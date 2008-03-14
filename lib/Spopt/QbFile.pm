@@ -68,44 +68,84 @@ sub read {
 
     my %temptracks = ();
     splice @filearr, 0, 7;  ## Get rid of the file header 
-    foreach (0 .. 0)            { &_get_track(\@filearr) if $mode eq "ps2"; }
+
+    foreach (0 .. 0)            { &_get_track(\@filearr) if $mode eq "ps2"; } # null
+
+    #foreach (0 .. 3)            { &_get_track(\@filearr); } # main notes
     $temptracks{main}{easy}     = &_get_track(\@filearr);
     $temptracks{main}{medium}   = &_get_track(\@filearr);
     $temptracks{main}{hard}     = &_get_track(\@filearr);
     $temptracks{main}{expert}   = &_get_track(\@filearr);
+    #foreach (0 .. 3)            { &_get_track(\@filearr); } # main sp
     $temptracks{mainsp}{easy}   = &_get_track(\@filearr);
     $temptracks{mainsp}{medium} = &_get_track(\@filearr);
     $temptracks{mainsp}{hard}   = &_get_track(\@filearr);
     $temptracks{mainsp}{expert} = &_get_track(\@filearr);
-    foreach (0 .. 3)            { &_get_track(\@filearr); }
-    foreach (0 .. 7)            { &_get_track(\@filearr); }
-    ##$TRACKS{alt}{easy}      =   &_get_track(\@filearr);
-    ##$TRACKS{alt}{medium}    =   &_get_track(\@filearr);
-    ##$TRACKS{alt}{hard}      =   &_get_track(\@filearr);
-    ##$TRACKS{alt}{expert}    =   &_get_track(\@filearr);
-    ##$TRACKS{altsp}{easy}    =   &_get_track(\@filearr);
-    ##$TRACKS{altsp}{medium}  =   &_get_track(\@filearr);
-    ##$TRACKS{altsp}{hard}    =   &_get_track(\@filearr);
-    ##$TRACKS{altsp}{expert}  =   &_get_track(\@filearr);
-    foreach (0 .. 31)           { &_get_track(\@filearr); }
+    foreach (0 .. 3)            { &_get_track(\@filearr); } # main battle phrases
+
+    #foreach (0 .. 3)            { &_get_track(\@filearr); } # bass/rhythm notes
+    $temptracks{coop}{easy}     = &_get_track(\@filearr);
+    $temptracks{coop}{medium}   = &_get_track(\@filearr);
+    $temptracks{coop}{hard}     = &_get_track(\@filearr);
+    $temptracks{coop}{expert}   = &_get_track(\@filearr);
+    #foreach (0 .. 3)            { &_get_track(\@filearr); } # bass/rhythm sp
+    $temptracks{coopsp}{easy}   = &_get_track(\@filearr);
+    $temptracks{coopsp}{medium} = &_get_track(\@filearr);
+    $temptracks{coopsp}{hard}   = &_get_track(\@filearr);
+    $temptracks{coopsp}{expert} = &_get_track(\@filearr);
+    foreach (0 .. 3)            { &_get_track(\@filearr); } # bass/rhythm battle phrases
+
+    #foreach (0 .. 3)           { &_get_track(\@filearr); } # co-op p1 notes
+    $temptracks{altp1}{easy}     = &_get_track(\@filearr);
+    $temptracks{altp1}{medium}   = &_get_track(\@filearr);
+    $temptracks{altp1}{hard}     = &_get_track(\@filearr);
+    $temptracks{altp1}{expert}   = &_get_track(\@filearr);
+    #foreach (0 .. 3)            { &_get_track(\@filearr); } # co-op p1 sp
+    $temptracks{altp1sp}{easy}   = &_get_track(\@filearr);
+    $temptracks{altp1sp}{medium} = &_get_track(\@filearr);
+    $temptracks{altp1sp}{hard}   = &_get_track(\@filearr);
+    $temptracks{altp1sp}{expert} = &_get_track(\@filearr);
+    foreach (0 .. 3)            { &_get_track(\@filearr); } # co-op p1 battle phrases
+
+    #foreach (0 .. 3)           { &_get_track(\@filearr); } # co-op p2 notes
+    $temptracks{altp2}{easy}     = &_get_track(\@filearr);
+    $temptracks{altp2}{medium}   = &_get_track(\@filearr);
+    $temptracks{altp2}{hard}     = &_get_track(\@filearr);
+    $temptracks{altp2}{expert}   = &_get_track(\@filearr);
+    #foreach (0 .. 3)           { &_get_track(\@filearr); } # co-op p2 sp
+    $temptracks{altp2sp}{easy}   = &_get_track(\@filearr);
+    $temptracks{altp2sp}{medium} = &_get_track(\@filearr);
+    $temptracks{altp2sp}{hard}   = &_get_track(\@filearr);
+    $temptracks{altp2sp}{expert} = &_get_track(\@filearr);
+    foreach (0 .. 3)            { &_get_track(\@filearr); } # co-op p2 battle phrases
+
+    foreach (0 .. 3)           { &_get_track(\@filearr); } # active sections for face off/boss battle
+
     $temptracks{timesig}        = &_get_track(\@filearr);
     $temptracks{beats}          = &_get_track(\@filearr);
 
+    my $part   = 'main';
+    my $partsp = $part . 'sp';
+
     for my $dd (qw(easy medium hard expert)) {
 
+        unless ( defined ($temptracks{$part}{$dd}) ) {
+            print "no section matching $part.\n";
+            return;
+        }
 	## Get the notes down first
-	for (my $i = 0; $i < @{$temptracks{main}{$dd}}; $i+=3) { 
-	    push @{$self->{_notes}{$dd}}, [ @{$temptracks{main}{$dd}}[$i .. $i+2] ];
+	for (my $i = 0; $i < @{$temptracks{$part}{$dd}}; $i+=3) { 
+	    push @{$self->{_notes}{$dd}}, [ @{$temptracks{$part}{$dd}}[$i .. $i+2] ];
 	}
 
 	## Run through the notes to get the SP start points
 	my $spp = 0;
-	my $numspphrases = scalar(@{$temptracks{mainsp}{$dd}});
+	my $numspphrases = scalar(@{$temptracks{$partsp}{$dd}});
 	for (my $i = 0; $i < @{$self->{_notes}{$dd}}; $i++) {
 	    next if $spp >= $numspphrases;
-	    if ($self->{_notes}{$dd}[$i][0] >= $temptracks{mainsp}{$dd}[$spp][0] ) { 
+	    if ( $self->{_notes}{$dd}[$i][0] >= $temptracks{$partsp}{$dd}[$spp][0] ) { 
 		$self->{_sp}{$dd}[$spp][0] = $i;
-		$self->{_sp}{$dd}[$spp][1] = $i + $temptracks{mainsp}{$dd}[$spp][2] - 1;
+		$self->{_sp}{$dd}[$spp][1] = $i + $temptracks{$partsp}{$dd}[$spp][2] - 1;
 		$spp++;
 	    }
 	}
