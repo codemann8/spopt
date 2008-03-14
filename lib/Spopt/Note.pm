@@ -322,19 +322,19 @@ sub calc_sp_tick {
     return int ($fraction * $self->totSpTick());
 }
 
-sub _init {
-    my $self = shift;
-    $self->{mult}           = 0;
-    $self->{multsust}       = 0;
-
-    $self->{baseNoteScore}  = 0;
-    $self->{baseSustScore}  = 0;
-    $self->{baseTotScore}   = 0;
-
-    $self->{noteScore}      = 0;
-    $self->{sustScore}      = 0;
-    $self->{totScore}       = 0;
-
-}
+#sub _init {
+#    my $self = shift;
+#    $self->{mult}           = 0;
+#    $self->{multsust}       = 0;
+#
+#    $self->{baseNoteScore}  = 0;
+#    $self->{baseSustScore}  = 0;
+#    $self->{baseTotScore}   = 0;
+#
+#    $self->{noteScore}      = 0;
+#    $self->{sustScore}      = 0;
+#    $self->{totScore}       = 0;
+#
+#}
 1;
 
