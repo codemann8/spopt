@@ -318,6 +318,9 @@ sub _printTitles() {
     my $self = shift;
     my $title = $self->title();
     my $subtitle = $self->subtitle();
+    # hack:
+    # added to distinguish the chart when generating coop, altp1 and altp2 blanks - tma
+    # $subtitle .= ' main';
     $self->_drawCenteredText("_im_song","black","Times",50,$title,512,40) if $title;
     $self->_drawCenteredText("_im_song","black","Times",30,$subtitle,512,80) if $subtitle;
 }
@@ -746,7 +749,7 @@ sub _highlight_regions {
 sub _drawTimeSignature {
     my ($self,$i) = @_;
     my $song = $self->song();
-    if ($i == 0 or $song->bpm($i) != $song->bpm($i-1)) {
+    if ($i == 0 or $i == 1 or $song->bpm($i) != $song->bpm($i-1)) {
         my $basex = $self->{_measureCoords}{$i}{x};
         my $basey = $self->{_measureCoords}{$i}{y};
         my $staff3 = $basey + $SINGLE_STAFF_LINE_3;
@@ -867,7 +870,7 @@ sub _drawMeasureGrid {
 
     ## Do the measure number
     $self->_drawText("_im_song", "DarkRed","Helvetica",10,"$i",$left,$staff1-5);
-    my ($self,$color,$family,$size,$text,$x,$y) = @_;
+    #my ($self,$color,$family,$size,$text,$x,$y) = @_;
 }
 
 sub _drawMeasureNotes {
@@ -947,7 +950,7 @@ sub _drawNoteCircle {
     if ($self->debug()) { print "Drawing NoteCircle ($color,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
     my $pointstr = sprintf "\%d,\%d \%d,\%d", $x,$y,$x+3,$y;
-    my $x = $im->Draw("primitive"   => "circle",
+    $x = $im->Draw("primitive"   => "circle",
 	      "points"      => $pointstr,
 	      "stroke"      => "black",
 	      "strokewidth" => 0.5,
@@ -961,7 +964,7 @@ sub _drawEllipse {
     if ($self->debug()) { print "Drawing Ellipse ($color,$x,$y,$rx,$ry,rot)\n"; }
     my $im =    $self->{$imagestr};
     my $pointstr = sprintf "\%d,\%d \%d,\%d \%d,\%d", 0,0,$rx,$ry,0,360;
-    my $x = $im->Draw("primitive"   => "ellipse",
+    $x = $im->Draw("primitive"   => "ellipse",
 	      "points"      => $pointstr,
 	      "stroke"      => $color,
 	      "rotate"      => $rot,
@@ -987,7 +990,7 @@ sub _drawNoteStar {
 		   $x-2,$y+1,
 		   $x-4,$y-1,
 		   $x-2,$y-1;
-    my $x = $im->Draw("primitive"   => "polygon",
+    $x = $im->Draw("primitive"   => "polygon",
 	      "points"      => $pointstr,
 	      "stroke"      => "black",
 	      "strokewidth" => 0.5,
@@ -1000,7 +1003,7 @@ sub _drawText {
     my ($self,$imagestr,$color,$family,$size,$text,$x,$y) = @_;
     if ($self->debug()) { print "Drawing text ($color,$family,$size,$text,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
-    my $x = $im->Annotate(text      => $text,
+    $x = $im->Annotate(text      => $text,
 	                  family    => $family,
 			  fill      => $color,
 			  pointsize => $size,
@@ -1013,7 +1016,7 @@ sub _drawRightText {
     my ($self,$imagestr,$color,$family,$size,$text,$x,$y) = @_;
     if ($self->debug()) { print "Drawing text ($color,$family,$size,$text,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
-    my $x = $im->Annotate(text      => $text,
+    $x = $im->Annotate(text      => $text,
 	                  family    => $family,
 			  fill      => $color,
 			  pointsize => $size,
@@ -1028,7 +1031,7 @@ sub _drawCenteredText {
     my ($self,$imagestr,$color,$family,$size,$text,$x,$y) = @_;
     if ($self->debug()) { print "Drawing text ($color,$family,$size,$text,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
-    my $x = $im->Annotate(text      => $text,
+    $x = $im->Annotate(text      => $text,
 	                  family    => $family,
 			  fill      => $color,
 			  pointsize => $size,
