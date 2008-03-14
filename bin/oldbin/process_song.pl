@@ -1,4 +1,4 @@
-#!/usr/bin/perl5
+#!/usr/bin/perl -w
 
 use FindBin;
 use lib "$FindBin::Bin/../lib";
@@ -24,9 +24,9 @@ our %SONGS = ();
 our %RESULTSDB = ();
 our %SONGDB = ();
 our %TIER_TITLE = ();
-our $MIDIDIR = "/home/Dave/gh/midi";
-our $QBDIR   = "/home/Dave/gh/qb";
-our $OUTDIR  = "/cygdrive/c/Web/GuitarHero";
+our $MIDIDIR = "/home/tarragon/cvs/spopt/midi";
+our $QBDIR   = "/home/tarragon/cvs/spopt/qb";
+our $OUTDIR  = "/home/tarragon/tmp/charts";
 our ($game,$diff,$tier,$name,$file,$sustthresh) = @ARGV;
 my %song = (tier => $tier, name => $name, file => $file, sustthresh => ($sustthresh ? $sustthresh : 0));
 
@@ -68,6 +68,9 @@ if ($game eq "gh3-ps2") {
         &process_song($game,\%song,$diff,$alg,1);
     }
 }
+elsif ($game eq 'gh3-x360') {
+    &process_song($game,\%song,$diff,'blank',1);
+}
 
 else {
     foreach my $alg (qw(blank lazy-whammy no-squeeze big-squeeze bigger-squeeze nearly-ideal upper-bound)) {
@@ -100,8 +103,9 @@ sub readmidi {
     my ($game,$rsong) = @_;
     my $basefilename = $rsong->{file};
     my $tier = $rsong->{tier};
-    print "Reading game:$game midi:$basefilename...\n";
-    if ($game eq "gh3-ps2") {
+    my $title = $rsong->{'name'};
+    print "Reading game:$game midi:$basefilename diff:$diff title:$title...\n";
+    if ($game eq "gh3-ps2" or $game eq 'gh3-x360' ) {
         my $filename = $tier == 10 ? "$QBDIR/$game/$basefilename.qb.xen" : "$QBDIR/$game/$basefilename.qb.ps2"; 
         print STDERR "ERROR: Couldn't find file '$filename'\n" unless -f $filename;
         my $mf = new QbFile;
@@ -144,7 +148,7 @@ sub process_song {
 
     my $song = new Song;
     if ($game eq "gh-ps2")  { $song->game("gh"); }
-    if ($game eq "gh3-ps2") {
+    if ($game eq "gh3-ps2" or $game eq 'gh3-x360' ) {
 	$song->game("gh3");
 	$song->filetype("qb");
     }
@@ -182,7 +186,7 @@ sub process_song {
         $optimizer->gen_interesting_events();
         $optimizer->debug(0);
         if ($game eq "gh-ps2")  { $optimizer->game("gh"); }
-        if ($game eq "gh3-ps2") {
+        if ($game eq "gh3-ps2" or $game eq 'gh3-x360' ) {
 	    $optimizer->game("gh3");
 	    $optimizer->whammy_per_quarter_bar(7.75);
 	}
@@ -202,7 +206,7 @@ sub process_song {
 
 	if ($pic) {
             my $painter = new SongPainter;
-            if ($game eq "gh3-ps2") { $painter->whammy_per_quarter_bar(7.75); }
+            if ($game eq "gh3-ps2" or $game eq 'gh3-x360' ) { $painter->whammy_per_quarter_bar(7.75); }
             $painter->debug(0);
             $painter->song($song);
             $painter->filename("$diffdir/$songkey.$alg.best.png");
