@@ -20,15 +20,31 @@ use Solution;
 
 use Getopt::Long;
 
+our ($GHROOT,$MIDIDIR,$QBDIR,$OUTDIR,$GAME_REGEX,$DIFF_REGEX,$TIER_REGEX,$FILE_REGEX) = ();
+
 our %SONGS = ();
 our %RESULTSDB = ();
 our %SONGDB = ();
 our %TIER_TITLE = ();
-our $MIDIDIR = "/home/tarragon/cvs/spopt/midi";
-our $QBDIR   = "/home/tarragon/cvs/spopt/qb";
-our $OUTDIR  = "/home/tarragon/tmp/charts";
-our ($game,$diff,$tier,$name,$file,$sustthresh) = @ARGV;
-my %song = (tier => $tier, name => $name, file => $file, sustthresh => ($sustthresh ? $sustthresh : 0));
+
+$MIDIDIR = "/home/tarragon/cvs/spopt/midi";
+$QBDIR   = "/home/tarragon/cvs/spopt/qb";
+$OUTDIR  = "/home/tarragon/tmp/charts";
+
+our ($game,$diff,$tier,$name,$file,$cfgfile) = @ARGV;
+
+## Do the config file stuff
+if ($cfgfile) {
+    my $fn = "$FindBin::Bin/../cfg/$cfgfile";
+    if (-e $fn) { require $fn; }
+    else        { die "Could not file cfg file: $fn for reading"; }
+}
+
+
+
+
+
+my %song = (tier => $tier, name => $name, file => $file);
 
 our %ALGORITHM;
 $ALGORITHM{'blank'}           = {wp => 1.00, wd => 0.00, sq => 0.00, sp => 0.00 };
@@ -111,10 +127,10 @@ sub readmidi {
         my $mf = new QbFile;
         $mf->file($filename);
 
-	my $sustthresh = $rsong->{sustthresh};
-        if ($sustthresh > 0) { $mf->sustainthresh($sustthresh); }
-
+	##my $sustthresh = $rsong->{sustthresh};
+        ##if ($sustthresh > 0) { $mf->sustainthresh($sustthresh); }
         ##$mf->maxtrack(2);
+
         $mf->read();
         $SONGDB{$game}{$basefilename} = $mf;
     }
