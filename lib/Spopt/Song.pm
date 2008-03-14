@@ -696,7 +696,7 @@ sub find_note_idx_before_squeezed {
 
 sub clear_score_cache {
     my $self = shift;
-    my $self->{scorecache} = {};
+    $self->{scorecache} = {};
 }
 
 sub score_range {
