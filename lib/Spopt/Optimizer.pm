@@ -477,12 +477,6 @@ sub _gen_sp_pwls {
     return ($s2epwl,$e2spwl,$sppwl,$xover);
 }
 
-sub __min {
-    my $min = @_[0];
-    foreach my $a (@_) { $min = $a if $a < $min; }
-    return $min;
-}
-
 sub get_unique_sp_pairs {
     my ($self,$rs) = @_;
     my %a = ();
