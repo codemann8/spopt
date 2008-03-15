@@ -8,7 +8,7 @@ sub song        { my $self = shift; return $self->_prop("song",@_);  }
 sub score       { my $self = shift; return $self->_prop("score",@_);  }
 sub compsp      { my $self = shift; return $self->_prop("compsp",@_);  }
 sub optsp       { my $self = shift; return $self->_prop("optsp",@_);  }
-sub pathstr     { my $self = shift; return $self->_prop("path",@_);  }
+sub pathstr     { my $self = shift; return $self->_prop("pathstr",@_);  }
 sub activations { my $self = shift; return $self->_prop("activations",@_);  }
 
 sub _init {
