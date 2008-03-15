@@ -48,6 +48,6 @@ sub argint4 {
 
 sub _init {
     my $self = shift;
-    %$self = (track => 0, tick => 0, eventstr => "", argstr => "", argint1 => 0, argint2 => 0, argint3 => 0, argint4 => 0);
+    %$self = ("_track" => 0, "_tick" => 0, "_eventstr" => "", "_argstr" => "", "_argint1" => 0, "_argint2" => 0, "_argint3" => 0, "_argint4" => 0);
 }
 1;

@@ -26,6 +26,7 @@ sub _init {
     $self->{_sp}{med}  = [];
     $self->{_sp}{hard}  = [];
     $self->{_sp}{expert}  = [];
+    $self->{_markers} = [];
 }
 
 sub read {
@@ -123,6 +124,7 @@ sub read {
 
     $temptracks{timesig}        = &_get_track(\@filearr);
     $temptracks{beats}          = &_get_track(\@filearr);
+    $temptracks{markers}        = &_get_marker_track(\@filearr);
 
     my $part   = 'main';
     my $partsp = $part . 'sp';
@@ -163,6 +165,42 @@ sub read {
     for (my $i = 0 ; $i < @{$temptracks{timesig}} ; $i++) {
         $self->{_timesig}[$i] = [ $temptracks{timesig}[$i][0], $temptracks{timesig} [$i][1] ];
     }
+
+
+    ###################################################################
+    ##  BEGIN SECTION NAMES
+    ###################################################################
+
+    ## for section names, we have to read in the master file
+    my $master_file = "";
+    if ($filename =~ /(\S+)\/(\S+)/) { $master_file = "$1/master_section_names.txt"; }
+        else                         { $master_file = "master_section_names.txt";    }
+    open MSECTION, "$master_file" or die "Could not find section file for opening";
+    my %db = ();
+    while (<MSECTION>) {
+	next unless /(\S+)\s+(\S+)\s+(\S+)\s+(\S.*\S)/;
+	my ($strcrc,$songcrc,$songbase,$string) = ($1,$2,$3,$4);
+	$db{$songbase}{$strcrc} = $string;
+    }
+    close MSECTION;
+
+    ## Now we need to extract the base name of this qb file
+    my $basefilename = "";
+    if     ($filename =~ /(\S+)\/(\S+).mid.qb.*/)  { $basefilename =  "$2"; }
+    elsif  ($filename =~ /(\S+).mid.qb.*/)         { $basefilename =  "$1"; }
+    else                                           { $basefilename =  "deadbeefsdfjdlskjfdklsjflsf"; }
+
+    ## Now loop through all of the section names, and if we find one, then we stick it in the hash
+    foreach my $ra (@{$temptracks{markers}}) {
+	my ($tt,$kk) = @$ra;
+	if (exists($db{$basefilename}{$kk})) {
+	    push @{$self->{_markers}}, [ $tt, $db{$basefilename}{$kk} ];
+	}
+    }
+
+    ###################################################################
+    ##  END SECTION NAMES
+    ###################################################################
 }
 
 sub _get_track {
@@ -181,6 +219,40 @@ sub _get_track {
     ##elsif ($type == 65536)  { &parse_rec65536();  }
 }
 
+sub _get_marker_track {
+    my $ra = shift;
+    my @out = ();
+    $ra->[0] == 787456 or $ra->[0] == 2100224 or die "No track header where one was expected";
+    splice @$ra, 0, 5;
+    my $type = $ra->[0];
+    $type == 655616 or $type == 68096 or die "Couldn't find the right marker track, got $type instead";
+    my $len = $ra->[1];
+    splice @$ra, 0, 3;
+    if ($len > 1) { splice @$ra, 0, $len; }
+    for my $i ( 0 .. $len ) {
+        ## 10 words each
+	
+	## 0x00010000
+	## start pointer
+	## type = integer
+	## checksum for "time"
+	## time value
+	## pointer
+	## type = basic variable
+	## checksum for "marker"
+	## value of the string checksum
+	## 0x00000000
+
+	my $timestamp       = $ra->[4];
+	my $string_checksum = sprintf "%08x", $ra->[8];
+	$out[$i][0] = $timestamp;
+	$out[$i][1] = $string_checksum;
+        splice @$ra, 0, 10;
+    }
+    return \@out;
+}
+
+
 sub _parse_simple_list {
     my $ra = shift;
     my $num = $ra->[1];
@@ -197,9 +269,10 @@ sub _parse_multlist {
     splice @$ra, 0, 3;
     if ($num > 1) { splice @$ra, 0, $num; }
     my @out = ();
-    for my $i ( 0 .. $num-1 ) { $out[$i] = &_parse_simple_list($ra); }
+    for my $i ( 0 .. $num-1 ) {$out[$i] = &_parse_simple_list($ra); }
     return [ @out ];
 }
+
 
 sub __max {
     my $max = $_[0];
@@ -212,6 +285,12 @@ sub __min {
     foreach my $a (@_) { $min = $a if $a < $min; }
     return $min;
 }
+
+sub get_markers {
+    my $self = shift;
+    return $self->{_markers};
+}
+
 
 1;
 

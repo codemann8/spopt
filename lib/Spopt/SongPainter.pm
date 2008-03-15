@@ -270,16 +270,9 @@ sub paintsong {
 sub _paintSectionLabels {
     my ($self) = shift;
     my $song = $self->song();
-    return if $song->filetype() eq "qb";
-    my $mf = $song->midifile();
-    my $ra = $mf->getall();
-    my @a = grep { $_->argstr() =~ /\[section/ } @$ra;
-    foreach my $a (@a) {
-	my $tick = $a->tick();
-	my $txt  = $a->argstr();
-	$txt =~ s/\[section //;
-	$txt =~ s/\]//;
-	my $meas = $song->t2m($tick);
+    my $ra = $song->sectionnames();
+    foreach my $rra (@$ra) {
+	my ($meas,$txt) = @$rra;
 	$meas = int ($meas + 0.5); ## round to the nearest measure to be sure to have room to type the text
         my $basex = $self->{_measureCoords}{$meas}{x};
         my $basey = $self->{_measureCoords}{$meas}{y};

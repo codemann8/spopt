@@ -22,6 +22,8 @@ sub t2bpwl        { my $self = shift; return $self->_prop("t2bpwl",@_);    }
 sub t2mpwl        { my $self = shift; return $self->_prop("t2mpwl",@_);    }
 sub m2tpwl        { my $self = shift; return $self->_prop("m2tpwl",@_);    }
 
+sub sectionnames  { my $self = shift; return $self->_prop("sectionnames",@_);    }
+
 sub whammy_percent     { my $self = shift; return $self->_prop("whammy_percent",@_);    }
 sub whammy_delay       { my $self = shift; return $self->_prop("whammy_delay",@_);    }
 sub squeeze_percent    { my $self = shift; return $self->_prop("squeeze_percent",@_);    }
@@ -74,6 +76,7 @@ sub _init {
     $self->whammy_delay(0);
     $self->whammy_percent(1.00);
     $self->{bpm} = {};
+    $self->{sectionnames} = [];
 }
 
 sub init_phrase_sp_pwls {
@@ -178,11 +181,13 @@ sub construct_song {
         $self->_gen_timesig_array();
         $self->_gen_measure_beat_structures();
         $self->_gen_note_arr(1,"notearr");
+	$self->_gen_sectionnames();
     }
 
     elsif ($self->filetype() eq "qb") {
         $self->_qb_gen_tempo_timesig_measure_beat_stuff();
         $self->_qb_gen_note_arr(1,"notearr");
+	$self->_qb_gen_sectionnames();
     }
 
     else { die "Couldn't figure out filetype in Song::construct_song"; }
@@ -193,6 +198,36 @@ sub construct_song {
     ##    $self->_associate_tempos("coop_notearr");
     ##}
     $self->initialize_multipliers();
+}
+
+sub _gen_sectionnames {
+    my $self = shift;
+    @{$self->{sectionnames}} = ();
+    my $mf   = $self->midifile();
+    my $ra = $mf->getall();
+    my @a = grep { $_->argstr() =~ /\[section/ } @$ra;
+    foreach my $a (@a) {
+	my $tick = $a->tick();
+	my $txt  = $a->argstr();
+	$txt =~ s/\[section //;
+	$txt =~ s/\]//;
+	my $meas = $self->t2m($tick);
+	push @{$self->{sectionnames}}, [$meas, $txt];
+    }
+}
+
+sub _qb_gen_sectionnames {
+    my $self = shift;
+    @{$self->{sectionnames}} = ();
+    my $mf   = $self->midifile();
+    my $rmarkers = $mf->get_markers();
+
+    ## Now we just have to convert from ms2tick and then t2m
+    foreach my $rm (@$rmarkers) {
+	my $tick = $self->{_qbstuff}{ms2tick}->interpolate($rm->[0]);
+	my $meas = $self->t2m($tick);
+	push @{$self->{sectionnames}}, [$meas, $rm->[1]];
+    }
 }
 
 sub initialize_multipliers {
