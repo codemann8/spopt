@@ -628,7 +628,7 @@ sub _print_tempos {
 
     ## Get all the tempos per measure
     $self->_filter_tempos($tarr);
-    foreach my $tt (@$tarr) {
+    foreach my $tt (sort @$tarr) {
 	my $tick = $tt->tick();
 	my $tempo = $tt->tempo();
 	$tempo = int (60 * 1e6 / $tempo + 0.5); ## convert from us/qn to qn/min
@@ -638,6 +638,14 @@ sub _print_tempos {
         my $basey = $self->{_measureCoords}{$meas}{y};
         my $staff1 = $basey + $SINGLE_STAFF_LINE_1;
 	$self->_draw_tempo($tempo,$basex+$offset,$staff1-20);
+        #print '===' . "\n"; ## DEBUG
+        #print '$meas='.$meas."\n"; ## DEBUG
+        #print '$SINGLE_STAFF_LINE_1=' . $SINGLE_STAFF_LINE_1 ."\n"; ## DEBUG
+        #print '$basex=' . $basex ."\n"; ## DEBUG
+        #print '$basey=' . $basey ."\n"; ## DEBUG
+        #print '$tempo=' . $tempo ."\n"; ##DEBUG
+        #print '$offset=' . $offset ."\n"; ##DEBUG
+        #print '$staff1=' . $staff1 ."\n"; ## DEBUG
     }
 }
 
