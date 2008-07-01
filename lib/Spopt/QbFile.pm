@@ -96,6 +96,9 @@ sub read {
     $temptracks{coopsp}{expert} = &_get_track(\@filearr);
     foreach (0 .. 3)            { &_get_track(\@filearr); } # bass/rhythm battle phrases
 
+    #HACK - skip Aerosmith extra sections
+    # foreach (0 .. 11) { &_get_track(\@filearr); }
+
     #foreach (0 .. 3)           { &_get_track(\@filearr); } # co-op p1 notes
     $temptracks{altp1}{easy}     = &_get_track(\@filearr);
     $temptracks{altp1}{medium}   = &_get_track(\@filearr);
