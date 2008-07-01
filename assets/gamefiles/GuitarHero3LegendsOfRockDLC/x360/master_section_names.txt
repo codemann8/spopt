@@ -1,0 +1,741 @@
+9df25021 81622321 dlc1 (Tom 1)  Tom's House Riff 1
+573ce684 81622321 dlc1 Squeakaholic 1
+99bb5ce2 81622321 dlc1 (Tom 2)  Tom's House Riff 2
+c8d88a53 81622321 dlc1 Squeakaholic 2
+f1e89aa3 81622321 dlc1 (Tom 3) Waka chika waka
+9c81f261 81622321 dlc1 Scratchification
+48c40112 81622321 dlc1 (Tom 4) Abduction
+f100e34d 81622321 dlc1 Game Over!?
+d00512ea 81622321 dlc1 (Tom 5) Nose to the Grind
+90724273 81622321 dlc1 Fish Outta Water Level 1
+74bc2e04 81622321 dlc1 (Tom 6) What's Up? Part 1
+43d60360 81622321 dlc1 Fish Outta Water Level 2
+08eb6388 81622321 dlc1 (Tom 7) What's Up? Part 2
+53dbfd8d 81622321 dlc1 Feline Frenzy
+98e40134 81622321 dlc1 (Tom 8) Noodles from the sky
+2d30cd51 81622321 dlc1 Destructimus
+8538d866 81622321 dlc1 (Tom 9) Pop a Squealie
+ebbef3db 81622321 dlc1 Spin Cycle
+31b71fe9 81622321 dlc1 (Tom 10) O' Squealie?
+fccf8558 81622321 dlc1 High and Dry
+a48a04fc 81622321 dlc1 (Tom 11) Better Off Shred 1
+4db5d08b 81622321 dlc1 Better Off Shred 2
+ea6051ee 81622321 dlc1 (Tom 12)  Better Off Shred 3
+83f30981 81622321 dlc1 Peel-out
+69238c66 81622321 dlc1 (Tom 13) Hand Mangler Stage 1
+23692509 81622321 dlc1 Hand Mangler Stage 2
+afb4f5e5 81622321 dlc1 (Tom 14) Hand Mangler Stage 3
+bf9e9f5c 81622321 dlc1 Hand Mangler Stage 4
+fba4751f 81622321 dlc1 (Tom 15) Hand Mangler Stage 5
+c70a28bc 81622321 dlc1 Hand Mangler Stage 6
+b2ff3a37 81622321 dlc1 (Tom 16) Hand Mangler Stage 7
+ea881e7f 81622321 dlc1 Hand Mangler Stage 8
+6b79f392 81622321 dlc1 (Tom 17) Widow-mayka
+c840e723 b2b9c9b9 dlc10 Intro
+c1752035 b2b9c9b9 dlc10 Verse 1
+fd90775e b2b9c9b9 dlc10 Chorus 1
+79735295 b2b9c9b9 dlc10 Verse 2
+2060dce8 b2b9c9b9 dlc10 Chorus 2
+7f3ff343 b2b9c9b9 dlc10 Solo 
+e1de38db b2b9c9b9 dlc10 Bridge
+34544c70 b2b9c9b9 dlc10 Solo 2
+ce14f9ff b2b9c9b9 dlc10 Solo 3
+6c06ab9b b2b9c9b9 dlc10 Outro
+53330df7 6f2f103c dlc11 Intro
+5a06cae1 6f2f103c dlc11 Verse 1
+66e39d8a 6f2f103c dlc11 Chorus 1
+6a2ba238 6f2f103c dlc11 Hardcore Riff 1
+e200b841 6f2f103c dlc11 Verse 2
+bb13363c 6f2f103c dlc11 Chorus 2
+82a4f37f 6f2f103c dlc11 Bridge A
+bfb2ef76 6f2f103c dlc11 Bridge B
+b41036dc 6f2f103c dlc11 Hardcore Riff 2
+a7bd01e6 6f2f103c dlc11 Chorus 3
+4323d891 6f2f103c dlc11 Solo
+f775414f 6f2f103c dlc11 Outro
+25d634ca d2e57cf2 dlc12 Intro
+a087852e d2e57cf2 dlc12 Intro Riffage
+2c56b974 d2e57cf2 dlc12 Chorus Riff
+2ce3f3dc d2e57cf2 dlc12 Verse 1
+1006a4b7 d2e57cf2 dlc12 Chorus 1
+94e5817c d2e57cf2 dlc12 Verse 2
+cdf60f01 d2e57cf2 dlc12 Chorus 2
+0c48eb32 d2e57cf2 dlc12 Bridge
+afd79c59 d2e57cf2 dlc12 Jam Out
+d15838db d2e57cf2 dlc12 Chorus 3
+81907872 d2e57cf2 dlc12 Outro
+a254e357 0f73a577 dlc13 Cold Winter Morning
+cb50e832 0f73a577 dlc13 So Far Away I
+c2fb1a35 0f73a577 dlc13 Slide Riff 1
+b7901908 0f73a577 dlc13 Verse 1
+fb81401c 0f73a577 dlc13 So Far Away II
+2cacf288 0f73a577 dlc13 Slide Riff 2
+0f966ba8 0f73a577 dlc13 Verse 2
+f28fb000 0f73a577 dlc13 Metal Battleground
+1aaab446 0f73a577 dlc13 Chugging Riff 1
+80713c56 0f73a577 dlc13 Drizzle 1
+64b2a934 0f73a577 dlc13 Chugging Riff 2
+4d235ce5 0f73a577 dlc13 Drizzle 2
+9a7d8ccc 7200a32f dlc14 Intro Riff 
+c12981a6 7200a32f dlc14 Verse 1
+fdccd6cd 7200a32f dlc14 Chorus 1
+792ff306 7200a32f dlc14 Verse 2
+bcb702a0 7200a32f dlc14 Chorus 2A
+8694d191 7200a32f dlc14 Chorus 2B
+198bb838 7200a32f dlc14 Bridge A
+249da431 7200a32f dlc14 Bridge B
+4d4df754 7200a32f dlc14 Intro Riffage
+317441c5 7200a32f dlc14 Bridge C
+3c924aa1 7200a32f dlc14 Chorus 3
+6c5a0a08 7200a32f dlc14 Outro
+536fac64 af967aaa dlc15 Intro
+fd211391 af967aaa dlc15 Verse 1A
+9f989660 af967aaa dlc15 Verse 1B
+66bf3c19 af967aaa dlc15 Chorus 1
+dd188bd2 af967aaa dlc15 Verse 2A
+73ca7ad5 af967aaa dlc15 Verse 2B
+bb4f97af af967aaa dlc15 Chorus 2
+7af1739c af967aaa dlc15 Bridge
+f729e0dc af967aaa dlc15 Outro
+258a9559 125c1664 dlc16 Intro
+81357b14 125c1664 dlc16 Riff 1a
+bfbb737e 125c1664 dlc16 Breakdown 1
+61a6a3b9 125c1664 dlc16 Riff 2a
+2dfcaf92 125c1664 dlc16 Riff 1b
+2f2b2b3b 125c1664 dlc16 Breakdown 2
+e9c790db 125c1664 dlc16 Riff 2b
+110bf16c 125c1664 dlc16 GET TO THE CHOPPA!!
+5fe3c8ac 125c1664 dlc16 Riff 1c
+81ccd9e1 125c1664 dlc16 Outro
+07fd8b66 cfcacfe1 dlc17 Georgia Theme Lead 1
+10b7c078 cfcacfe1 dlc17 Verse 1A
+720e4589 cfcacfe1 dlc17 Verse 1B
+9767a075 cfcacfe1 dlc17 Bridge
+7c7f8b44 cfcacfe1 dlc17 Georgia Theme Lead 2
+0fcaca3b cfcacfe1 dlc17 Verse 2
+0dce00a0 cfcacfe1 dlc17 Devil Disco 1
+5a76a26c cfcacfe1 dlc17 Devil Metal 1
+584f2198 cfcacfe1 dlc17 Devil Solo A
+47669f8f cfcacfe1 dlc17 Devil Solo B
+9b5e2865 cfcacfe1 dlc17 Devil Solo C
+0bf68f1d cfcacfe1 dlc17 Devil Solo D
+d4dd654e cfcacfe1 dlc17 Devil Solo E
+39e6d5bb cfcacfe1 dlc17 Devil Solo F
+f2fc5afe cfcacfe1 dlc17 Devil Solo G
+313799b6 cfcacfe1 dlc17 Devil Solo H
+4c39cbaa cfcacfe1 dlc17 Verse 3
+8b29eff0 cfcacfe1 dlc17 Chorus 1
+906f2279 cfcacfe1 dlc17 Johnny's Theme Lead 1
+06a1c15d cfcacfe1 dlc17 Victory Solo A
+eabcd056 cfcacfe1 dlc17 Victory Solo B
+ec45eda5 cfcacfe1 dlc17 Victory Solo C
+f6faf8b4 cfcacfe1 dlc17 Victory Solo D
+a1193a98 cfcacfe1 dlc17 Victory Solo E
+8128a834 cfcacfe1 dlc17 Victory Solo F
+b098c1cb cfcacfe1 dlc17 Victory Solo G
+64467cb4 cfcacfe1 dlc17 Victory Solo H
+76532a9d cfcacfe1 dlc17 Victory Solo I
+cf8856d4 cfcacfe1 dlc17 Victory Solo J
+e308638b cfcacfe1 dlc17 Victory Solo K
+5000b118 cfcacfe1 dlc17 Victory Solo L
+f1d811e0 cfcacfe1 dlc17 Victory Solo M
+f3cb61c7 cfcacfe1 dlc17 Victory Solo N
+10d29846 cfcacfe1 dlc17 Victory Solo P
+563d772e cfcacfe1 dlc17 Victory Solo Q
+5ff17841 cfcacfe1 dlc17 Victory Solo R
+39468f4f cfcacfe1 dlc17 Verse 4
+56d94446 cfcacfe1 dlc17 Chorus 2
+da079f96 cfcacfe1 dlc17 Johnny's Theme Lead 2
+f3bf235e cfcacfe1 dlc17 End Riff
+c8f9a405 e8ba1ad4 dlc18 Intro
+c1cc6313 e8ba1ad4 dlc18 Verse 1
+79ca11b3 e8ba1ad4 dlc18 Verse 2
+9d4979fc e8ba1ad4 dlc18 Pre-Chorus 1
+fd293478 e8ba1ad4 dlc18 Chorus 1
+5ebd43e0 e8ba1ad4 dlc18 Interlude
+3a391022 e8ba1ad4 dlc18 Verse 3
+e9f60e0b e8ba1ad4 dlc18 Pre-Chorus 2
+20d99fce e8ba1ad4 dlc18 Chorus 2
+3c77a814 e8ba1ad4 dlc18 Chorus 3
+d8e97163 e8ba1ad4 dlc18 Solo
+55e0473c e8ba1ad4 dlc18 Chorus 4
+b4895245 e8ba1ad4 dlc18 Chorus 5
+63ca7710 e8ba1ad4 dlc18 Breakdown
+42f80c96 e8ba1ad4 dlc18 Jam Out
+6bc700c5 e8ba1ad4 dlc18 Solo 2A
+b773aa43 e8ba1ad4 dlc18 Solo 2B
+3d11ba2f e8ba1ad4 dlc18 Solo 2C
+6cbfe8bd e8ba1ad4 dlc18 Outro
+538a4ed1 352cc351 dlc19 Intro
+9250f643 352cc351 dlc19 Main Riff
+e4d293ee 352cc351 dlc19 Mini-Solo
+6468cf2b 352cc351 dlc19 Solo 1
+6ec72021 352cc351 dlc19 Solo Fill I
+8f7e263a 352cc351 dlc19 Major Riffage
+6c76865a 352cc351 dlc19 Solo Fill II
+af9ee582 352cc351 dlc19 Solo 2
+55de500d 352cc351 dlc19 Solo 3
+246598df 352cc351 dlc19 Solo 4
+04513f70 352cc351 dlc19 Solo 5
+88ce02f5 352cc351 dlc19 Waaaah!!!
+f7cc0269 352cc351 dlc19 Outro
+2b7b3fd0 3ca84fef dlc2 Let the Games Begin
+02c91f7e 3ca84fef dlc2 Testing the Waters
+0a1b6d0d 3ca84fef dlc2 Slash Loosens Up
+2454f2bc 3ca84fef dlc2 Show Slash the Goods
+b5e5f76f 3ca84fef dlc2 Check This
+9fcf7409 3ca84fef dlc2 Groove On It
+bca812cd 3ca84fef dlc2 Point
+4e101a8e 3ca84fef dlc2 Counterpoint
+0a3314cd 3ca84fef dlc2 Deedely Doo
+74a30821 3ca84fef dlc2 Run-Down the Scale
+a8bbe55e 3ca84fef dlc2 Blues Buster
+03e7dbf9 3ca84fef dlc2 Who's the Boss A
+31d843d6 3ca84fef dlc2 Who's the Boss B
+bcc52c17 3ca84fef dlc2 Trading Licks A
+c1364696 3ca84fef dlc2 Trading Licks B
+1566f111 3ca84fef dlc2 Trading Licks C
+fc7e6417 3ca84fef dlc2 Tenacious Triplets
+0708426b 3ca84fef dlc2 Tenacious Triplets B
+8b4ca694 3ca84fef dlc2 Glide Down the Scale
+e7bfc7f8 3ca84fef dlc2 Relaxin' with Slash
+a7f7ee74 3ca84fef dlc2 Wha' Happened
+24f5f041 3ca84fef dlc2 Blowin' with Slash
+00721e0c 3ca84fef dlc2 Meedely Moo
+3b88cba6 3ca84fef dlc2 Workin' with Slash
+a72eec00 3ca84fef dlc2 Go Crazy
+3aa98aef 3ca84fef dlc2 Roastin' with Slash
+b6108456 3ca84fef dlc2 Finish Slash Off
+80a64c78 3ca84fef dlc2 He's Alive!...?
+9937288e 0e6186f4 dlc24 Verse 1
+5208ebc7 0e6186f4 dlc24 Bridge 1
+21315a2e 0e6186f4 dlc24 Verse 2
+dcdec297 0e6186f4 dlc24 Bridge 2
+a5d27fe5 0e6186f4 dlc24 Chorus 1
+62c25bbf 0e6186f4 dlc24 Verse 3
+3d58f813 0e6186f4 dlc24 Bridge 3
+7822d453 0e6186f4 dlc24 Chorus 2
+d34a2d1f 0e6186f4 dlc24 Solo Bridge
+80123afe 0e6186f4 dlc24 Solo
+44ec9128 0e6186f4 dlc24 Heavy Bridge
+648ce389 0e6186f4 dlc24 Chorus 3
+d7e26857 0e6186f4 dlc24 Chorus Outro
+0b71054c d3f75f71 dlc25 Intro
+0244c25a d3f75f71 dlc25 Verse 1
+3ea19531 d3f75f71 dlc25 Chorus 1
+ba42b0fa d3f75f71 dlc25 Verse 2
+e3513e87 d3f75f71 dlc25 Chorus 2
+c97b0113 d3f75f71 dlc25 Bridge 1
+3c9384b6 d3f75f71 dlc25 Solo 1
+f765ae1f d3f75f71 dlc25 Solo 2
+f9b1b16b d3f75f71 dlc25 Verse 3
+ffff095d d3f75f71 dlc25 Chorus 3
+47ad2843 d3f75f71 dlc25 Bridge 2
+f4874b10 d3f75f71 dlc25 Intro 2
+95a7cd73 d3f75f71 dlc25 Octave Riff Intro
+a62b12c7 d3f75f71 dlc25 Bridge 3
+af3749f4 d3f75f71 dlc25 Outro
+b4cc78d6 6e3d33bf dlc26 Intro Solo A
+16e1b2eb 6e3d33bf dlc26 Intro Solo B
+d3da8384 6e3d33bf dlc26 Verse 1A
+b1630675 6e3d33bf dlc26 Verse 1B
+4844ac0c 6e3d33bf dlc26 Chorus 1
+bd6747e8 6e3d33bf dlc26 Chorus 1B
+560c5b5d 6e3d33bf dlc26 Solo 1A
+46224a69 6e3d33bf dlc26 Solo 1B
+f3e31bc7 6e3d33bf dlc26 Verse 2A
+5d31eac0 6e3d33bf dlc26 Verse 2B
+95b407ba 6e3d33bf dlc26 Chorus 2
+ebd0db94 6e3d33bf dlc26 Interlude
+7b7db7e5 6e3d33bf dlc26 Guitar Interlude
+10c48e8b 6e3d33bf dlc26 Check This
+89030508 6e3d33bf dlc26 Verse 3A
+61b06596 6e3d33bf dlc26 Verse 3B
+62e0e0a1 6e3d33bf dlc26 Chorus 3A
+aa921e66 6e3d33bf dlc26 Chorus 3B
+deaa98b1 6e3d33bf dlc26 Solo 2A
+021e3237 6e3d33bf dlc26 Solo 2B
+887c225b 6e3d33bf dlc26 Solo 2C
+e08ddf48 6e3d33bf dlc26 Chorus 4
+3a74bbbe 6e3d33bf dlc26 Chorus Outro
+efd211b3 b3abea3a dlc27 Verse 1
+d33746d8 b3abea3a dlc27 Chorus 1
+57d46313 b3abea3a dlc27 Verse 2
+0ec7ed6e b3abea3a dlc27 Chorus 2
+24edd2fa b3abea3a dlc27 Bridge 1
+9d082943 b3abea3a dlc27 Bridge Riff 1
+4dd405b0 b3abea3a dlc27 Breakdown
+14276282 b3abea3a dlc27 Verse 3
+aa3bfbaa b3abea3a dlc27 Bridge 2
+4bbdc12e b3abea3a dlc27 Bridge 3
+61d498f8 b3abea3a dlc27 Bridge Riff 2
+49b1948d b3abea3a dlc27 Breakdown-own-own
+42a19a1d b3abea3a dlc27 Outro
+90e70d2d 94db3f0f dlc28 Intro
+52ed0972 94db3f0f dlc28 Bridge 1
+99d2ca3b 94db3f0f dlc28 Verse 1
+06295410 94db3f0f dlc28 Chorus 1A
+501476b4 94db3f0f dlc28 Chorus 1B
+dc3b2022 94db3f0f dlc28 Bridge 2
+21d4b89b 94db3f0f dlc28 Verse 2
+e44c493d 94db3f0f dlc28 Chorus 2A
+de6f9a0c 94db3f0f dlc28 Chorus 2B
+06a3eac8 94db3f0f dlc28 Interlude
+6469013c 94db3f0f dlc28 Chorus 3
+80f7d84b 94db3f0f dlc28 Solo
+3dbd1aa6 94db3f0f dlc28 Bridge 3
+8e94adf7 94db3f0f dlc28 Heavy Riff
+e46971a1 94db3f0f dlc28 Ending
+0b94e7f9 494de68a dlc29 Intro
+02a120ef 494de68a dlc29 Verse 1
+c99ee3a6 494de68a dlc29 Bridge 1
+3e447784 494de68a dlc29 Chorus 1
+baa7524f 494de68a dlc29 Verse 2
+4748caf6 494de68a dlc29 Bridge 2
+e3b4dc32 494de68a dlc29 Chorus 2
+a0a734ec 494de68a dlc29 Breakdown
+f95453de 494de68a dlc29 Verse 3
+ff1aebe8 494de68a dlc29 Chorus 3
+afd2ab41 494de68a dlc29 Outro
+4361181c e13e966a dlc3 Guitar Intro
+4af36857 e13e966a dlc3 Verse 1
+e3c09d09 e13e966a dlc3 Riff 1
+f2f51af7 e13e966a dlc3 Verse 2
+76163f3c e13e966a dlc3 Chorus 1
+edf4224c e13e966a dlc3 Riff 2
+b1061b66 e13e966a dlc3 Verse 3
+abe6948a e13e966a dlc3 Chorus 2
+39c8967a e13e966a dlc3 Riff 3
+e8f57c54 e13e966a dlc3 Breakdown
+c4795f83 e13e966a dlc3 Verse 4
+f0b600f2 e13e966a dlc3 Verse 5
+32a4760b e13e966a dlc3 Heavy build-up
+b748a350 e13e966a dlc3 Chorus 3
+e780e3f9 e13e966a dlc3 Outro
+11dc9c71 53d70d14 dlc30 Guitar Intro
+bf3594d9 53d70d14 dlc30 Verse 1A
+dd8c1128 53d70d14 dlc30 Verse 1B
+24abbb51 53d70d14 dlc30 Chorus 1
+a0489e9a 53d70d14 dlc30 Verse 2
+f95b10e7 53d70d14 dlc30 Chorus 2
+38e5f4d4 53d70d14 dlc30 Bridge
+016bfe4a 53d70d14 dlc30 Solo
+e3bb9f0b 53d70d14 dlc30 Verse 3
+e5f5273d 53d70d14 dlc30 Chorus 3
+8c62c815 53d70d14 dlc30 Chorus 4
+6d0bdd6c 53d70d14 dlc30 Chorus 5
+3976e762 53d70d14 dlc30 Enduring Solitude
+b53d6794 53d70d14 dlc30 Outro
+8a08c1f8 8e41d491 dlc31 Intro
+e76065b6 8e41d491 dlc31 Bass Intro
+8aaf76a5 8e41d491 dlc31 Guitar Intro
+24467e0d 8e41d491 dlc31 Verse 1A
+2eb72fb5 8e41d491 dlc31 Riff 1A
+46fffbfc 8e41d491 dlc31 Verse 1B
+63e02116 8e41d491 dlc31 Riff 1 B
+1cc698c5 8e41d491 dlc31 Chorus 1A
+4afbba61 8e41d491 dlc31 Chorus 1B
+243a4cf5 8e41d491 dlc31 Riff 2
+047fe64e 8e41d491 dlc31 Verse 2A
+f006f8c3 8e41d491 dlc31 Riff 3
+fea385e8 8e41d491 dlc31 Chorus 2A
+c48056d9 8e41d491 dlc31 Chorus 2B
+8ce14a6c 8e41d491 dlc31 Guitar Interlude
+957c1d28 8e41d491 dlc31 Chorus 3A
+5d0ee3ef 8e41d491 dlc31 Chorus 3B
+5da2482b 8e41d491 dlc31 Riffage
+2e4e8d40 8e41d491 dlc31 Outro
+fcedf8c5 338bb85f dlc32 Intro
+8f8f1d00 338bb85f dlc32 Pre-Verse Riff
+52a34730 338bb85f dlc32 Verse 1A
+301ac2c1 338bb85f dlc32 Verse 1B
+6a23a1f8 338bb85f dlc32 Chorus 1A
+3c1e835c 338bb85f dlc32 Chorus 1B
+729adf73 338bb85f dlc32 Verse 2A
+dc482e74 338bb85f dlc32 Verse 2B
+8846bcd5 338bb85f dlc32 Chorus 2A
+b2656fe4 338bb85f dlc32 Chorus 2B
+6aa91f20 338bb85f dlc32 Interlude
+a2444bc6 338bb85f dlc32 Solo A
+b9475dbb 338bb85f dlc32 Solo B
+d573273d 338bb85f dlc32 Bridge
+e3992415 338bb85f dlc32 Chorus 3A
+2bebdad2 338bb85f dlc32 Chorus 3B
+58abb47d 338bb85f dlc32 Outro
+679e1211 ee1d61da dlc33 Intro
+6eabd507 ee1d61da dlc33 Verse 1
+ab692815 ee1d61da dlc33 Verse 1B
+524e826c ee1d61da dlc33 Chorus 1
+4e00cde9 ee1d61da dlc33 Bridge
+778ec777 ee1d61da dlc33 Solo
+d6ada7a7 ee1d61da dlc33 Verse 2
+8fbe29da ee1d61da dlc33 Chorus 2
+2b423f1e ee1d61da dlc33 Bridge 2
+c3d85ea9 ee1d61da dlc33 Outro
+11278abf 936e6782 dlc34 Intro
+bf69354a 936e6782 dlc34 Verse 1A
+ddd0b0bb 936e6782 dlc34 Verse 1B
+9f50ad09 936e6782 dlc34 Verse 2A
+31825c0e 936e6782 dlc34 Verse 2B
+24f71ac2 936e6782 dlc34 Chorus 1
+283f2570 936e6782 dlc34 Hardcore Riff 1
+e5b0b3c6 936e6782 dlc34 Verse 3A
+0d03d358 936e6782 dlc34 Verse 3B
+f907b174 936e6782 dlc34 Chorus 2
+f604b194 936e6782 dlc34 Hardcore Riff 2
+c0b07437 936e6782 dlc34 Bridge A
+fda6683e 936e6782 dlc34 Bridge B
+e5a986ae 936e6782 dlc34 Chorus 3
+800a093d 936e6782 dlc34 Hardcore Riff 3
+b561c607 936e6782 dlc34 Outro
+8a54606b 4ef8be07 dlc35 Intro
+4b8ed8f9 4ef8be07 dlc35 Main Riff
+8361a77d 4ef8be07 dlc35 Verse 1
+bf84f016 4ef8be07 dlc35 Chorus 1
+a3cabf93 4ef8be07 dlc35 Bridge
+3b67d5dd 4ef8be07 dlc35 Verse 2
+62745ba0 4ef8be07 dlc35 Chorus 2
+e9b70241 4ef8be07 dlc35 Meaty Riff
+9a44b50d 4ef8be07 dlc35 Solo
+7eda6c7a 4ef8be07 dlc35 Chorus 3
+2e122cd3 4ef8be07 dlc35 Outro
+c961c92b f332d2c9 dlc36 Chorus 1
+b09b3748 f332d2c9 dlc36 Metal Battleground
+1491629d f332d2c9 dlc36 Chorus 2
+f5849e40 f332d2c9 dlc36 Verse 1
+083f5547 f332d2c9 dlc36 Chorus 3
+d52f86ae f332d2c9 dlc36 Bridge
+a218ea55 f332d2c9 dlc36 Solo A
+b91bfc28 f332d2c9 dlc36 Solo B
+1ffa122f f332d2c9 dlc36 Red Dawn
+72c67ee0 f332d2c9 dlc36 Verse 2A
+dc148fe7 f332d2c9 dlc36 Verse 2B
+58f715ee f332d2c9 dlc36 Outro
+cb7a3a53 f332d2c9 dlc36 Outro Madness
+67c2b382 2ea40b4c dlc37 Intro
+6ef77494 2ea40b4c dlc37 Verse 1
+f1865467 2ea40b4c dlc37 Interlude
+d6f10634 2ea40b4c dlc37 Verse 2
+521223ff 2ea40b4c dlc37 Chorus 1
+c894f1aa 2ea40b4c dlc37 Breakdown-own-own
+8fe28849 2ea40b4c dlc37 Chorus 2
+b6554d0a 2ea40b4c dlc37 Bridge A
+8b435103 2ea40b4c dlc37 Bridge B
+934cbf93 2ea40b4c dlc37 Chorus 3
+c384ff3a 2ea40b4c dlc37 Outro
+11c2680a 09d4de79 dlc38 Intro
+18f7af1c 09d4de79 dlc38 Verse 1
+2412f877 09d4de79 dlc38 Chorus 1
+a0f1ddbc 09d4de79 dlc38 Verse 2
+f9e253c1 09d4de79 dlc38 Chorus 2
+e54c641b 09d4de79 dlc38 Chorus 3
+385cb7f2 09d4de79 dlc38 Bridge
+8cdb8b33 09d4de79 dlc38 Chorus 4
+b58424b2 09d4de79 dlc38 Outro
+8ab182de d44207fc dlc39 Intro
+838445c8 d44207fc dlc39 Verse 1
+4646b8da d44207fc dlc39 Verse 1B
+bf6112a3 d44207fc dlc39 Chorus 1
+3b823768 d44207fc dlc39 Verse 2
+aa14546f d44207fc dlc39 Verse 2B
+6291b915 d44207fc dlc39 Chorus 2
+787136f9 d44207fc dlc39 Verse 3
+9695db39 d44207fc dlc39 Verse 3B
+7e3f8ecf d44207fc dlc39 Chorus 3
+0d0e721c d44207fc dlc39 Verse 4
+9aa157b8 d44207fc dlc39 Solo
+39c12d6d d44207fc dlc39 Verse 5
+17a861e7 d44207fc dlc39 Chorus 4
+2ef7ce66 d44207fc dlc39 Outro
+357f37ef 9c4d9032 dlc4 Intro
+9b31881a 9c4d9032 dlc4 Verse 1A
+f9880deb 9c4d9032 dlc4 Verse 1B
+00afa792 9c4d9032 dlc4 Chorus 1
+bb081059 9c4d9032 dlc4 Verse 2A
+15dae15e 9c4d9032 dlc4 Verse 2B
+dd5f0c24 9c4d9032 dlc4 Chorus 2
+e4e8c967 9c4d9032 dlc4 Bridge A
+d9fed56e 9c4d9032 dlc4 Bridge B
+a33bd00a 9c4d9032 dlc4 Interlude
+c1f13bfe 9c4d9032 dlc4 Chorus 3
+a866d4d6 9c4d9032 dlc4 Chorus 4
+41f14b63 9c4d9032 dlc4 Ending
+20631c5b 361aa7d4 dlc40 Intro
+df955207 361aa7d4 dlc40 Intro 2
+6e9a0c6e 361aa7d4 dlc40 Into The Verse
+53310011 361aa7d4 dlc40 Into The Verse 2
+8e2da3ae 361aa7d4 dlc40 Verse 1A
+ec94265f 361aa7d4 dlc40 Verse 1B
+b6ad4566 361aa7d4 dlc40 Chorus 1A
+e09067c2 361aa7d4 dlc40 Chorus 1B
+4d33aea1 361aa7d4 dlc40 Check This
+ae143bed 361aa7d4 dlc40 Verse 2A
+00c6caea 361aa7d4 dlc40 Verse 2B
+54c8584b 361aa7d4 dlc40 Chorus 2A
+6eeb8b7a 361aa7d4 dlc40 Chorus 2B
+e1b9a4c9 361aa7d4 dlc40 Main Riff
+d4f42522 361aa7d4 dlc40 Verse 3A
+3c4745bc 361aa7d4 dlc40 Verse 3B
+3f17c08b 361aa7d4 dlc40 Chorus 3A
+f7653e4c 361aa7d4 dlc40 Chorus 3B
+98a48199 361aa7d4 dlc40 The Calm
+3f8d0638 361aa7d4 dlc40 Hard Rain
+1470e09c 361aa7d4 dlc40 The Verse Riff once more
+842550e3 361aa7d4 dlc40 Outro
+bb4c571c 2b3514c7 dlc45 Intro
+1502e8e9 2b3514c7 dlc45 Verse 1A
+77bb6d18 2b3514c7 dlc45 Verse 1B
+8e9cc761 2b3514c7 dlc45 Chorus 1
+353b70aa 2b3514c7 dlc45 Verse 2A
+9be981ad 2b3514c7 dlc45 Verse 2B
+536c6cd7 2b3514c7 dlc45 Chorus 2
+5adc5701 2b3514c7 dlc45 Solo Bass
+2574a57f 2b3514c7 dlc45 Bass Riffin'
+4fdb6e65 2b3514c7 dlc45 Verse 3A
+a7680efb 2b3514c7 dlc45 Verse 3B
+4fc25b0d 2b3514c7 dlc45 Chorus 3
+e5e5e41f 2b3514c7 dlc45 Solo A
+fee6f262 2b3514c7 dlc45 Solo B
+8b4bc61d 2b3514c7 dlc45 Solo C
+1f0a1ba4 2b3514c7 dlc45 Outro
+cda96e21 96ff7809 dlc46 Intro
+c49ca937 96ff7809 dlc46 Verse 1
+f879fe5c 96ff7809 dlc46 Chorus 1
+7c9adb97 96ff7809 dlc46 Verse 2
+258955ea 96ff7809 dlc46 Chorus 2
+e631090d 96ff7809 dlc46 Solo 1A
+f61f1839 96ff7809 dlc46 Solo 1B
+db89114c 96ff7809 dlc46 Solo 1C
+3f69da06 96ff7809 dlc46 Verse 3
+39276230 96ff7809 dlc46 Chorus 3
+6e97cae1 96ff7809 dlc46 Solo 2A
+b2236067 96ff7809 dlc46 Solo 2B
+3841700b 96ff7809 dlc46 Solo 2C
+4c957d43 96ff7809 dlc46 Solo 2D
+56ccc4fa 96ff7809 dlc46 Solo 2E
+69ef2299 96ff7809 dlc46 Outro
+3bb220bb 4b69a18c dlc47 Bass Intro
+f8943b00 4b69a18c dlc47 Verse 1A
+9a2dbef1 4b69a18c dlc47 Verse 1B
+630a1488 4b69a18c dlc47 Chorus 1
+c014ddc8 4b69a18c dlc47 Chorus 1A
+d8ada343 4b69a18c dlc47 Verse 2A
+767f5244 4b69a18c dlc47 Verse 2B
+befabf3e 4b69a18c dlc47 Chorus 2
+2271c0e5 4b69a18c dlc47 Chorus 2A
+7a298bc8 4b69a18c dlc47 Pre Solo Bridge
+7d42e3d9 4b69a18c dlc47 Solo 1A
+6d6cf2ed 4b69a18c dlc47 Solo 1B
+40fafb98 4b69a18c dlc47 Solo 1C
+eb2c7e6e 4b69a18c dlc47 Solo 1D
+c09e6310 4b69a18c dlc47 Interlude
+f5e42035 4b69a18c dlc47 Solo 2A
+29508ab3 4b69a18c dlc47 Solo 2B
+a3329adf 4b69a18c dlc47 Solo 2C
+d7e69797 4b69a18c dlc47 Solo 2D
+cdbf2e2e 4b69a18c dlc47 Solo 2E
+a24dbd8c 4b69a18c dlc47 Verse 3A
+4afedd12 4b69a18c dlc47 Verse 3B
+a25488e4 4b69a18c dlc47 Chorus 3
+49ae5825 4b69a18c dlc47 Chorus 3A
+81dca6e2 4b69a18c dlc47 Chorus 3B
+fb858c99 4b69a18c dlc47 Almost there...
+6111e7f0 4b69a18c dlc47 Outro Madness
+bba9b5a9 b18fad3c dlc49 Intro
+b29c72bf b18fad3c dlc49 Verse 1
+79a3b1f6 b18fad3c dlc49 Bridge 1
+8e7925d4 b18fad3c dlc49 Chorus 1
+0a9a001f b18fad3c dlc49 Verse 2
+f77598a6 b18fad3c dlc49 Bridge 2
+53898e62 b18fad3c dlc49 Chorus 2
+abb960cf b18fad3c dlc49 Solo
+16f3a222 b18fad3c dlc49 Bridge 3
+4f27b9b8 b18fad3c dlc49 Chorus 3
+1feff911 b18fad3c dlc49 Outro
+d12700ed 41db49b7 dlc5 Intro Verse
+a7391a2d 41db49b7 dlc5 Verse 1
+9bdc4d46 41db49b7 dlc5 Chorus 1
+1f3f688d 41db49b7 dlc5 Verse 2
+462ce6f0 41db49b7 dlc5 Chorus 2
+6c06d964 41db49b7 dlc5 Bridge 1
+5ccc691c 41db49b7 dlc5 Verse 3
+5a82d12a 41db49b7 dlc5 Chorus 3
+e2d0f034 41db49b7 dlc5 Bridge 2
+45a87d7e 41db49b7 dlc5 Breakdown Verse
+29b32df9 41db49b7 dlc5 Verse 4
+33153e02 41db49b7 dlc5 Chorus 4
+0356cab0 41db49b7 dlc5 Bridge 3
+ac8a112c 41db49b7 dlc5 Outro Riff
+a146797c ab1546a2 dlc50 Intro
+a873be6a ab1546a2 dlc50 Verse 1
+634c7d23 ab1546a2 dlc50 Bridge 1
+9496e901 ab1546a2 dlc50 Chorus 1
+1075ccca ab1546a2 dlc50 Verse 2
+ed9a5473 ab1546a2 dlc50 Bridge 2
+496642b7 ab1546a2 dlc50 Chorus 2
+8ade1e50 ab1546a2 dlc50 Solo 1A
+9af00f64 ab1546a2 dlc50 Solo 1B
+0c1c6ef7 ab1546a2 dlc50 Bridge 3
+55c8756d ab1546a2 dlc50 Chorus 3
+0278ddbc ab1546a2 dlc50 Solo 2A
+decc773a ab1546a2 dlc50 Solo 2B
+3c5f9a45 ab1546a2 dlc50 Chorus 4
+e6a6feb3 ab1546a2 dlc50 Chorus Outro
+3a3593a8 76839f27 dlc51 Intro
+032d3c67 76839f27 dlc51 Hardcore Riff 1
+dd16a883 76839f27 dlc51 Hardcore Riff 2
+330054be 76839f27 dlc51 Verse 1
+f83f97f7 76839f27 dlc51 Bridge 1
+8b06261e 76839f27 dlc51 Verse 2
+76e9bea7 76839f27 dlc51 Bridge 2
+0fe503d5 76839f27 dlc51 Chorus 1
+4fef46de 76839f27 dlc51 Riffus Maximus 1
+c2bcc359 76839f27 dlc51 Riffus Maximus 2
+c8f5278f 76839f27 dlc51 Verse 3
+976f8423 76839f27 dlc51 Bridge 3
+649c20ab 76839f27 dlc51 Solo A
+7f9f36d6 76839f27 dlc51 Solo B
+d215a863 76839f27 dlc51 Chorus 2
+782f04cf 76839f27 dlc51 Riff of Doom
+79186d81 76839f27 dlc51 Riff of Doom 2
+8d41af0d 76839f27 dlc51 What the..!?
+45773849 76839f27 dlc51 Wha' Happened
+d8e9e406 fc112579 dlc6 Intro
+88af02c1 fc112579 dlc6 Rockin' Riff
+e1f14bc9 fc112579 dlc6 Hardcore Riff 1
+d1dc2310 fc112579 dlc6 Verse 1
+ed39747b fc112579 dlc6 Chorus 1
+3fcadf2d fc112579 dlc6 Hardcore Riff 2
+69da51b0 fc112579 dlc6 Verse 2
+30c9dfcd fc112579 dlc6 Chorus 2
+4ead03e3 fc112579 dlc6 Interlude
+86405705 fc112579 dlc6 Solo A
+9d434178 fc112579 dlc6 Solo B
+f1773bfe fc112579 dlc6 Bridge
+2c67e817 fc112579 dlc6 Chorus 3
+ce44133f fc112579 dlc6 Mini-solo 1
+5870c1bb fc112579 dlc6 Mini-solo 2
+f9e19372 8d77b014 dlc68 Intro
+cc31030f 8d77b014 dlc68 Chorus 1
+f0d45464 8d77b014 dlc68 Verse 1
+11c1a8b9 8d77b014 dlc68 Chorus 2
+d07f4c8a 8d77b014 dlc68 Bridge
+ce031288 8d77b014 dlc68 Solo 1
+48d226c4 8d77b014 dlc68 Verse 2
+0d6f9f63 8d77b014 dlc68 Chorus 3
+05f53821 8d77b014 dlc68 Solo 2
+52d24067 8d77b014 dlc68 Breakdown
+ffb58dae 8d77b014 dlc68 Solo 3
+0b212755 8d77b014 dlc68 Verse 3
+5da7dfca 8d77b014 dlc68 Outro
+629279a6 50e16991 dlc69 Intro
+6ba7beb0 50e16991 dlc69 Verse 1
+5742e9db 50e16991 dlc69 Chorus 1
+ece55e10 50e16991 dlc69 Verse 2A
+4237af17 50e16991 dlc69 Verse 2B
+8ab2426d 50e16991 dlc69 Chorus 2
+7f1699c8 50e16991 dlc69 Verse Riff
+490a1e8a 50e16991 dlc69 Solo 1A
+59240fbe 50e16991 dlc69 Solo 1B
+74b206cb 50e16991 dlc69 Solo 1C
+df64833d 50e16991 dlc69 Solo 1D
+961c75b7 50e16991 dlc69 Chorus 3
+960540df 50e16991 dlc69 Verse 3A
+7eb62041 50e16991 dlc69 Verse 3B
+ff8b9a9f 50e16991 dlc69 Chorus 4
+d5e64503 50e16991 dlc69 What the..!?
+2572fe69 50e16991 dlc69 Chorus Outro
+c6d4351e 50e16991 dlc69 Outro
+55591aa3 50e16991 dlc69 Outro Madness
+439a0ed2 2187fcfc dlc7 Intro
+4aafc9c4 2187fcfc dlc7 Verse 1
+81900a8d 2187fcfc dlc7 Bridge 1
+764a9eaf 2187fcfc dlc7 Chorus 1
+f2a9bb64 2187fcfc dlc7 Verse 2
+0f4623dd 2187fcfc dlc7 Bridge 2
+abba3519 2187fcfc dlc7 Chorus 2
+d9abe8f5 2187fcfc dlc7 Breakdown 1
+493bb0b0 2187fcfc dlc7 Breakdown 2
+8c644a84 2187fcfc dlc7 Breakdown 3
+2a9fe8b4 2187fcfc dlc7 Build 1
+12a27223 2187fcfc dlc7 Build 2
+bc7f384d 2187fcfc dlc7 Lead 1
+c9db42db 2187fcfc dlc7 Lead 2
+eec01959 2187fcfc dlc7 Bridge 3
+b71402c3 2187fcfc dlc7 Chorus 3
+787db573 4a7b820f dlc70 Intro
+d6330a86 4a7b820f dlc70 Verse 1A
+b48a8f77 4a7b820f dlc70 Verse 1B
+4dad250e 4a7b820f dlc70 Chorus 1
+f60a92c5 4a7b820f dlc70 Verse 2A
+58d863c2 4a7b820f dlc70 Verse 2B
+905d8eb8 4a7b820f dlc70 Chorus 2
+ba77b12c 4a7b820f dlc70 Bridge 1
+42bb82ed 4a7b820f dlc70 Guitar Strummin'
+8cea8c0a 4a7b820f dlc70 Verse 3A
+6459ec94 4a7b820f dlc70 Verse 3B
+8cf3b962 4a7b820f dlc70 Chorus 3
+34a1987c 4a7b820f dlc70 Bridge 2
+3f9d32bc 4a7b820f dlc70 Chorus Outro
+e30e5fa7 97ed5b8a dlc71 Intro
+ea3b98b1 97ed5b8a dlc71 Verse 1
+d6decfda 97ed5b8a dlc71 Chorus 1
+21045bf8 97ed5b8a dlc71 Bridge 1
+523dea11 97ed5b8a dlc71 Verse 2
+0b2e646c 97ed5b8a dlc71 Chorus 2
+afd272a8 97ed5b8a dlc71 Bridge 2
+f31e8ac1 97ed5b8a dlc71 Solo
+178053b6 97ed5b8a dlc71 Chorus 3
+4e54482c 97ed5b8a dlc71 Bridge 3
+4748131f 97ed5b8a dlc71 Outro
+95eb669a 2a273744 dlc72 Intro
+57e162c5 2a273744 dlc72 Bridge 1
+9cdea18c 2a273744 dlc72 Verse 1
+a03bf6e7 2a273744 dlc72 Chorus 1
+d9374b95 2a273744 dlc72 Bridge 2
+24d8d32c 2a273744 dlc72 Verse 2
+7dcb5d51 2a273744 dlc72 Chorus 2
+38b17111 2a273744 dlc72 Bridge 3
+31ad2a22 2a273744 dlc72 Outro
+0e988c4e f7b1eec1 dlc73 Intro
+07ad4b58 f7b1eec1 dlc73 Verse 1
+397a0db4 f7b1eec1 dlc73 Solo 1
+bfab39f8 f7b1eec1 dlc73 Verse 2
+3b481c33 f7b1eec1 dlc73 Chorus 1
+f28c271d f7b1eec1 dlc73 Solo 2
+fc583869 f7b1eec1 dlc73 Verse 3
+cc928811 f7b1eec1 dlc73 Bridge 1
+e6b8b785 f7b1eec1 dlc73 Chorus 2
+4244a141 f7b1eec1 dlc73 Bridge 2
+fa16805f f7b1eec1 dlc73 Chorus 3
+aadec0f6 f7b1eec1 dlc73 Outro
+359ad55a 06f729c9 dlc8 Intro
+959ce712 06f729c9 dlc8 Riff 1
+3caf124c 06f729c9 dlc8 Verse 1
+602a08a3 06f729c9 dlc8 Pre-Chorus 1
+004a4527 06f729c9 dlc8 Chorus 1
+9ba85857 06f729c9 dlc8 Riff 2
+84a960ec 06f729c9 dlc8 Verse 2
+14957f54 06f729c9 dlc8 Pre-Chorus 2
+ddbaee91 06f729c9 dlc8 Chorus 2
+4f94ec61 06f729c9 dlc8 Riff 3
+1c040aa2 06f729c9 dlc8 Bridge
+258a003c 06f729c9 dlc8 Solo
+c114d94b 06f729c9 dlc8 Chorus 3
+91dc99e2 06f729c9 dlc8 Outro
+b2ba6ef1 db61f04c dlc9 Introduction
+511f71d2 db61f04c dlc9 Intro 2
+553dc0ed db61f04c dlc9 Verse Introduction
+a7dcf898 db61f04c dlc9 Verse 1
+9b39aff3 db61f04c dlc9 Chorus 1
+1fda8a38 db61f04c dlc9 Verse 2
+46c90445 db61f04c dlc9 Chorus 2
+c6abf73b db61f04c dlc9 Interlude 1
+bef9eae8 db61f04c dlc9 Solo
+8777e076 db61f04c dlc9 Bridge
+5c298ba9 db61f04c dlc9 Verse 3
+5a67339f db61f04c dlc9 Chorus 3
+5487bb8d db61f04c dlc9 Interlude 2
+4307b7fb db61f04c dlc9 Post Chorus A
+1d9e215b db61f04c dlc9 Post Chorus B
+0aaf7336 db61f04c dlc9 Outro

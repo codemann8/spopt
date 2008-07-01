@@ -1,0 +1,48 @@
+dlc3	0xda322b81	All My Life	by	Foo Fighters	2002
+dlc4	0x4456be22	The Pretender	by	Foo Fighters	2007
+dlc5	0x33518eb4	This is a call	by	Foo Fighters	1995
+dlc6	0xaa58df0e	Slither	by	Velvet Revolver	2004
+dlc7	0xdd5fef98	She Builds Quick Machines	by	Velvet Revolver	2007
+dlc8	0x4de0f209	Messages	by	Velvet Revolver	2007
+dlc1	0x343c4aad	Tom Morello Guitar Battle	by	Tom Morello	2007
+dlc2	0xad351b17	Slash Guitar Battle	by	Slash	2007
+dlc17	0x10ee4610	The Devil Went Down To Georgia	as made famous by	Charlie Daniels Band	2007
+dlc14	0x89e717aa	Carcinogen Crush	by	AFI	2007
+dlc15	0xfee0273c	Tina	by	Flyleaf	2007
+dlc16	0x67e97686	Putting Holes In Happiness	by	Marilyn Manson	2007
+dlc19	0xf7566b17	Halo Theme MJOLNIR Mix	by	O'Donnell/Salvatori/ Vai	2006
+dlc26	0x4cc42545	Ernten Was Wir Säen	by	Die Fantastischen Vier	2007
+dlc18	0x80515b81	So Payaso	by	Extremoduro	1996
+dlc9	0x3ae7c29f	Antisocial	by	Trust	1980
+dlc11	0xf98de325	Pretty Handsome Awkward	by	The Used	2007
+dlc12	0x6084b29f	No More Sorrow	by	Linkin Park	2007
+dlc13	0x17838209	Sleeping Giant	by	Mastodon	2006
+dlc36	0x55df1404	We Three Kings	by	Steve Ouimette	2007
+dlc10	0x8e8ad3b3	Any Way You Want It	by	Journey	1980
+dlc24	0xa2ca4469	Jukebox Hero	by	Foreigner	1981
+dlc25	0xd5cd74ff	Peace Of Mind	by	Boston	1976
+dlc37	0x22d82492	Dream On	by	Aerosmith	2007
+dlc29	0xdc7b38d4	Excuse Me Mr.	by	No Doubt	1995
+dlc30	0xbcbcb131	Don't Speak	by	No Doubt	1996
+dlc31	0xcbbb81a7	Sunday Morning	by	No Doubt	1995
+dlc27	0x3bc315d3	The Arsonist	by	Thrice	2007
+dlc28	0xab7c0842	Hole in the Earth	by	Deftones	2006
+dlc32	0x52b2d01d	Almost Easy	by	Avenged Sevenfold	2007
+dlc38	0xb2673903	Famous for Nothing	by	Dropkick Murphys	2007
+dlc39	0xc5600995	(F)lannigan's Ball	by	Dropkick Murphys	2007
+dlc40	0xf3fd27f6	Johnny, I Hardly Knew Ya	by	Dropkick Murphys	2007
+dlc49	0x8a219f52	Nine Lives	by	Def Leppard	2008
+dlc50	0xeae616b7	Photograph (Live)	by	Def Leppard	1993
+dlc51	0x9de12621	Rock of Ages (Live)	by	Def Leppard	1993
+dlc33	0x25b5e08b	Exo-Politics	by	Muse	2006
+dlc34	0xbbd17528	Stockholm Syndrome	by	Muse	2003
+dlc35	0xccd645be	Super Massive Black Hole	by	Muse	2006
+dlc45	0x8397d379	Stay Clean	by	Motörhead	2008
+dlc46	0x1a9e82c3	(We Are) The Road Crew	by	Motörhead	2008
+dlc47	0x6d99b255	Motörhead	by	Motörhead	2008
+dlc68	0xcf10cd46	Shoot the Runner	by	Kasabian	2006
+dlc69	0xb817fdd0	Problems (Live at Brixton)	by	The Sex Pistols	2007
+dlc70	0xd8d07435	I Predict a Riot	by	Kaiser Chiefs	2004
+dlc71	0xafd744a3	Violet Hill	by	Coldplay	2008
+dlc72	0x36de1519	Yellow	by	Coldplay	2000
+dlc73	0x41d9258f	God Put A Smile Upon Your Face	by	Coldplay	2002
