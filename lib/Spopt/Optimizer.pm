@@ -15,6 +15,7 @@ sub _init {
     my $self = shift;
     $self->game("gh2");
     $self->whammy_per_quarter_bar(7.5);
+    # $self->whammy_per_quarter_bar(7.3529411764705882352941176470588); # alt rate provided by cdw01 for gh1
     $self->delay_per_quarter_bar(9.0/24.0);
 }
 
