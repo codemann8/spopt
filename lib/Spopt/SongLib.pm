@@ -414,9 +414,9 @@ sub _init {
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 6, name => 'Talk Talkin\'',                 file => 'talktalking.mid' };
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 6, name => 'Mercy',                         file => 'mercy.mid' };
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 6, name => 'Pandora\'s Box',                file => 'pandorasbox.mid' };
+    push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 6, name => 'Joe Perry Guitar Battle',       file => 'joeperryguitarbattle.mid' };
 
     #push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'bossjoe.mid',file => 'bossjoe.mid' };
-    #push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'joeperryguitarbattle.mid',file => 'joeperryguitarbattle.mid' };
     ##push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'kingsandqueenscredits.mid',file => 'kingsandqueenscredits.mid' };
 
     @{$self->{tier_titles}{"gh2-x360"}} = ( "Opening Licks",
