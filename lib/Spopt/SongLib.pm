@@ -393,39 +393,98 @@ sub _init {
     ##push @{$self->{songarr}}, { game => "gh3-ps2", tier => 10, name => "Flannigan's Ball",                file => "flannigansball.mid" };
     ##push @{$self->{songarr}}, { game => "gh3-ps2", tier => 10, name => "Johnny, I Hardly Knew Ya",        file => "johnnyihardlyknewya.mid" };
 
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'All My Life',                    file => 'dlc3.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'The Pretender',                  file => 'dlc4.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'This is a call',                 file => 'dlc5.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Slither',                        file => 'dlc6.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'She Builds Quick Machines',      file => 'dlc7.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Messages',                       file => 'dlc8.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Tom Morello Guitar Battle',      file => 'dlc1.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Slash Guitar Battle',            file => 'dlc2.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'The Devil Went Down To Georgia', file => 'dlc17.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Carcinogen Crush',               file => 'dlc14.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Tina',                           file => 'dlc15.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Putting Holes In Happiness',     file => 'dlc16.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Halo Theme MJOLNIR Mix',         file => 'dlc19.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Ernten Was Wir Säen',           file => 'dlc26.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'So Payaso',                      file => 'dlc18.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Antisocial',                     file => 'dlc9.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Pretty Handsome Awkward',        file => 'dlc11.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'No More Sorrow',                 file => 'dlc12.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Sleeping Giant',                 file => 'dlc13.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'We Three Kings',                 file => 'dlc36.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Any Way You Want It',            file => 'dlc10.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Jukebox Hero',                   file => 'dlc24.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Peace Of Mind',                  file => 'dlc25.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Dream On',                       file => 'dlc37.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Excuse Me Mr.',                  file => 'dlc29.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Don\'t Speak',                   file => 'dlc30.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Sunday Morning',                 file => 'dlc31.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'The Arsonist',                   file => 'dlc27.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Hole in the Earth',              file => 'dlc28.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Almost Easy',                    file => 'dlc32.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Famous for Nothing',             file => 'dlc38.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => '(F)lannigan\'s Ball',            file => 'dlc39.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-x360', tier => 10, name => 'Johnny, I Hardly Knew Ya',       file => 'dlc40.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'All My Life',file => 'dlc3.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'The Pretender',file => 'dlc4.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'This is a call',file => 'dlc5.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Slither',file => 'dlc6.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'She Builds Quick Machines',file => 'dlc7.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Messages',file => 'dlc8.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Tom Morello Guitar Battle',file => 'dlc1.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Slash Guitar Battle',file => 'dlc2.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'The Devil Went Down To Georgia',file => 'dlc17.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Carcinogen Crush',file => 'dlc14.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Tina',file => 'dlc15.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Putting Holes In Happiness',file => 'dlc16.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Halo Theme MJOLNIR Mix',file => 'dlc19.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Ernten Was Wir Säen',file => 'dlc26.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'So Payaso',file => 'dlc18.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Antisocial',file => 'dlc9.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Pretty Handsome Awkward',file => 'dlc11.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'No More Sorrow',file => 'dlc12.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Sleeping Giant',file => 'dlc13.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'We Three Kings',file => 'dlc36.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Any Way You Want It',file => 'dlc10.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Jukebox Hero',file => 'dlc24.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Peace Of Mind',file => 'dlc25.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Dream On',file => 'dlc37.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Excuse Me Mr.',file => 'dlc29.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Don\'t Speak',file => 'dlc30.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Sunday Morning',file => 'dlc31.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'The Arsonist',file => 'dlc27.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Hole in the Earth',file => 'dlc28.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Almost Easy',file => 'dlc32.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Famous for Nothing',file => 'dlc38.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => '(F)lannigan\'s Ball',file => 'dlc39.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Johnny, I Hardly Knew Ya',file => 'dlc40.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Nine Lives',file => 'dlc49.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Photograph (Live)',file => 'dlc50.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Rock of Ages (Live)',file => 'dlc51.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Exo-Politics',file => 'dlc33.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Stockholm Syndrome',file => 'dlc34.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Super Massive Black Hole',file => 'dlc35.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Stay Clean',file => 'dlc45.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => '(We Are) The Road Crew',file => 'dlc46.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Motörhead',file => 'dlc47.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Shoot the Runner',file => 'dlc68.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Problems (Live at Brixton)',file => 'dlc69.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'I Predict a Riot',file => 'dlc70.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Violet Hill',file => 'dlc71.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Yellow',file => 'dlc72.mid' };
+push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'God Put A Smile Upon Your Face',file => 'dlc73.mid' };
+
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'alldayandallofthenight.mid',file => 'alldayandallofthenight.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'alltheyoungdudes.mid',file => 'alltheyoungdudes.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'alwaysontherun.mid',file => 'alwaysontherun.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'backinthesaddle.mid',file => 'backinthesaddle.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'beyondbeautiful.mid',file => 'beyondbeautiful.mid' };
+#push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'bossjoe.mid',file => 'bossjoe.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'brightlightfright.mid',file => 'brightlightfright.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'catscratchfever.mid',file => 'catscratchfever.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'combination.mid',file => 'combination.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'completecontrol.mid',file => 'completecontrol.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'drawtheline.mid',file => 'drawtheline.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'dreamon.mid',file => 'dreamon.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'dreampolice.mid',file => 'dreampolice.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'hardtohandle.mid',file => 'hardtohandle.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'ihatemyselfforlovingyou.mid',file => 'ihatemyselfforlovingyou.mid' };
+#push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'joeperryguitarbattle.mid',file => 'joeperryguitarbattle.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'kingofrock.mid',file => 'kingofrock.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'kingsandqueenscredits.mid',file => 'kingsandqueenscredits.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'kingsandqueens.mid',file => 'kingsandqueens.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'letthemusicdothetalking.mid',file => 'letthemusicdothetalking.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'livinontheedge.mid',file => 'livinontheedge.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'loveinanelevator.mid',file => 'loveinanelevator.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'makeit.mid',file => 'makeit.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'mamakin.mid',file => 'mamakin.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'mercy.mid',file => 'mercy.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'movinout.mid',file => 'movinout.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'nobodysfault.mid',file => 'nobodysfault.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'nosurprize.mid',file => 'nosurprize.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'pandorasbox.mid',file => 'pandorasbox.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'personalitycrisis.mid',file => 'personalitycrisis.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'pink.mid',file => 'pink.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'ragdoll.mid',file => 'ragdoll.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'ratsinthecellar.mid',file => 'ratsinthecellar.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'sextypething.mid',file => 'sextypething.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'shakinmycage.mid',file => 'shakinmycage.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'shesellssanctuary.mid',file => 'shesellssanctuary.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'sweetemotion.mid',file => 'sweetemotion.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'talktalking.mid',file => 'talktalking.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'toysintheattic.mid',file => 'toysintheattic.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'trainkeptarollin.mid',file => 'trainkeptarollin.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'unclesalty.mid',file => 'unclesalty.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'walkthisway.mid',file => 'walkthisway.mid' };
+push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 1, name => 'walkthiswayrundmc.mid',file => 'walkthiswayrundmc.mid' };
 
     @{$self->{tier_titles}{"gh2-x360"}} = ( "Opening Licks",
                                             "Amp-Warmers",
@@ -475,6 +534,20 @@ sub _init {
                                                "Co-op Encores",
                                                "Bonus Tracks",
                                                "DLC" );
+
+    @{$self->{tier_titles}{"gh3-dlc"}} = (     "Starting Out Small",
+                                               "Your First Real Gig",
+                                               "Making the Video",
+                                               "European Invasion",
+                                               "Bighouse Blues",
+                                               "The Hottest Band on Earth",
+                                               "Live in Japan",
+                                               "Battle for Your Soul",
+                                               "Co-op Encores",
+                                               "Bonus Tracks",
+                                               "DLC" );
+
+    @{$self->{tier_titles}{'gh3-aerosmith'}} = ( 'Null', );
 
 }
 
