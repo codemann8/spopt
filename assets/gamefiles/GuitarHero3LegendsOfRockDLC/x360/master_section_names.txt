@@ -709,6 +709,16 @@ e6b8b785 f7b1eec1 dlc73 Chorus 2
 4244a141 f7b1eec1 dlc73 Bridge 2
 fa16805f f7b1eec1 dlc73 Chorus 3
 aadec0f6 f7b1eec1 dlc73 Outro
+e352fe34 5754311c dlc75 Intro
+ea673922 5754311c dlc75 Verse 1
+d6826e49 5754311c dlc75 Chorus 1
+52614b82 5754311c dlc75 Verse 2
+0b72c5ff 5754311c dlc75 Chorus 2
+c8ca9918 5754311c dlc75 Solo 1A
+d8e4882c 5754311c dlc75 Solo 1B
+11924a13 5754311c dlc75 Verse 3
+17dcf225 5754311c dlc75 Chorus 3
+4714b28c 5754311c dlc75 Outro
 359ad55a 06f729c9 dlc8 Intro
 959ce712 06f729c9 dlc8 Riff 1
 3caf124c 06f729c9 dlc8 Verse 1

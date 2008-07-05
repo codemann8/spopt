@@ -46,3 +46,4 @@ dlc70	0xd8d07435	I Predict a Riot	by	Kaiser Chiefs	2004
 dlc71	0xafd744a3	Violet Hill	by	Coldplay	2008
 dlc72	0x36de1519	Yellow	by	Coldplay	2000
 dlc73	0x41d9258f	God Put A Smile Upon Your Face	by	Coldplay	2002
+dlc75	0xa8ba80ba	I Am Murloc	by	L70ETC	2007
