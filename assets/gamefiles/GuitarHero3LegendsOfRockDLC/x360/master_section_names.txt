@@ -615,6 +615,63 @@ f1773bfe fc112579 dlc6 Bridge
 2c67e817 fc112579 dlc6 Chorus 3
 ce44133f fc112579 dlc6 Mini-solo 1
 5870c1bb fc112579 dlc6 Mini-solo 2
+14ce03bd b728d632 dlc62 Intro
+e37821a5 b728d632 dlc62 Verse
+d6c407e2 b728d632 dlc62 Bridge 1
+211e93c0 b728d632 dlc62 Chorus 1
+3f566491 b728d632 dlc62 Solo 1A
+2f7875a5 b728d632 dlc62 Solo 1B
+02ee7cd0 b728d632 dlc62 Solo 1C
+a938f926 b728d632 dlc62 Solo 1D
+58122eb2 b728d632 dlc62 Bridge 2
+fcee3876 b728d632 dlc62 Chorus 2
+b7f0a77d b728d632 dlc62 Solo 2A
+6b440dfb b728d632 dlc62 Solo 2B
+e1261d97 b728d632 dlc62 Solo 2C
+95f210df b728d632 dlc62 Solo 2D
+8faba966 b728d632 dlc62 Solo 2E
+b0884f05 b728d632 dlc62 Outro
+a4258e45 6abe0fb7 dlc63 Solo 1A
+b40b9f71 6abe0fb7 dlc63 Solo 1B
+19f90e8c 6abe0fb7 dlc63 Interlude
+2c834da9 6abe0fb7 dlc63 Solo 2A
+f037e72f 6abe0fb7 dlc63 Solo 2B
+8083b339 6abe0fb7 dlc63 Fast Solo A
+4619e874 6abe0fb7 dlc63 Fast Solo B
+0c1bb47e 6abe0fb7 dlc63 Post Insanity
+3944a012 6abe0fb7 dlc63 Galloping Rampage
+89e9f7b5 6abe0fb7 dlc63 Solo 3
+22e2e105 6abe0fb7 dlc63 Almost there...
+b8768a6c 6abe0fb7 dlc63 Outro Madness
+1492a22e 7791bca4 dlc66 Intro
+1da76538 7791bca4 dlc66 Verse 1
+56883549 7791bca4 dlc66 Riff of Doom
+a5a11798 7791bca4 dlc66 Verse 2
+57bf5c07 7791bca4 dlc66 Riff of Doom 2
+41ebb506 7791bca4 dlc66 Riff of Love 1
+023f5517 7791bca4 dlc66 Mini-Solo 1
+940b8793 7791bca4 dlc66 Mini-Solo 2
+ad4c9e11 7791bca4 dlc66 Mini-Solo 3
+f224fc3b 7791bca4 dlc66 Devil Solo A
+ed0d422c 7791bca4 dlc66 Devil Solo B
+3135f5c6 7791bca4 dlc66 Devil Solo C
+a19d52be 7791bca4 dlc66 Devil Solo D
+7eb6b8ed 7791bca4 dlc66 Devil Solo E
+938d0818 7791bca4 dlc66 Devil Solo F
+5897875d 7791bca4 dlc66 Devil Solo G
+9b5c4415 7791bca4 dlc66 Devil Solo H
+83ee2cdb 7791bca4 dlc66 Riff of Love 2
+acca1cfe 7791bca4 dlc66 Victory Solo A
+40d70df5 7791bca4 dlc66 Victory Solo B
+462e3006 7791bca4 dlc66 Victory Solo C
+5c912517 7791bca4 dlc66 Victory Solo D
+0b72e73b 7791bca4 dlc66 Victory Solo E
+2b437597 7791bca4 dlc66 Victory Solo F
+1af31c68 7791bca4 dlc66 Victory Solo G
+ce2da117 7791bca4 dlc66 Victory Solo H
+dc38f73e 7791bca4 dlc66 Victory Solo I
+65e38b77 7791bca4 dlc66 Victory Solo J
+4963be28 7791bca4 dlc66 Victory Solo K
 f9e19372 8d77b014 dlc68 Intro
 cc31030f 8d77b014 dlc68 Chorus 1
 f0d45464 8d77b014 dlc68 Verse 1
@@ -709,6 +766,19 @@ e6b8b785 f7b1eec1 dlc73 Chorus 2
 4244a141 f7b1eec1 dlc73 Bridge 2
 fa16805f f7b1eec1 dlc73 Chorus 3
 aadec0f6 f7b1eec1 dlc73 Outro
+782114e0 8ac2e899 dlc74 Intro
+7114d3f6 8ac2e899 dlc74 Verse 1
+1063dc55 8ac2e899 dlc74 Interlude 1
+c912a156 8ac2e899 dlc74 Verse 2
+824f90e3 8ac2e899 dlc74 Interlude 2
+090dcea6 8ac2e899 dlc74 Bring in the Guitar!
+2688a7e3 8ac2e899 dlc74 Solo A
+3d8bb19e 8ac2e899 dlc74 Solo B
+482685e1 8ac2e899 dlc74 Solo C
+89cf34a0 8ac2e899 dlc74 Solo D
+8ae1a0c7 8ac2e899 dlc74 Verse 3
+01a7a7a4 8ac2e899 dlc74 Make that guitar whine!
+dc675858 8ac2e899 dlc74 Outro
 e352fe34 5754311c dlc75 Intro
 ea673922 5754311c dlc75 Verse 1
 d6826e49 5754311c dlc75 Chorus 1
