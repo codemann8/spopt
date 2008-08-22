@@ -377,6 +377,9 @@ sub _init {
     push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Surfing With The Alien',          file => 'dlc62.mid' };
     push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'For the Love of God',             file => 'dlc63.mid' };
     push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Soothsayer',                      file => 'dlc66.mid' };
+    push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Heroes of Our Time',              file => 'dlc80.mid' };
+    push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Operation Ground and Pound',      file => 'dlc81.mid' };
+    push @{$self->{songarr}}, { game => 'gh3-dlc', tier => 10, name => 'Revolution Deathsquad',           file => 'dlc82.mid' };
 
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 0, name => 'Dream Police',                  file => 'dreampolice.mid' };
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 0, name => 'All the Young Dudes',           file => 'alltheyoungdudes.mid' };
