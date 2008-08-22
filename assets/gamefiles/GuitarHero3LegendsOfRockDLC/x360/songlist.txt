@@ -51,3 +51,6 @@ dlc74	0xdfbdb02c	Top Gun Anthem
 dlc62	0x2fc52458	Surfing With The Alien	by	Joe Satriani	1987
 dlc63	0x58c214ce	For the Love of God	by	Steve Vai	1990
 dlc66	0x28a8e041	Soothsayer	by	Buckethead	2006
+dlc80	0x5f4868fa	Heroes of Our Time	by	DragonForce	2008
+dlc81	0x284f586c	Operation Ground and Pound	by	DragonForce	2006
+dlc82	0xb14609d6	Revolution Deathsquad	by	DragonForce	2006

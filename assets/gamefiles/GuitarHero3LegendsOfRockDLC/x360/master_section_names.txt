@@ -803,6 +803,98 @@ ddbaee91 06f729c9 dlc8 Chorus 2
 258a003c 06f729c9 dlc8 Solo
 c114d94b 06f729c9 dlc8 Chorus 3
 91dc99e2 06f729c9 dlc8 Outro
+9b68beba 1cef36f9 dlc80 Intro
+5230fa1d 1cef36f9 dlc80 Intro Solo A
+f01d3020 1cef36f9 dlc80 Intro Solo B
+1e390f5e 1cef36f9 dlc80 Intro Riffage
+925d79ac 1cef36f9 dlc80 Verse 1
+5962bae5 1cef36f9 dlc80 Bridge 1
+aeb82ec7 1cef36f9 dlc80 Chorus 1
+ce11a992 1cef36f9 dlc80 Riff of Love 1
+2a5b0b0c 1cef36f9 dlc80 Verse 2
+d7b493b5 1cef36f9 dlc80 Bridge 2
+73488571 1cef36f9 dlc80 Chorus 2
+0c14304f 1cef36f9 dlc80 Riff of Love 2
+23af2378 1cef36f9 dlc80 The Calm
+f32a760f 1cef36f9 dlc80 Interlude 1
+b0f0d996 1cef36f9 dlc80 Solo 1A
+a0dec8a2 1cef36f9 dlc80 Solo 1B
+8d48c1d7 1cef36f9 dlc80 Solo 1C
+269e4421 1cef36f9 dlc80 Solo 1D
+38561a7a 1cef36f9 dlc80 Solo 2A
+e4e2b0fc 1cef36f9 dlc80 Solo 2B
+6e80a090 1cef36f9 dlc80 Solo 2C
+1a54add8 1cef36f9 dlc80 Solo 2D
+78a8527f 1cef36f9 dlc80 Break
+61063ab9 1cef36f9 dlc80 Interlude 2
+6fe6b2ab 1cef36f9 dlc80 Chorus 3
+3f2ef202 1cef36f9 dlc80 Outro
+001b546e c179ef7c dlc81 Intro
+658ad107 c179ef7c dlc81 Intro - Solo A
+854bf611 c179ef7c dlc81 Intro - Solo B
+092e9378 c179ef7c dlc81 Verse 1
+95751e25 c179ef7c dlc81 Pre Chorus 1
+96d50d53 c179ef7c dlc81 Chorus 1A
+c0e82ff7 c179ef7c dlc81 Chorus 1B
+6474a287 c179ef7c dlc81 Solo-ette 1
+1c2d0983 c179ef7c dlc81 Solo-ette 2
+b128e1d8 c179ef7c dlc81 Verse 2
+b803098d c179ef7c dlc81 Pre Chorus 2
+74b0107e c179ef7c dlc81 Chorus 2A
+4e93c34f c179ef7c dlc81 Chorus 2B
+d29d0536 c179ef7c dlc81 Deedely Doo
+63f83644 c179ef7c dlc81 Meaty Riff
+a6076114 c179ef7c dlc81 Synth Death
+965fb38b c179ef7c dlc81 Interlude
+2b833342 c179ef7c dlc81 Solo 1A
+3bad2276 c179ef7c dlc81 Solo 1B
+163b2b03 c179ef7c dlc81 Solo 1C
+bdedaef5 c179ef7c dlc81 Solo 1D
+d0ecd382 c179ef7c dlc81 Keep Soloing!
+e91e0efd c179ef7c dlc81 'Ooooh' No. 1
+928af20b c179ef7c dlc81 'Ooooh' No. 2
+3d563a9e c179ef7c dlc81 Solo Fill I
+3fe79ce5 c179ef7c dlc81 Solo Fill II
+1f6f88be c179ef7c dlc81 Chorus 3A
+d71d7679 c179ef7c dlc81 Chorus 3B
+049495c7 c179ef7c dlc81 Climactic Build-up
+47fbd3a1 c179ef7c dlc81 Chorus Outro
+d6104439 c179ef7c dlc81 Solo To The End!
+ad445c02 c179ef7c dlc81 Almost there...
+76fe6d53 7cb383b2 dlc82 Intro
+040fb66e 7cb383b2 dlc82 Intro Riff
+c18a51f6 7cb383b2 dlc82 What the..!?
+7fcbaa45 7cb383b2 dlc82 Verse 1
+b4f4690c 7cb383b2 dlc82 Bridge 1
+432efd2e 7cb383b2 dlc82 Chorus 1
+0324b825 7cb383b2 dlc82 Riffus Maximus 1
+c7cdd8e5 7cb383b2 dlc82 Verse 2
+3a22405c 7cb383b2 dlc82 Bridge 2
+9ede5698 7cb383b2 dlc82 Chorus 2
+8e773da2 7cb383b2 dlc82 Riffus Maximus 2
+ffc868c7 7cb383b2 dlc82 Why?!?!?!?!?
+fbe7df5d 7cb383b2 dlc82 Heaviest Riff Ever
+1867fc5b 7cb383b2 dlc82 Start Soloing!
+17ca8ea0 7cb383b2 dlc82 Rockin' Riff!
+b5e400bf 7cb383b2 dlc82 Riff of Personality
+a6a83b30 7cb383b2 dlc82 Some long notes..
+0b670ae2 7cb383b2 dlc82 Rockin' Riff again!
+953e8196 7cb383b2 dlc82 Break
+cea6d383 7cb383b2 dlc82 Victory Solo A
+22bbc288 7cb383b2 dlc82 Victory Solo B
+2442ff7b 7cb383b2 dlc82 Victory Solo C
+35b6afd4 7cb383b2 dlc82 Solo Bridge
+90483346 7cb383b2 dlc82 Devil Solo A
+8f618d51 7cb383b2 dlc82 Devil Solo B
+53593abb 7cb383b2 dlc82 Devil Solo C
+c3f19dc3 7cb383b2 dlc82 Devil Solo D
+1cda7790 7cb383b2 dlc82 Devil Solo E
+f1e1c765 7cb383b2 dlc82 Devil Solo F
+3afb4820 7cb383b2 dlc82 Devil Solo G
+f9308b68 7cb383b2 dlc82 Devil Solo H
+adba2177 7cb383b2 dlc82 Waaaah!!!
+82706142 7cb383b2 dlc82 Chorus 3
+d2b821eb 7cb383b2 dlc82 Outro
 b2ba6ef1 db61f04c dlc9 Introduction
 511f71d2 db61f04c dlc9 Intro 2
 553dc0ed db61f04c dlc9 Verse Introduction
