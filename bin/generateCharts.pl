@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.1 2008-09-14 13:07:09 tarragon Exp $
+# $Id: generateCharts.pl,v 1.2 2008-09-14 14:41:41 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -28,7 +28,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.1 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.2 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -70,7 +70,7 @@ my %ALGORITHM =
 );
 
 my @games = qw(gh-ps2 gh2-ps2 gh2-x360 ghrt80s-ps2 gh3-ps2 gh3-dlc gh3-aerosmith);
-my @diffs = qw(expert hard medium easy);
+my @diffs = qw(easy medium hard expert);
 
 sub usage {
     my $filename = basename( $0 );
@@ -91,27 +91,27 @@ unless ( -f $configFile && -r $configFile ) {
 
 my %config = new Config::General( $configFile )->getall;
 
-my $GAME_REGEX = defined $config{'GAME_REGEX'} ? $config{'GAME_REGEX'} : qw{};
-my $DIFF_REGEX = defined $config{'DIFF_REGEX'} ? $config{'DIFF_REGEX'} : qw{};
-my $TIER_REGEX = defined $config{'TIER_REGEX'} ? $config{'TIER_REGEX'} : qw{};
-my $FILE_REGEX = defined $config{'FILE_REGEX'} ? $config{'FILE_REGEX'} : qw{};
-my $ALG_REGEX  = defined $config{'ALG_REGEX'}  ? $config{'ALG_REGEX'}  : qw{};
-my $OUTPUT_DIR = defined $config{'OUTPUT_DIR'} ? $config{'OUTPUT_DIR'} : qw{};
+my $GAME_REGEX = defined $config{'GAME_REGEX'} ? $config{'GAME_REGEX'} : qw{.*};
+my $DIFF_REGEX = defined $config{'DIFF_REGEX'} ? $config{'DIFF_REGEX'} : qw{.*};
+my $TIER_REGEX = defined $config{'TIER_REGEX'} ? $config{'TIER_REGEX'} : qw{.*};
+my $FILE_REGEX = defined $config{'FILE_REGEX'} ? $config{'FILE_REGEX'} : qw{.*};
+my $ALG_REGEX  = defined $config{'ALG_REGEX'}  ? $config{'ALG_REGEX'}  : qw{.*};
+my $OUTPUT_DIR = defined $config{'OUTPUT_DIR'} ? $config{'OUTPUT_DIR'} : qw{.};
 
 ## Loop through all of the songs
 my $sl = SongLib->new();
 foreach my $game ( @games ) {
     my @songarr = $sl->get_songarr_for_game( $game );
     foreach my $song ( @songarr ) {
-        foreach my $diff ( @diffs ) {
+        foreach my $diff ( reverse @diffs ) {
 	    my $tier  = $song->{tier};
 	    my $title = $song->{name};
 	    my $file  = $song->{file};
 
-            if ( $GAME_REGEX ) { next unless $game =~ /$GAME_REGEX/; }
-            if ( $DIFF_REGEX ) { next unless $diff =~ /$DIFF_REGEX/; }
-            if ( $TIER_REGEX ) { next unless $tier =~ /$TIER_REGEX/; }
-            if ( $FILE_REGEX ) { next unless $file =~ /$FILE_REGEX/; }
+            next unless $game =~ /$GAME_REGEX/;
+            next unless $diff =~ /$DIFF_REGEX/;
+            next unless $tier =~ /$TIER_REGEX/;
+            next unless $file =~ /$FILE_REGEX/;
 
 	    &do_song( $game, $diff, $tier, $title, $file );
 	}
