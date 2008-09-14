@@ -59,12 +59,12 @@ $ALGORITHM{'bigger-squeeze'}  = {wp => 1.00, wd => 0.00, sq => 0.60, sp => 0.60 
 $ALGORITHM{'nearly-ideal'}    = {wp => 1.00, wd => 0.00, sq => 0.80, sp => 0.80 };
 $ALGORITHM{'upper-bound'}     = {wp => 1.00, wd => 0.00, sq => 1.00, sp => 1.00 };
 
-our $FILE_REGEX = ".*";
+our $FILE_REGEX = '.*';
 #our $GAME_REGEX = "gh-ps2|gh2-ps2|gh2-x360|ghrt80s-ps2|gh3-ps2";
 our $GAME_REGEX = "gh3-aerosmith";
 our $DIFF_REGEX = "easy|medium|hard|expert";
-our $TIER_REGEX = "1";
-our $ALG_REGEX  = "blank";
+our $TIER_REGEX = ".*";
+our $ALG_REGEX  = ".*";
 
 our $USAGE  = "USAGE: doit.pl [options]\n";
     $USAGE .= "    --outdir <output directory>\n";
