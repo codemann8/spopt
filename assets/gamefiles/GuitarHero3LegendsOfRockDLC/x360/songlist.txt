@@ -54,3 +54,14 @@ dlc66	0x28a8e041	Soothsayer	by	Buckethead	2006
 dlc80	0x5f4868fa	Heroes of Our Time	by	DragonForce	2008
 dlc81	0x284f586c	Operation Ground and Pound	by	DragonForce	2006
 dlc82	0xb14609d6	Revolution Deathsquad	by	DragonForce	2006
+dlc83	0xc6413940	My Apocalypse	by	Metallica	2008
+dlc84	0x5825ace3	All Nightmare Long	by	Metallica	2008
+dlc85	0x2f229c75	That Was Just Your Life	by	Metallica	2008
+dlc86	0xb62bcdcf	The Day That Never Comes	by	Metallica	2008
+dlc87	0xc12cfd59	Broken, Beat & Scarred	by	Metallica	2008
+dlc88	0x5193e0c8	The Judas Kiss	by	Metallica	2008
+dlc89	0x2694d05e	The End of the Line	by	Metallica	2008
+dlc90	0x465359bb	The Unforgiven III	by	Metallica	2008
+dlc91	0x3154692d	Cyanide	by	Metallica	2008
+dlc92	0xa85d3897	Suicide & Redemption J.H.	by	Metallica	2008
+dlc93	0xdf5a0801	Suicide & Redemption K.H.	by	Metallica	2008
