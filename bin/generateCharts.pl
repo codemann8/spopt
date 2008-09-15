@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.2 2008-09-14 14:41:41 tarragon Exp $
+# $Id: generateCharts.pl,v 1.3 2008-09-15 22:42:36 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -28,7 +28,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.2 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.3 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -69,7 +69,17 @@ my %ALGORITHM =
     'upper-bound'     => {wp => 1.00, wd => 0.00, sq => 1.00, sp => 1.00 },
 );
 
-my @games = qw(gh-ps2 gh2-ps2 gh2-x360 ghrt80s-ps2 gh3-ps2 gh3-dlc gh3-aerosmith);
+my %games = 
+(
+    'gh-ps2'            => { 'optimizer' => 'gh',  'whammyrate' => 7.5,  'filetype' => 'midi' },
+    'gh2-ps2'           => { 'optimizer' => 'gh2', 'whammyrate' => 7.5,  'filetype' => 'midi' },
+    'gh2-x360'          => { 'optimizer' => 'gh2', 'whammyrate' => 7.5,  'filetype' => 'midi' },
+    'ghrt80s-ps2'       => { 'optimizer' => 'gh2', 'whammyrate' => 7.5,  'filetype' => 'midi' },
+    'gh3-ps2'           => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
+    'gh3-dlc'           => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
+    'gh3-aerosmith'     => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
+);
+
 my @diffs = qw(easy medium hard expert);
 
 sub usage {
@@ -91,16 +101,17 @@ unless ( -f $configFile && -r $configFile ) {
 
 my %config = new Config::General( $configFile )->getall;
 
-my $GAME_REGEX = defined $config{'GAME_REGEX'} ? $config{'GAME_REGEX'} : qw{.*};
-my $DIFF_REGEX = defined $config{'DIFF_REGEX'} ? $config{'DIFF_REGEX'} : qw{.*};
-my $TIER_REGEX = defined $config{'TIER_REGEX'} ? $config{'TIER_REGEX'} : qw{.*};
-my $FILE_REGEX = defined $config{'FILE_REGEX'} ? $config{'FILE_REGEX'} : qw{.*};
-my $ALG_REGEX  = defined $config{'ALG_REGEX'}  ? $config{'ALG_REGEX'}  : qw{.*};
-my $OUTPUT_DIR = defined $config{'OUTPUT_DIR'} ? $config{'OUTPUT_DIR'} : qw{.};
+my $GAME_REGEX  = defined $config{'GAME_REGEX'} ? $config{'GAME_REGEX'} : qw{.*};
+my $DIFF_REGEX  = defined $config{'DIFF_REGEX'} ? $config{'DIFF_REGEX'} : qw{.*};
+my $TIER_REGEX  = defined $config{'TIER_REGEX'} ? $config{'TIER_REGEX'} : qw{.*};
+my $FILE_REGEX  = defined $config{'FILE_REGEX'} ? $config{'FILE_REGEX'} : qw{.*};
+my $ALG_REGEX   = defined $config{'ALG_REGEX'}  ? $config{'ALG_REGEX'}  : qw{.*};
+my $OUTPUT_DIR  = defined $config{'OUTPUT_DIR'} ? $config{'OUTPUT_DIR'} : qw{.};
+my $WHAMMY_RATE = defined $config{'WHAMMY_RATE'} ? $config{'WHAMMY_RATE'} : 0;
 
 ## Loop through all of the songs
 my $sl = SongLib->new();
-foreach my $game ( @games ) {
+foreach my $game ( keys %games ) {
     my @songarr = $sl->get_songarr_for_game( $game );
     foreach my $song ( @songarr ) {
         foreach my $diff ( reverse @diffs ) {
@@ -132,13 +143,12 @@ sub do_song {
 
     &readmidi($game,\%song);
 
-    if ($game eq "gh3-ps2" or $game eq 'gh3-x360' or $game eq 'gh3-dlc') {
+    if ( $game =~ /^gh3.*/ ) {
         foreach my $alg (qw(blank lazy-whammy no-squeeze twenty-zero forty-zero sixty-zero eighty-zero hundred-zero)) {
             if ($ALG_REGEX) { next unless $alg =~ /$ALG_REGEX/; }
             &process_song($game,\%song,$diff,$alg,1);
         }
     }
-    
     else {
         foreach my $alg (qw(blank lazy-whammy no-squeeze big-squeeze bigger-squeeze nearly-ideal upper-bound)) {
             if ($ALG_REGEX) { next unless $alg =~ /$ALG_REGEX/; }
@@ -153,9 +163,19 @@ sub readmidi {
     my $tier = $rsong->{tier};
     my $title = $rsong->{'name'};
     print "Reading game:$game midi:$basefilename title:$title...\n";
-    if ($game eq "gh3-ps2" or $game eq 'gh3-x360' or $game eq 'gh3-dlc' ) {
-        my $filename = $tier == 10 ? "$QBDIR/$game/$basefilename.qb.xen" : "$QBDIR/$game/$basefilename.qb.ps2"; 
-        print STDERR "ERROR: Couldn't find file '$filename'\n" unless -f $filename;
+
+    if ( $games{$game}->{'filetype'} eq 'qb' ) {
+        my $filename = "$QBDIR/$game/$basefilename.qb";
+        if ( -f "$filename.xen" ) {
+            $filename .= '.xen';
+        }
+        elsif ( -f "$filename.ps2" ) {
+            $filename .= '.ps2';
+        }
+        else {
+            print STDERR "ERROR: Couldn't find file '$filename'\n";
+            return 1;
+        }
         my $mf = new QbFile;
         $mf->file($filename);
 
@@ -166,7 +186,6 @@ sub readmidi {
         $mf->read();
         $SONGDB{$game}{$basefilename} = $mf;
     }
-
     else {
         my $filename = "$MIDIDIR/$game/$basefilename";
         print STDERR "ERROR: Couldn't find file '$filename'\n" unless -f $filename;
@@ -195,11 +214,8 @@ sub process_song {
     mkdir($diffdir,0777) unless -d $diffdir;
 
     my $song = new Song;
-    if ($game eq "gh-ps2")  { $song->game("gh"); }
-    if ($game eq "gh3-ps2" or $game eq 'gh3-x360' or $game eq 'gh3-dlc' ) {
-	$song->game("gh3");
-	$song->filetype("qb");
-    }
+    $song->game( $games{$game}->{'optimizer'} );
+    $song->filetype( $games{$game}->{'filetype'} );
     $song->diff($diff);
     $song->midifile($SONGDB{$game}{$mfkey});
     $song->squeeze_percent($sq);
@@ -233,11 +249,13 @@ sub process_song {
         $optimizer->song($song);
         $optimizer->gen_interesting_events();
         $optimizer->debug(0);
-        if ($game eq "gh-ps2")  { $optimizer->game("gh"); }
-        if ($game eq "gh3-ps2" or $game eq 'gh3-x360' or $game eq 'gh3-dlc' ) {
-	    $optimizer->game("gh3");
-	    $optimizer->whammy_per_quarter_bar(7.75);
-	}
+        $optimizer->game( $games{$game}->{'optimizer'} );
+        if ( $WHAMMY_RATE ) {
+            $optimizer->whammy_per_quarter_bar( $WHAMMY_RATE );
+        }
+        else {
+            $optimizer->whammy_per_quarter_bar( $games{$game}->{'whammyrate'} );
+        }
         $optimizer->optimize_me();
 
         my $optreport = &get_optimizer_report($optimizer);
@@ -254,7 +272,12 @@ sub process_song {
 
 	if ($pic) {
             my $painter = new SongPainter;
-            if ($game eq "gh3-ps2" or $game eq 'gh3-x360' or $game eq 'gh3-dlc') { $painter->whammy_per_quarter_bar(7.75); }
+            if ( $WHAMMY_RATE ) {
+                $painter->whammy_per_quarter_bar( $WHAMMY_RATE );
+            }
+            else {
+                $painter->whammy_per_quarter_bar( $games{$game}->{'whammyrate'} );
+            }
             $painter->debug(0);
             $painter->song($song);
             $painter->filename("$diffdir/$songkey.$alg.best.png");
