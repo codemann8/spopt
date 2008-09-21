@@ -16,17 +16,17 @@ sub _init {
     $self->file("");
     $self->debug(0);
     $self->sustainthresh(0);
-    $self->{_beat}    = [];
-    $self->{_timesig} = [];
+    $self->{_beat}           = [];
+    $self->{_timesig}        = [];
     $self->{_notes}{easy}    = [];
-    $self->{_notes}{med}     = [];
+    $self->{_notes}{medium}  = [];
     $self->{_notes}{hard}    = [];
     $self->{_notes}{expert}  = [];
-    $self->{_sp}{easy}  = [];
-    $self->{_sp}{med}  = [];
-    $self->{_sp}{hard}  = [];
-    $self->{_sp}{expert}  = [];
-    $self->{_markers} = [];
+    $self->{_sp}{easy}       = [];
+    $self->{_sp}{medium}     = [];
+    $self->{_sp}{hard}       = [];
+    $self->{_sp}{expert}     = [];
+    $self->{_markers}        = [];
 }
 
 sub read {
