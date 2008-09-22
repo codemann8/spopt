@@ -17,6 +17,7 @@ my $qb = QbFile->new;
 ok( defined $qb, 'created object' );
 ok( $qb->isa('QbFile'), 'object is valid');
 
+# check qbcrc32 function
 is( $qb->qbcrc32('hitmewithyourbestshot_song_Hard'), 0x00090a3f, 'crc32 without path');
 is( $qb->qbcrc32('scripts\guitar\menu\menu_newspaper.qb'), 0x08c40450, 'crc32 with path');
 is( $qb->qbcrc32('scripts/guitar/menu/menu_newspaper.qb'), 0x08c40450, 'crc32 with incorrect path delimiters');
