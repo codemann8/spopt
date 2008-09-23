@@ -1,5 +1,10 @@
+# $Id: QbFile.pm,v 1.6 2008-09-23 13:00:40 tarragon Exp $
+# $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
+
 package QbFile;
 use strict;
+
+use String::CRC32;
 
 sub new               { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
 sub _prop             { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
@@ -35,21 +40,21 @@ sub read {
     if ($debug >= 1) { print "DEBUG: Enter QbFile::read()\n"; }
 
     ## Get the file into an array of dwords
-    my $filename = $self->{file};
+    my $filename = $self->{'file'};
     my $mode = "ps2";
     if ($filename =~ /xen$/) { $mode = "x360"; }
-    open MIDIFILE, $self->{file} or die "Could not open file $self->{file} for reading";
+    open SONGFILE, $self->{'file'} or die "Could not open file $self->{'file'} for reading";
     my $buf = "",
     my @filearr = ();
     while (1) {
-        my $len = read MIDIFILE, $buf, 1024;
+        my $len = read SONGFILE, $buf, 1024;
         last if $len == 0;
 	my @a;
 	if ($mode eq "x360") { @a = unpack "N*", $buf; }
 	else                 { @a = unpack "V*", $buf; }
         push @filearr, @a;
     }
-    close MIDIFILE;
+    close SONGFILE;
 
     ## Track breakdown
     ## --------------------------------
@@ -294,6 +299,86 @@ sub get_markers {
     return $self->{_markers};
 }
 
+sub qbcrc32 {
+    my $self = shift;
+    my $string = shift;
+    warn 'no string provided!\n' unless defined $string;
+
+    $string = lc $string;
+    $string =~ s#/#\\#g;
+
+    return String::CRC32::crc32( $string ) ^ 0xFFFFFFFF ;
+}
+
+sub generate_checksum_list {
+    my $self = shift;
+    my $filename = shift;
+
+    my %song_checksums;
+    my $transform;
+
+    # strip off extraneous suffixes
+    $filename =~ s/\.ps2$//;
+    $filename =~ s/\.xen$//;
+    $filename =~ s/\.qb$//;
+    $filename =~ s/\.mid$//;
+
+    # song
+    $song_checksums{ 'basename' } = { 'string' => $filename, 'checksum' => qbcrc32( $self, $filename ) };
+
+    # songs\<song>.mid.qb
+    $transform = "songs\\$filename.mid.qb";
+    $song_checksums{ 'wholename' } = { 'string' => $transform, 'checksum' => qbcrc32( $self, $transform) };
+
+    foreach my $part ( qw( timesig fretbars markers faceoffp1 faceoffp2 bossbattlep1 bossbattlep2 ) ) {
+        _push_string_checksum( $self, $filename, $part, \%song_checksums );
+    }
+
+    foreach my $diff ( qw( easy medium hard expert ) ) {
+
+        my $part;
+        # <filename>_song_<diff>
+        $part = 'song_' . $diff;
+        _push_string_checksum( $self, $filename, $part, \%song_checksums );
+
+        # <filename>_<diff>_star
+        $part = $diff . '_star';
+        _push_string_checksum( $self, $filename, $part, \%song_checksums );
+
+        # <filename>_<diff>_star
+        $part = $diff . '_starbattlemode';
+        _push_string_checksum( $self, $filename, $part, \%song_checksums );
+
+        # <filename>_song_{guitarcoop,rhythm,rhythmcoop}_<diff>
+        foreach my $chart_type ( qw( guitarcoop rhythm rhythmcoop ) ) {
+
+            # song_<type>_<diff>
+            $part = 'song_' . $chart_type . '_' . $diff;
+            _push_string_checksum( $self, $filename, $part, \%song_checksums );
+
+            # <type>_<diff>_star
+            $part = $chart_type . '_' . $diff . '_star';
+            _push_string_checksum( $self, $filename, $part, \%song_checksums );
+
+            # <type>_<diff>_starbattlemode
+            $part =  $chart_type . '_' . $diff . '_starbattlemode';
+            _push_string_checksum( $self, $filename, $part, \%song_checksums );
+        }
+    }
+    return \%song_checksums;
+}
+
+sub _push_string_checksum {
+    my $self = shift;
+    my $filename = shift;
+    my $part = shift;
+    my $hashref = shift;
+
+    return unless ( defined $part && defined $hashref && ref($hashref) eq 'HASH' );
+
+    my $transform = $filename . '_' . $part;
+    $hashref->{ $part } = { 'string' => $transform, 'checksum' => qbcrc32( $self, $transform ) };
+}
 
 1;
 
