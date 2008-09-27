@@ -1,0 +1,612 @@
+977d68f3 58913997 alldayandallofthenight Intro
+9e48afe5 58913997 alldayandallofthenight Verse 1
+55776cac 58913997 alldayandallofthenight Bridge 1
+a2adf88e 58913997 alldayandallofthenight Chorus 1
+264edd45 58913997 alldayandallofthenight Verse 2
+dba145fc 58913997 alldayandallofthenight Bridge 2
+7f5d5338 58913997 alldayandallofthenight Chorus 2
+c9d4dbf0 58913997 alldayandallofthenight Solo A
+d2d7cd8d 58913997 alldayandallofthenight Solo B
+65bddcd4 58913997 alldayandallofthenight Verse 3
+3a277f78 58913997 alldayandallofthenight Bridge 3
+63f364e2 58913997 alldayandallofthenight Chorus 3
+e3f3147f 58913997 alldayandallofthenight Ending
+47e3c5c7 87a78342 alltheyoungdudes Intro
+e9ad7a32 87a78342 alltheyoungdudes Verse 1A
+8b14ffc3 87a78342 alltheyoungdudes Verse 1B
+d12d9cfa 87a78342 alltheyoungdudes Chorus 1A
+8710be5e 87a78342 alltheyoungdudes Chorus 1B
+c994e271 87a78342 alltheyoungdudes Verse 2A
+67461376 87a78342 alltheyoungdudes Verse 2B
+334881d7 87a78342 alltheyoungdudes Chorus 2A
+096b52e6 87a78342 alltheyoungdudes Chorus 2B
+eff31b34 87a78342 alltheyoungdudes All the Fun Tunes
+194a76c4 87a78342 alltheyoungdudes Solo A
+024960b9 87a78342 alltheyoungdudes Solo B
+77e454c6 87a78342 alltheyoungdudes Solo C
+b60de587 87a78342 alltheyoungdudes Solo D
+58971917 87a78342 alltheyoungdudes Chorus 3A
+90e5e7d0 87a78342 alltheyoungdudes Chorus 3B
+83a62cc5 87a78342 alltheyoungdudes Chorus 4A
+a63acb5e 87a78342 alltheyoungdudes Chorus 4B
+7592c111 cdfedc23 alwaysontherun Run 1
+d1cc2cf5 cdfedc23 alwaysontherun Chorus 1
+f3fa7fd0 cdfedc23 alwaysontherun Run 2
+0c3c8743 cdfedc23 alwaysontherun Chorus 2
+aaecdbcc cdfedc23 alwaysontherun See Slash Run!
+9658f4fa cdfedc23 alwaysontherun Run 3
+1092b099 cdfedc23 alwaysontherun Chorus 3
+93198a6b cdfedc23 alwaysontherun Run 4
+1775a89d cd0f60e0 backinthesaddle Mount It (The Steed)
+2ab3f5dc cd0f60e0 backinthesaddle Chorus 1
+1656a2b7 cd0f60e0 backinthesaddle Verse 1
+f7435e6a cd0f60e0 backinthesaddle Chorus 2
+0537dc5f cd0f60e0 backinthesaddle Itty Bitty Solo
+b3a1a600 cd0f60e0 backinthesaddle Get Along Gallup
+ebed69b0 cd0f60e0 backinthesaddle Chorus 3
+4cf96423 cd0f60e0 backinthesaddle Ride-On Riff 
+827a8698 cd0f60e0 backinthesaddle Chorus 4
+0088a436 cd0f60e0 backinthesaddle Very Perry Solo (part 1)
+b5db3878 cd0f60e0 backinthesaddle Very Perry Solo (part 2)
+41db3282 cd0f60e0 backinthesaddle Very Perry Solo (part 3)
+cc83cbbc cd0f60e0 backinthesaddle Very Perry Solo (part 4)
+ae5bf306 6a9362d6 beyondbeautiful Intro
+00154cf3 6a9362d6 beyondbeautiful Verse 1A
+62acc902 6a9362d6 beyondbeautiful Verse 1B
+9b8b637b 6a9362d6 beyondbeautiful Chorus 1
+1f6846b0 6a9362d6 beyondbeautiful Verse 2
+467bc8cd 6a9362d6 beyondbeautiful Chorus 2
+f0f24005 6a9362d6 beyondbeautiful Solo A
+ebf15678 6a9362d6 beyondbeautiful Solo B
+5ad5ff17 6a9362d6 beyondbeautiful Chorus 3
+19628315 6a9362d6 beyondbeautiful Outro Solo A
+2ac345de 6a9362d6 beyondbeautiful Outro Solo B
+11d936ee 6a9362d6 beyondbeautiful Outro Solo C
+3c1e17af f060cf32 bossjoe The Boneyard Riff
+40691724 f060cf32 bossjoe Rock This Way
+8464bf05 f060cf32 bossjoe Get A Grip
+eb0019df f060cf32 bossjoe Just Push Play
+a63bd2e7 f060cf32 bossjoe Cryin'
+d992b304 f060cf32 bossjoe Amazing
+098b5846 f060cf32 bossjoe Honkin' On Bobo
+d6ef7cc6 f060cf32 bossjoe The Other Side
+e7ef3b2b f060cf32 bossjoe Dream On
+6b7eb8e5 f060cf32 bossjoe Back In The Saddle
+6ed62592 f060cf32 bossjoe Toys In The Attic
+0be63780 f060cf32 bossjoe Rock In A Hard Place
+1f01007d f060cf32 bossjoe Night In The Rutz
+9e5ef2fc f060cf32 bossjoe Get Your Wings
+9e1c9f0c f060cf32 bossjoe Come Together
+11a09052 f060cf32 bossjoe Livin' On The Edge
+d1647876 f060cf32 bossjoe Done Without Mirrors
+da5177ad f060cf32 bossjoe You Don't Want To Miss A Thing
+75fc3974 f060cf32 bossjoe Joey's Got A Gun
+5910e3bc f060cf32 bossjoe Nine Lives
+6029550c f060cf32 bossjoe Draws The Line
+357204b1 da4900af brightlightfright Down, Up, Squeal!!
+4421bbe5 da4900af brightlightfright Screamin' The Blues
+2e984d70 da4900af brightlightfright Blow In the Sax
+45d2d5e0 da4900af brightlightfright Party'in Tunes
+eb3a42cd da4900af brightlightfright Bright Light Fright 1
+ff01a9d3 da4900af brightlightfright Going Stag 
+342a143a da4900af brightlightfright Going Stag x2
+a888e1f9 da4900af brightlightfright Bright Light Fright 2
+0e03b0f9 da4900af brightlightfright Time To Crash
+7f0e724c 873b37ce catscratchfever Cat Intro
+ffcc5dcb 873b37ce catscratchfever Scratch Intro
+795aedf1 873b37ce catscratchfever 'The Nuge' Vs1
+3c642ab5 873b37ce catscratchfever Cat Scratch Chorus 1
+27779c2a 873b37ce catscratchfever 'Uncle Ted' Vs2
+fc98885f 873b37ce catscratchfever Cat Scratch Chorus 2
+23b8c196 873b37ce catscratchfever Dangerous Breakdown
+b0869336 873b37ce catscratchfever Motor Solo
+811d845a 873b37ce catscratchfever City Solo
+d1bb4b47 873b37ce catscratchfever 'Terrible Ted' Vs3
+76fa9833 873b37ce catscratchfever Cat Scratch Chorus 3
+62cde84d 873b37ce catscratchfever Cat Scratch Breakdown
+eb4b4af0 873b37ce catscratchfever Mad Solo
+5dce50e8 873b37ce catscratchfever Man Solo
+e3f833c9 873b37ce catscratchfever 'Sweaty Teddy' Outro
+35ebd603 3d4b44b0 combination Intro
+3cde1115 3d4b44b0 combination Verse 1
+f7e1d25c 3d4b44b0 combination Bridge 1
+84d863b5 3d4b44b0 combination Verse 2
+003b467e 3d4b44b0 combination Chorus 1
+7937fb0c 3d4b44b0 combination Bridge 2
+ddcbedc8 3d4b44b0 combination Chorus 2
+6b426500 3d4b44b0 combination Solo A
+7041737d 3d4b44b0 combination Solo B
+c165da12 3d4b44b0 combination Chorus 3
+37bc742c 3d4b44b0 combination Outro A
+5b2587b9 3d4b44b0 combination Outro B
+49de227f 3d4b44b0 combination Outro C
+6ecf895c c4d61f78 completecontrol Intro
+67fa4e4a c4d61f78 completecontrol Verse 1
+5b1f1921 c4d61f78 completecontrol Chorus 1
+dffc3cea c4d61f78 completecontrol Verse 2
+86efb297 c4d61f78 completecontrol Chorus 2
+bd6bc0de c4d61f78 completecontrol Guitar Hero! A
+92c52e9a c4d61f78 completecontrol Guitar Hero! B
+9c0f3d7b c4d61f78 completecontrol Verse 3
+9a41854d c4d61f78 completecontrol Chorus 3
+bf5877d4 c4d61f78 completecontrol Bridge A
+824e6bdd c4d61f78 completecontrol Bridge B
+74e37e31 c4d61f78 completecontrol Total Control A
+74d938be c4d61f78 completecontrol Total Control B
+d9f6f94f c4d61f78 completecontrol Outro Solo A
+ea573f84 c4d61f78 completecontrol Outro Solo B
+d14d4cb4 c4d61f78 completecontrol Outro Solo C
+37710abe c4d61f78 completecontrol Outro Solo D
+4a0628a0 5a67fe13 drawtheline Intro
+4333efb6 5a67fe13 drawtheline Verse 1
+376efa0d 5a67fe13 drawtheline Draw the Line 1
+fb359d16 5a67fe13 drawtheline Verse 2
+0e1066da 5a67fe13 drawtheline Draw the Line 2
+b8c69c87 5a67fe13 drawtheline Verse 3
+ee471b45 5a67fe13 drawtheline Draw the Line 3
+e135fbb5 5a67fe13 drawtheline Breakdown
+dd142932 5a67fe13 drawtheline Draw the Line 4
+ee406418 5a67fe13 drawtheline Outro
+0e154312 1d9ed2e3 dreamon Intro
+07208404 1d9ed2e3 dreamon Verse 1
+9851a4f7 1d9ed2e3 dreamon Interlude
+bf26f6a4 1d9ed2e3 dreamon Verse 2
+3bc5d36f 1d9ed2e3 dreamon Chorus 1
+35b3d639 1d9ed2e3 dreamon Guitar Break
+e63578d9 1d9ed2e3 dreamon Chorus 2
+df82bd9a 1d9ed2e3 dreamon Bridge A
+2cd7c897 1d9ed2e3 dreamon Bridge B (aka Scream On)
+fa9b4f03 1d9ed2e3 dreamon Chorus 3
+aa530faa 1d9ed2e3 dreamon Outro
+8856b1f2 5d5e3799 dreampolice Intro/Refrain 1
+f955b5b5 5d5e3799 dreampolice Verse 1
+c5b0e2de 5d5e3799 dreampolice Chorus 1
+55d5df07 5d5e3799 dreampolice Refrain 2
+4153c715 5d5e3799 dreampolice Verse 2
+18404968 5d5e3799 dreampolice Chorus 2
+d9fead5b 5d5e3799 dreampolice Bridge
+e070a7c5 5d5e3799 dreampolice Solo
+04ee7eb2 5d5e3799 dreampolice Chorus 3
+da7f619f 5d5e3799 dreampolice Lucid Riffage
+689c2812 5d5e3799 dreampolice Nightmare Riffage A
+25c15ac5 5d5e3799 dreampolice Nightmare Riffage B
+0a2a5635 5d5e3799 dreampolice Refrain 3
+54263e1b 5d5e3799 dreampolice Outro
+9d2c9f22 9d72ee89 hardtohandle Intro
+94195834 9d72ee89 hardtohandle Verse 1
+a8fc0f5f 9d72ee89 hardtohandle Chorus 1
+2c1f2a94 9d72ee89 hardtohandle Verse 2
+750ca4e9 9d72ee89 hardtohandle Chorus 2
+6fec2b05 9d72ee89 hardtohandle Verse 3
+69a29333 9d72ee89 hardtohandle Chorus 3
+aace1ed8 9d72ee89 hardtohandle Solo 1
+00357c1b 9d72ee89 hardtohandle Chorus 4
+61383471 9d72ee89 hardtohandle Solo 2
+396ad39a 9d72ee89 hardtohandle Outro
+32c95285 e9b613ed ihatemyselfforlovingyou Love Sucks 1
+c54af0a0 e9b613ed ihatemyselfforlovingyou Verse 1
+99cfea4f e9b613ed ihatemyselfforlovingyou Pre-Chorus 1
+f9afa7cb e9b613ed ihatemyselfforlovingyou Chorus 1
+65b1ba6a e9b613ed ihatemyselfforlovingyou Love Sucks 2
+7d4c8200 e9b613ed ihatemyselfforlovingyou Verse 2
+ed709db8 e9b613ed ihatemyselfforlovingyou Pre-Chorus 2
+2a88158f e9b613ed ihatemyselfforlovingyou Mini Solo
+245f0c7d e9b613ed ihatemyselfforlovingyou Chorus 2
+6b471489 e9b613ed ihatemyselfforlovingyou Solo of a Lonely Heart
+86697761 e9b613ed ihatemyselfforlovingyou Pre-Chorus 3
+d55e5cfa e9b613ed ihatemyselfforlovingyou Chorus 3 (no guitar)
+54441bdf e9b613ed ihatemyselfforlovingyou Chorus 4 (with guitar)
+b17f04ea e9b613ed ihatemyselfforlovingyou Love Sucks to the End!
+c5f85803 d4447ee5 joeperryguitarbattle The Boneyard Riff
+b98f5888 d4447ee5 joeperryguitarbattle Rock This Way
+7d82f0a9 d4447ee5 joeperryguitarbattle Get A Grip
+12e65673 d4447ee5 joeperryguitarbattle Just Push Play
+5fdd9d4b d4447ee5 joeperryguitarbattle Cryin'
+2074fca8 d4447ee5 joeperryguitarbattle Amazing
+f06d17ea d4447ee5 joeperryguitarbattle Honkin' On Bobo
+2f09336a d4447ee5 joeperryguitarbattle The Other Side
+1e097487 d4447ee5 joeperryguitarbattle Dream On
+9298f749 d4447ee5 joeperryguitarbattle Back In The Saddle
+97306a3e d4447ee5 joeperryguitarbattle Toys In The Attic
+f200782c d4447ee5 joeperryguitarbattle Rock In A Hard Place
+e6e74fd1 d4447ee5 joeperryguitarbattle Night In The Rutz
+67b8bd50 d4447ee5 joeperryguitarbattle Get Your Wings
+67fad0a0 d4447ee5 joeperryguitarbattle Come Together
+e846dffe d4447ee5 joeperryguitarbattle Livin' On The Edge
+288237da d4447ee5 joeperryguitarbattle Done Without Mirrors
+23b73801 d4447ee5 joeperryguitarbattle You Don't Want To Miss A Thing
+8c1a76d8 d4447ee5 joeperryguitarbattle Joey's Got A Gun
+a0f6ac10 d4447ee5 joeperryguitarbattle Nine Lives
+99cf1aa0 d4447ee5 joeperryguitarbattle Draws The Line
+3ad448a9 b2fd4f92 kingofrock Vocal Intro
+a7e21a59 b2fd4f92 kingofrock Intro Riff - Solo 1
+a68a1111 b2fd4f92 kingofrock Verse 1
+de14ae03 b2fd4f92 kingofrock Verse 2 - Solo 2
+b8ba03dd b2fd4f92 kingofrock Verse 3 - Solo 3A
+a1349d3a b2fd4f92 kingofrock Verse 4 - Solo 3B
+f3558904 b2fd4f92 kingofrock Verse 5A
+b29c18cd b2fd4f92 kingofrock Verse 5B - Solo 4
+320c7a6e b2fd4f92 kingofrock Verse 6
+f864a7a6 b2fd4f92 kingofrock Solo 5
+bf5c38a1 b2fd4f92 kingofrock Verse 7 - Solo 6
+71c02045 b2fd4f92 kingofrock Verse 8 - Solo 7
+2954dcc3 b2fd4f92 kingofrock Solo 8A
+73c5b2e6 b2fd4f92 kingofrock Solo 8B
+306aacc8 b2fd4f92 kingofrock Solo 8C
+30dd5caf d6b4e200 kingsandqueens Intro Bridge
+7234ce1c d6b4e200 kingsandqueens Verse 1
+ca32bcbc d6b4e200 kingsandqueens Verse 2
+529fd6f2 d6b4e200 kingsandqueens Bridge
+4493dc75 d6b4e200 kingsandqueens Chorus
+17145da9 d6b4e200 kingsandqueens Do or Die 1
+4d1ee41d d6b4e200 kingsandqueens Piano Break
+25a8ba09 d6b4e200 kingsandqueens Solo A
+3eabac74 d6b4e200 kingsandqueens Solo B
+b13fdb07 d6b4e200 kingsandqueens Do or Die 2
+094fbd05 38029fde kingsandqueenscredits Intro Bridge
+4ba62fb6 38029fde kingsandqueenscredits Verse 1
+f3a05d16 38029fde kingsandqueenscredits Verse 2
+6b0d3758 38029fde kingsandqueenscredits Bridge
+7d013ddf 38029fde kingsandqueenscredits Chorus
+2e86bc03 38029fde kingsandqueenscredits Do or Die 1
+748c05b7 38029fde kingsandqueenscredits Piano Break
+52833dc6 38029fde kingsandqueenscredits Solo
+88ad3aad 38029fde kingsandqueenscredits Do or Die 2
+55575904 fffb47ed letthemusicdothetalking Intro
+64e78eb2 fffb47ed letthemusicdothetalking Slide Riffage 1
+5c629e12 fffb47ed letthemusicdothetalking Verse 1
+6087c979 fffb47ed letthemusicdothetalking Chorus 1
+503392ca fffb47ed letthemusicdothetalking Slide Riffage 2
+e464ecb2 fffb47ed letthemusicdothetalking Verse 2
+bd7762cf fffb47ed letthemusicdothetalking Chorus 2
+84c0a78c fffb47ed letthemusicdothetalking Bridge A
+b9d6bb85 fffb47ed letthemusicdothetalking Bridge B
+ac3f5e71 fffb47ed letthemusicdothetalking Bridge C
+592dd8cd fffb47ed letthemusicdothetalking Bridge D
+4a2385d4 fffb47ed letthemusicdothetalking Chorus 3A
+82517b13 fffb47ed letthemusicdothetalking Chorus 3B
+f11115bc fffb47ed letthemusicdothetalking Outro
+dd3ef145 176cc7e5 livinontheedge Intro
+73704eb0 176cc7e5 livinontheedge Verse 1A
+11c9cb41 176cc7e5 livinontheedge Verse 1B
+e8ee6138 176cc7e5 livinontheedge Chorus 1
+5349d6f3 176cc7e5 livinontheedge Verse 2A
+fd9b27f4 176cc7e5 livinontheedge Verse 2B
+351eca8e 176cc7e5 livinontheedge Chorus 2
+542a81a8 176cc7e5 livinontheedge Livin' on the Bridge 1A
+168ce352 176cc7e5 livinontheedge Livin' on the Bridge 1B
+83974246 176cc7e5 livinontheedge Solo A
+9894543b 176cc7e5 livinontheedge Solo B
+fbcb3c11 176cc7e5 livinontheedge Livin' on the Bridge 2A
+0e7cdf0d 176cc7e5 livinontheedge Livin' on the Bridge 2B
+54e1e771 176cc7e5 livinontheedge Goin' to the Edge...
+be72745d 176cc7e5 livinontheedge Livin' on the Edge!
+d4be7cfb 176cc7e5 livinontheedge Chorus Riff
+a1f80ac0 176cc7e5 livinontheedge Two Hand Tapping 101
+7978bdfd 176cc7e5 livinontheedge Outro
+91ef10e8 7a5a148d loveinanelevator Feel Good Intro
+9ba28221 7a5a148d loveinanelevator Workin' Man's Verse
+0e453adb 7a5a148d loveinanelevator Love in an Elevator 1
+99938936 7a5a148d loveinanelevator Now We're Talkin' Verse
+7a4d69f0 7a5a148d loveinanelevator Love in an Elevator 2
+ecf506c1 7a5a148d loveinanelevator Perry-Dice Solo 1
+1db77e44 7a5a148d loveinanelevator Perry-Dice Solo 2
+fb74d415 7a5a148d loveinanelevator Perry-Dice Solo 3
+5c36a5cc 7a5a148d loveinanelevator Perry-Dice Solo 4
+6b71af90 7a5a148d loveinanelevator Takin' the Stairs
+fdce2d46 7a5a148d loveinanelevator Goin' Down 1
+fc59890f 7a5a148d loveinanelevator Goin' Down 2
+3c52718e 7a5a148d loveinanelevator Goin' Down 3
+f07772bd 7a5a148d loveinanelevator Love in an Elevator 3
+35d47ef3 7a5a148d loveinanelevator Rags 2 Riches Verse
+32df9ab2 7a5a148d loveinanelevator Love in an Elevator 4
+b4e056d9 7a5a148d loveinanelevator Lovin' an Outro
+9d76a4dd 7a5a148d loveinanelevator _ENDOFSONG
+7a62f4ac 257c6324 makeit Intro Bridge
+388b661f 257c6324 makeit Verse 1
+046e3174 257c6324 makeit Chorus 1
+808d14bf 257c6324 makeit Verse 2
+d99e9ac2 257c6324 makeit Chorus 2
+64375956 257c6324 makeit Post Chorus 1
+83d5800d 257c6324 makeit Solo Section A
+e05de0b4 257c6324 makeit Solo Section B
+18207ef1 257c6324 makeit Bridge
+c37e152e 257c6324 makeit Verse 3
+c530ad18 257c6324 makeit Chorus 3
+51e19d9e 257c6324 makeit Post Chorus 2
+8a17a5fb 3bd01e9e mamakin Intro A
+f564ab04 3bd01e9e mamakin Intro B
+9d82d21c 3bd01e9e mamakin Solo A
+8681c461 3bd01e9e mamakin Solo B
+5af02841 3bd01e9e mamakin Intro C
+0d2cb4d4 3bd01e9e mamakin Gypsy - V1
+0da67584 3bd01e9e mamakin Earth Lover - V2
+b40db200 3bd01e9e mamakin Dragon - Chorus 1
+ecc1a6af 3bd01e9e mamakin Livin' - V3
+b8a6363b 3bd01e9e mamakin Bald - Chorus 2
+17c184ff 3bd01e9e mamakin Maka Min 1A
+f18e33c2 3bd01e9e mamakin Maka Min 1B
+f32cf01e 3bd01e9e mamakin Solo C
+5f8898a3 3bd01e9e mamakin Livin - V4
+058a0632 3bd01e9e mamakin Bald - Chorus 3
+f7bd7045 3bd01e9e mamakin Maka Min 2A
+c570906b 3bd01e9e mamakin Maka Min 2B
+676d2da7 3bd01e9e mamakin Outro
+8f42c77e 0f90936e mercy Clean Riff 1a
+833ff613 0f90936e mercy Clean Riff 1b
+7f0b375a 0f90936e mercy Dirty Riff 1a
+e30543ae 0f90936e mercy Dirty Riff 1b
+bd213466 0f90936e mercy Go Joe!  1
+84d94c71 0f90936e mercy Go Joe!  2
+883aa7ec 0f90936e mercy Clean Riff 2a
+015c1201 0f90936e mercy Clean Riff 2b
+1a9130ff 0f90936e mercy Dirty Riff 2a
+4c9e5b60 0f90936e mercy Go Joe!  3
+f275fd95 0f90936e mercy Slip Slidin' Away
+f97fe752 0f90936e mercy Go Joe!  4
+c831408b 0f90936e mercy Tractor Beam
+f6c45a8b 0f90936e mercy Go Joe! 5
+22854958 44d956bf movinout Intro
+f96d5636 44d956bf movinout Edge of Town
+445a86eb 44d956bf movinout Arpeggios 1
+a120cfe1 44d956bf movinout  Nobody Knows 1
+38aef383 44d956bf movinout Arpeggios 1.5
+032a5f23 44d956bf movinout Nobody Knows 2
+32959c3e 44d956bf movinout Solo
+69b49221 44d956bf movinout Slow and Sweet
+17d4fadd 44d956bf movinout Buildup
+56184e68 44d956bf movinout Arpeggios 2
+9239e498 44d956bf movinout Nobody Knows 3
+86c305e0 44d956bf movinout Outro
+0417a1e2 b07bd892 nobodysfault Epic Sustains
+c62b0dc6 b07bd892 nobodysfault Intro Solo 
+12685733 b07bd892 nobodysfault Apocalyptic Verse 1
+02b72241 b07bd892 nobodysfault Perceptive Chorus 1
+6c661b4d b07bd892 nobodysfault Bridge 1
+2bbf7a05 b07bd892 nobodysfault Sorry! So Sorry! 1
+34da17e6 b07bd892 nobodysfault Apocalyptic Verse 2
+c4374df0 b07bd892 nobodysfault Perceptive Chorus 2
+e2b0321d b07bd892 nobodysfault Bridge 2
+6c313e4d b07bd892 nobodysfault Sorry! So Sorry! 2
+998e9ee8 b07bd892 nobodysfault Solo 1
+5278b441 b07bd892 nobodysfault Solo 2
+03360899 b07bd892 nobodysfault Bridge 3
+625d0ae8 b07bd892 nobodysfault Apocalyptic Verse 3
+10fc5716 b07bd892 nobodysfault Sorry! So Sorry! 3
+a83801ce b07bd892 nobodysfault Solo 3
+d983c91c b07bd892 nobodysfault Solo 4
+59725cfd b07bd892 nobodysfault Solo 5 to Outro
+1a86748a 43bd8b0f nosurprize Intro Chords
+3b1bcb6f 43bd8b0f nosurprize Verse 1A
+59a24e9e 43bd8b0f nosurprize Verse 1B
+589174c5 43bd8b0f nosurprize Verse 1C
+72b5264b 43bd8b0f nosurprize No Surprize 1
+1b22532c 43bd8b0f nosurprize Verse 2A
+b5f0a22b 43bd8b0f nosurprize Verse 2B
+f4dd988a 43bd8b0f nosurprize No Surprize 2
+e48e0435 43bd8b0f nosurprize Bridge 1A
+7c0d0c73 43bd8b0f nosurprize Bridge 1B
+61c24de3 43bd8b0f nosurprize Verse 3A
+89712d7d 43bd8b0f nosurprize Verse 3B
+d3a9677c 43bd8b0f nosurprize No Surprize 3
+7920f75e 43bd8b0f nosurprize Bridge 2A
+0895f6f4 43bd8b0f nosurprize Bridge 2B
+380f6311 43bd8b0f nosurprize Bridge 3
+cbfcc799 43bd8b0f nosurprize Solo A
+d0ffd1e4 43bd8b0f nosurprize Solo B
+a552e59b 43bd8b0f nosurprize Solo C
+64bb54da 43bd8b0f nosurprize Solo D
+9409f0bb 43bd8b0f nosurprize Solo E
+8138c476 e63a91fa pandorasbox Opening Riffage
+22e844bb e63a91fa pandorasbox Verse 1
+9aee361b e63a91fa pandorasbox Verse 2
+e9d787f2 e63a91fa pandorasbox Bridge 1
+1e0d13d0 e63a91fa pandorasbox Chorus 1
+fe51938e e63a91fa pandorasbox Just 4 Me 1
+3bcd56cb e63a91fa pandorasbox Solo
+d91d378a e63a91fa pandorasbox Verse 3
+6701aea2 e63a91fa pandorasbox Bridge 2
+c3fdb866 e63a91fa pandorasbox Chorus 2
+34801379 e63a91fa pandorasbox Just 4 Me 2
+cf9edf6f e63a91fa pandorasbox Coda Riffage
+6e788be6 e63a91fa pandorasbox Coda
+b835e4ae 5de27afa personalitycrisis Intro
+bcbb7966 5de27afa personalitycrisis Drums, Piano, Action!
+b10023b8 5de27afa personalitycrisis Verse 1
+c0eedde1 5de27afa personalitycrisis Personality Crisis 1
+ab75049b 5de27afa personalitycrisis Scream Riff 1
+09065118 5de27afa personalitycrisis Verse 2
+2de7df90 5de27afa personalitycrisis Scream and Shout
+045064e5 5de27afa personalitycrisis Personality Crisis 2
+79afef57 5de27afa personalitycrisis Scream Riff 2
+4af55089 5de27afa personalitycrisis Verse 3
+fd56c5a0 5de27afa personalitycrisis Personality Crisis 3
+4cf8c763 5de27afa personalitycrisis Scream Riff 3
+3f8a146c 5de27afa personalitycrisis Verse 4
+88bdf53a 5de27afa personalitycrisis Of A Friend... Of A Friend...
+b9b10bd8 5de27afa personalitycrisis Personality Crisis 4
+cb1b9373 5de27afa personalitycrisis Scream Riff 4
+a319a38e 04dccebf pink Intro
+aa2c6498 04dccebf pink Verse 1
+96c933f3 04dccebf pink Chorus 1
+122a1638 04dccebf pink Verse 2
+4b399845 04dccebf pink Chorus 2
+b30976e8 04dccebf pink Solo
+51d917a9 04dccebf pink Verse 3
+8ff8ea83 04dccebf pink Chorus 3 / Outro
+05bde27d 4dfb0f50 ragdoll Riff-Doll 1
+00920253 4dfb0f50 ragdoll Chorus 1
+6fd9286a 4dfb0f50 ragdoll Riff-Doll 2
+dd62a9e5 4dfb0f50 ragdoll Chorus 2
+42105e57 4dfb0f50 ragdoll Riff-Doll 3
+c1cc9e3f 4dfb0f50 ragdoll Chorus 3
+25524748 4dfb0f50 ragdoll Solo
+950cbae9 4dfb0f50 ragdoll Riff-Doll 4
+a85b7117 4dfb0f50 ragdoll Chorus 4
+303bd04a 4dfb0f50 ragdoll Outro Solo
+a950d36d 4dfb0f50 ragdoll _ENDOFSONG
+a5e05b04 37e5ab36 ratsinthecellar Intro
+acd59c12 37e5ab36 ratsinthecellar Verse 1
+c675ee12 37e5ab36 ratsinthecellar Refrain 1
+94ac63b3 37e5ab36 ratsinthecellar Build-Up 1
+14d3eeb2 37e5ab36 ratsinthecellar Verse 2
+0055f6a0 37e5ab36 ratsinthecellar Refrain 2
+ce8bf558 37e5ab36 ratsinthecellar Build-Up 2
+3d5f7263 37e5ab36 ratsinthecellar Harp Solo
+82730c6a 37e5ab36 ratsinthecellar Call and Response
+4152c376 37e5ab36 ratsinthecellar Guitar Solo
+5faa7f92 37e5ab36 ratsinthecellar Refrain 3
+c7b70387 37e5ab36 ratsinthecellar Build-Up 3
+334f350a 37e5ab36 ratsinthecellar Cellar Jam A
+fd27331c 37e5ab36 ratsinthecellar Cellar Jam B
+3ad33dc6 37e5ab36 ratsinthecellar Cellar Jam C
+9f78b624 37e5ab36 ratsinthecellar Cellar Jam D
+5d2ef199 37e5ab36 ratsinthecellar Rats in the Outro!
+c9c78c41 6cd423a0 sextypething Intro
+c0f24b57 6cd423a0 sextypething Verse 1
+540cce1a 6cd423a0 sextypething Lick Type Thing 1
+78f439f7 6cd423a0 sextypething Verse 2
+fc171c3c 6cd423a0 sextypething Chorus 1
+c204acc8 6cd423a0 sextypething Lick Type Thing 2
+3b073866 6cd423a0 sextypething Verse 3
+21e7b78a 6cd423a0 sextypething Chorus 2
+0bcd881e 6cd423a0 sextypething Bridge 1
+4e787c83 6cd423a0 sextypething Verse 4
+3d498050 6cd423a0 sextypething Chorus 3
+851ba14e 6cd423a0 sextypething Bridge 2
+6d81c0f9 6cd423a0 sextypething Outro
+cac9e3c6 ce619814 shakinmycage Intro
+edb5610b ce619814 shakinmycage Intro Solo
+64875c33 ce619814 shakinmycage Verse 1A
+063ed9c2 ce619814 shakinmycage Verse 1B
+ff1973bb ce619814 shakinmycage Chorus 1
+44bec470 ce619814 shakinmycage Verse 2A
+ea6c3577 ce619814 shakinmycage Verse 2B
+22e9d80d ce619814 shakinmycage Chorus 2
+5130478d ce619814 shakinmycage Instrumental Interlude
+946050c5 ce619814 shakinmycage Solo A
+8f6346b8 ce619814 shakinmycage Solo B
+face72c7 ce619814 shakinmycage Solo C
+3b27c386 ce619814 shakinmycage Solo D
+3e5edabf ce619814 shakinmycage Verse 3A
+d6edba21 ce619814 shakinmycage Verse 3B
+3e47efd7 ce619814 shakinmycage Chorus 3
+c89e41e9 ce619814 shakinmycage Outro A
+a407b27c ce619814 shakinmycage Outro B
+4c7450c1 f4c9fafa shesellssanctuary Intro Space Guitar
+ebf8ac61 f4c9fafa shesellssanctuary Sanctuary Riff 1
+a17acb4a f4c9fafa shesellssanctuary Verse 1
+ffa96311 f4c9fafa shesellssanctuary Verse Interlude 1
+197cb9ea f4c9fafa shesellssanctuary Verse 2
+9d9f9c21 f4c9fafa shesellssanctuary Chorus 1
+38ecbdc7 f4c9fafa shesellssanctuary Sanctuary Riff 2
+5a8fb87b f4c9fafa shesellssanctuary Verse 3
+d92ae3d8 f4c9fafa shesellssanctuary Verse Interlude 2
+2ff0fc9e f4c9fafa shesellssanctuary Verse 4
+406f3797 f4c9fafa shesellssanctuary Chorus 2
+3a524305 f4c9fafa shesellssanctuary Breakdown Space Guitar
+af0d3086 f4c9fafa shesellssanctuary Big Solo
+842c18bc f4c9fafa shesellssanctuary Chorus w/ Verse Riff 
+9b916fdf f4c9fafa shesellssanctuary Sanctuary Riff 3
+41046845 f4c9fafa shesellssanctuary Outro Space Guitar
+602278d3 7abfe948 sweetemotion Talk Box Intro
+56267cdc 7abfe948 sweetemotion Chorus 1 - Bass Intro
+40a19a1d 7abfe948 sweetemotion Verse 1
+0c6d067e 7abfe948 sweetemotion Sweet Riff 1
+f8a7e8bd 7abfe948 sweetemotion Verse 2
+982f9d1a 7abfe948 sweetemotion Sweet Riff 2
+a1b466c0 7abfe948 sweetemotion Chorus 2
+bb54e92c 7abfe948 sweetemotion Verse 3
+918ab3ae 7abfe948 sweetemotion Sweet Riff 3
+ce2badc9 7abfe948 sweetemotion Verse 4
+da558b6b 7abfe948 sweetemotion Sweet Riff 4
+4b12911c 7abfe948 sweetemotion Outro Riff
+fead2d18 7abfe948 sweetemotion Outro Solo A
+cd0cebd3 7abfe948 sweetemotion Outro Solo B
+3d1a2187 7abfe948 sweetemotion Ending
+29949e8b 54ab56cd talktalking Intro
+1c440ef6 54ab56cd talktalking Chorus 1
+20a1599d 54ab56cd talktalking Verse 1
+c1b4a540 54ab56cd talktalking Chorus 2
+98a72b3d 54ab56cd talktalking Verse 2
+dd1a929a 54ab56cd talktalking Chorus 3
+db542aac 54ab56cd talktalking Verse 3
+39844bed 54ab56cd talktalking Solo
+ae2b6e49 54ab56cd talktalking Verse 4
+b48d7db2 54ab56cd talktalking Chorus 4
+97714378 54ab56cd talktalking Solo/Outro
+5052bb4a d52f0f5c toysintheattic Intro
+59677c5c d52f0f5c toysintheattic Verse 1
+de259cfc d52f0f5c toysintheattic Verse 2A
+70f76dfb d52f0f5c toysintheattic Verse 2B
+65822b37 d52f0f5c toysintheattic Chorus 1
+a2920f6d d52f0f5c toysintheattic Verse 3
+40426e2c d52f0f5c toysintheattic Solo
+2b47771a d52f0f5c toysintheattic Verse 4A
+be1ee11f d52f0f5c toysintheattic Verse 4B
+b8728081 d52f0f5c toysintheattic Chorus 2
+588b64d1 d52f0f5c toysintheattic Chorus Out
+5046cdff 6b352696 trainkeptarollin All Aboard!
+6ab56c65 6b352696 trainkeptarollin Engine Solo
+1fba95ae 6b352696 trainkeptarollin Verse 1
+6b6597e3 6b352696 trainkeptarollin Passenger Car Solo
+a7bce70e 6b352696 trainkeptarollin Verse 2
+af22c40a 6b352696 trainkeptarollin Jumping Cars
+4b9d9b62 6b352696 trainkeptarollin Observation Car Solo Part 1
+6d30f075 6b352696 trainkeptarollin Observation Car Solo Part 2
+6226dbcb 6b352696 trainkeptarollin Train's a Comin'
+e44fe69f 6b352696 trainkeptarollin Verse 3
+9b4d2f03 6b352696 trainkeptarollin Dining Car Solo 
+9130a27a 6b352696 trainkeptarollin Verse 4
+bd889ec1 6b352696 trainkeptarollin Rollin'
+469f0508 6b352696 trainkeptarollin Baggage Car Solo Part 1
+f2036af6 6b352696 trainkeptarollin Baggage Car Solo Part 2
+a5fffd0b 6b352696 trainkeptarollin Verse 5
+3a65209a 6b352696 trainkeptarollin Boxcar Solo
+9ba1d9f1 6b352696 trainkeptarollin Caboose
+5eeebdb7 5d35b7dc unclesalty Guitar Intro
+577ccdfc 5d35b7dc unclesalty Verse 1
+9c430eb5 5d35b7dc unclesalty Bridge 1
+ef7abf5c 5d35b7dc unclesalty Verse 2
+129527e5 5d35b7dc unclesalty Bridge 2
+6b999a97 5d35b7dc unclesalty Chorus 1
+4e59df8c 5d35b7dc unclesalty Solo
+ac89becd 5d35b7dc unclesalty Verse 3
+f3131d61 5d35b7dc unclesalty Bridge 3
+b6693121 5d35b7dc unclesalty Chorus 2
+c25b4ba9 5d35b7dc unclesalty _ENDOFSONG
+c139072d 0ab3a3e6 walkthisway Riff This Way 1
+97c99f1b 0ab3a3e6 walkthisway Verse 1
+d58d2e1d 0ab3a3e6 walkthisway Riff This Way 2
+2fcfedbb 0ab3a3e6 walkthisway Verse 2
+ab2cc870 0ab3a3e6 walkthisway Chorus 1
+a91ed9f7 0ab3a3e6 walkthisway Solo 1
+12eb1285 0ab3a3e6 walkthisway Riff This Way 3
+6c3cec2a 0ab3a3e6 walkthisway Verse 3
+9fe68afd 0ab3a3e6 walkthisway Riff This Way 4
+1943a8cf 0ab3a3e6 walkthisway Verse 4
+76dc63c6 0ab3a3e6 walkthisway Chorus 2
+62e8f35e 0ab3a3e6 walkthisway Solo 2
+c24f27ff 0ab3a3e6 walkthisway Riff This Way 5
+98a846d1 0ab3a3e6 walkthisway Solo 3
+a733ff41 cfaa2227 walkthiswayrundmc Intro - Drums
+982b3524 cfaa2227 walkthiswayrundmc Rock This Way 1
+504a7a62 cfaa2227 walkthiswayrundmc Verse 1
+92ad311b cfaa2227 walkthiswayrundmc Rock This Way 2
+e84c08c2 cfaa2227 walkthiswayrundmc Verse 2
+6caf2d09 cfaa2227 walkthiswayrundmc Chorus 1
+c0373456 cfaa2227 walkthiswayrundmc Quick Solo 1
+f8e7ed5d cfaa2227 walkthiswayrundmc Rock This Way 3
+abbf0953 cfaa2227 walkthiswayrundmc Verse 3
+adb941ea cfaa2227 walkthiswayrundmc Rock This Way 4
+dec04db6 cfaa2227 walkthiswayrundmc Verse 4
+b15f86bf cfaa2227 walkthiswayrundmc Chorus 2
+dafba0f8 cfaa2227 walkthiswayrundmc Quick Solo 2
+6d700ad6 cfaa2227 walkthiswayrundmc Rock This Way 5
+07d60e77 cfaa2227 walkthiswayrundmc Solo A
+1cd5180a cfaa2227 walkthiswayrundmc Solo B
+69782c75 cfaa2227 walkthiswayrundmc Solo C
+4fe2f123 cfaa2227 walkthiswayrundmc Rock This Way 6
+cd40a109 cfaa2227 walkthiswayrundmc Jammin' Out
+2df1c1f8 cfaa2227 walkthiswayrundmc Ending
+c56dfc37 cfaa2227 walkthiswayrundmc _ENDOFSONG
