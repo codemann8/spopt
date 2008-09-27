@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.3 2008-09-15 22:42:36 tarragon Exp $
+# $Id: generateCharts.pl,v 1.4 2008-09-27 14:29:31 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -28,7 +28,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.3 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.4 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -228,6 +228,8 @@ sub process_song {
     $song->init_phrase_sp_pwls();
 
     if ($alg eq "blank") {
+        print "Generating blank chart for $game:$mfkey:$diff\n";
+
         ## Make the blank notechart
         my $painter0 = new SongPainter;
         $painter0->debug(0);
@@ -239,9 +241,11 @@ sub process_song {
         $painter0->outline_only(1);
         &highlight_blank_phrases($song,$painter0);
         $painter0->paintsong();
-    }
 
+    }
     else {
+        print "Generating $alg algorithm chart for $game:$mfkey:$diff\n";
+
         my ($dum1,$dum2,$dum3,$perfect) = $song->estimate_scores();
         $RESULTSDB{$game}{$mfkey}{$diff}{"no-sp"}{best}{score} = $perfect; 
 
