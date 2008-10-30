@@ -1,171 +1,145 @@
-# $Id: QbFile.pm,v 1.6 2008-09-23 13:00:40 tarragon Exp $
+# $Id: QbFile.pm,v 1.7 2008-10-30 05:29:30 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package QbFile;
 use strict;
 
 use String::CRC32;
+use File::Basename;
+use Carp;
 
 sub new               { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
 sub _prop             { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
-sub file              { my $self = shift; return $self->_prop("file",@_);    }
-sub debug             { my $self = shift; return $self->_prop("debug",@_);    }
-sub sustainthresh     { my $self = shift; return $self->_prop("sustainthresh",@_);    }
-sub get_notearr       { my ($self,$diff) = @_; return $self->{_notes}{$diff}; }
-sub get_sparr         { my ($self,$diff) = @_; return $self->{_sp}{$diff}; }
-sub get_beats         { my ($self) = @_;       return $self->{_beat}; }
-sub get_timesig       { my ($self) = @_;       return $self->{_timesig}; }
+sub file              { my $self = shift; return $self->_prop('file',@_);    }
+sub debug             { my $self = shift; return $self->_prop('debug',@_);    }
+sub sustainthresh     { my $self = shift; return $self->_prop('sustainthresh',@_);    }
+sub notepart          { my $self = shift; return $self->_prop('notepart',@_);    }
+sub get_notearr       { my ($self,$diff) = @_; return $self->{'_notes'}{$diff}; }
+sub get_sparr         { my ($self,$diff) = @_; return $self->{'_sp'}{$diff}; }
+sub get_beats         { my ($self) = @_;       return $self->{'_beat'}; }
+sub get_timesig       { my ($self) = @_;       return $self->{'_timesig'}; }
+sub get_str2crc       { my ($self) = @_;       return $self->{'_str2crc'}; }
+sub get_crc2str       { my ($self) = @_;       return $self->{'_crc2str'}; }
+sub get_markers       { my $self = shift; return $self->{_markers}; }
+
 
 sub _init {
     my $self = shift;
-    $self->file("");
+
+    $self->file('');
     $self->debug(0);
     $self->sustainthresh(0);
-    $self->{_beat}           = [];
-    $self->{_timesig}        = [];
-    $self->{_notes}{easy}    = [];
-    $self->{_notes}{medium}  = [];
-    $self->{_notes}{hard}    = [];
-    $self->{_notes}{expert}  = [];
-    $self->{_sp}{easy}       = [];
-    $self->{_sp}{medium}     = [];
-    $self->{_sp}{hard}       = [];
-    $self->{_sp}{expert}     = [];
-    $self->{_markers}        = [];
+    $self->notepart('main');
+
+    $self->{'_raw'}             = [];
+    $self->{'_str2crc'}         = {};
+    $self->{'_crc2str'}         = {};
+    $self->{'_sections'}        = [];
+    $self->{'_beat'}            = [];
+    $self->{'_timesig'}         = [];
+    $self->{'_markers'}         = [];
+    $self->{'_notes'}{'easy'}   = [];
+    $self->{'_notes'}{'medium'} = [];
+    $self->{'_notes'}{'hard'}   = [];
+    $self->{'_notes'}{'expert'} = [];
+    $self->{'_sp'}{'easy'}      = [];
+    $self->{'_sp'}{'medium'}    = [];
+    $self->{'_sp'}{'hard'}      = [];
+    $self->{'_sp'}{'expert'}    = [];
 }
 
 sub read {
     my $self = shift;
     my $debug = $self->debug();
-    if ($debug >= 1) { print "DEBUG: Enter QbFile::read()\n"; }
 
-    ## Get the file into an array of dwords
+    my $part   = $self->{'notepart'};
+    my $partsp = $part . 'sp';
+
     my $filename = $self->{'file'};
-    my $mode = "ps2";
-    if ($filename =~ /xen$/) { $mode = "x360"; }
-    open SONGFILE, $self->{'file'} or die "Could not open file $self->{'file'} for reading";
-    my $buf = "",
-    my @filearr = ();
-    while (1) {
-        my $len = read SONGFILE, $buf, 1024;
-        last if $len == 0;
-	my @a;
-	if ($mode eq "x360") { @a = unpack "N*", $buf; }
-	else                 { @a = unpack "V*", $buf; }
-        push @filearr, @a;
+
+    my $basename = File::Basename::basename($filename);
+    $self->generate_checksum_list( $basename );
+
+    my $mode = 'be'; # big endian by default, only ps2 is little endian
+    my $file_checksum = $self->{'_str2crc'}->{'wholename'}->{'checksum'};
+    if ( $filename =~ /\.ps2$/ ) {
+        $mode = 'le'; 
+        $file_checksum = $self->{'_str2crc'}->{'wholename_ps2'}->{'checksum'};
+    }
+
+    $debug && print  "DEBUG: File: $filename\n";
+    $debug && print  "DEBUG: Mode: $mode\n";
+    $debug && printf "DEBUG: File checksum: 0x%08x\n", $file_checksum;
+
+    ## Get the file into an array of 32 bit values
+    open SONGFILE, $filename or croak "Could not open file $filename for reading\n";
+    binmode SONGFILE;
+    my $buf;
+    for ( my $len ; $len = read SONGFILE, $buf, 65536 ; ! $len ) {
+        push @{$self->{'_raw'}}, $mode eq 'be' ? unpack 'N*', $buf : unpack 'V*', $buf;
     }
     close SONGFILE;
 
-    ## Track breakdown
-    ## --------------------------------
-    ## (1)  1x null track
-    ## (5)  4x notes for main part
-    ## (9)  4x SP phrases for main part
-    ## (13) 4x Battle phrases for main part
-    ## (17) 4x notes for alt part
-    ## (21) 4x SP phrases for alt part
-    ## (49) 28x null tracks
-    ## (50) Player 1 sections for Face-off
-    ## (51) Player 2 sections for Face-off
-    ## (52) 2x null tracks
-    ## (53) 1 Time signature track
-    ## (54) 1 Beat counting track
-    ## + some more crap I don't feel like parsing right now
+    # scan for file checksum and set pointers
+    foreach my $i ( 0 .. ( scalar @{$self->{'_raw'}} ) - 1 ) {
+        if ( $self->{'_raw'}->[$i] == $file_checksum ) {
+            my $section_string = $self->{'_crc2str'}->{ $self->{'_raw'}->[$i - 1] };
+            if ( defined $section_string ) {
+                $self->{'_str2crc'}->{$section_string}->{'pos'} = scalar @{$self->{'_sections'}};
+            }
+            push @{$self->{'_sections'}}, $i - 2;
+        }
+    }
+    $debug && printf "DEBUG: Found %u sections\n", scalar @{$self->{'_sections'}};
 
     my %temptracks = ();
-    splice @filearr, 0, 7;  ## Get rid of the file header 
 
-    foreach (0 .. 0)            { &_get_track(\@filearr) if $mode eq "ps2"; } # null
+    foreach my $diff ( qw( easy medium hard expert ) ) {
+        # get notes
+        $temptracks{'main'}{ $diff }  = $self->_get_section("song_$diff");
+        $temptracks{'coop'}{ $diff }  = $self->_get_section("song_rhythm_$diff");
+        $temptracks{'altp1'}{ $diff } = $self->_get_section("song_guitarcoop_$diff");
+        $temptracks{'altp2'}{ $diff } = $self->_get_section("song_rhythmcoop_$diff");
+        # get star power
+        $temptracks{'mainsp'}{ $diff }  = $self->_get_section("${diff}_star");
+        $temptracks{'coopsp'}{ $diff }  = $self->_get_section("rhythm_${diff}_star");
+        $temptracks{'altp1sp'}{ $diff } = $self->_get_section("guitarcoop_${diff}_star");
+        $temptracks{'altp2sp'}{ $diff } = $self->_get_section("rhythmcoop_${diff}_star");
+    }
+    $temptracks{'timesig'} = $self->_get_section('timesig');
+    $temptracks{'beats'}   = $self->_get_section('fretbars');
+    $temptracks{'markers'} = $self->_get_section('markers');
 
-    #foreach (0 .. 3)            { &_get_track(\@filearr); } # main notes
-    $temptracks{main}{easy}     = &_get_track(\@filearr);
-    $temptracks{main}{medium}   = &_get_track(\@filearr);
-    $temptracks{main}{hard}     = &_get_track(\@filearr);
-    $temptracks{main}{expert}   = &_get_track(\@filearr);
-    #foreach (0 .. 3)            { &_get_track(\@filearr); } # main sp
-    $temptracks{mainsp}{easy}   = &_get_track(\@filearr);
-    $temptracks{mainsp}{medium} = &_get_track(\@filearr);
-    $temptracks{mainsp}{hard}   = &_get_track(\@filearr);
-    $temptracks{mainsp}{expert} = &_get_track(\@filearr);
-    foreach (0 .. 3)            { &_get_track(\@filearr); } # main battle phrases
+    foreach my $diff ( qw(easy medium hard expert) ) {
 
-    #foreach (0 .. 3)            { &_get_track(\@filearr); } # bass/rhythm notes
-    $temptracks{coop}{easy}     = &_get_track(\@filearr);
-    $temptracks{coop}{medium}   = &_get_track(\@filearr);
-    $temptracks{coop}{hard}     = &_get_track(\@filearr);
-    $temptracks{coop}{expert}   = &_get_track(\@filearr);
-    #foreach (0 .. 3)            { &_get_track(\@filearr); } # bass/rhythm sp
-    $temptracks{coopsp}{easy}   = &_get_track(\@filearr);
-    $temptracks{coopsp}{medium} = &_get_track(\@filearr);
-    $temptracks{coopsp}{hard}   = &_get_track(\@filearr);
-    $temptracks{coopsp}{expert} = &_get_track(\@filearr);
-    foreach (0 .. 3)            { &_get_track(\@filearr); } # bass/rhythm battle phrases
-
-    #HACK - skip Aerosmith extra sections
-    # foreach (0 .. 11) { &_get_track(\@filearr); }
-
-    #foreach (0 .. 3)           { &_get_track(\@filearr); } # co-op p1 notes
-    $temptracks{altp1}{easy}     = &_get_track(\@filearr);
-    $temptracks{altp1}{medium}   = &_get_track(\@filearr);
-    $temptracks{altp1}{hard}     = &_get_track(\@filearr);
-    $temptracks{altp1}{expert}   = &_get_track(\@filearr);
-    #foreach (0 .. 3)            { &_get_track(\@filearr); } # co-op p1 sp
-    $temptracks{altp1sp}{easy}   = &_get_track(\@filearr);
-    $temptracks{altp1sp}{medium} = &_get_track(\@filearr);
-    $temptracks{altp1sp}{hard}   = &_get_track(\@filearr);
-    $temptracks{altp1sp}{expert} = &_get_track(\@filearr);
-    foreach (0 .. 3)            { &_get_track(\@filearr); } # co-op p1 battle phrases
-
-    #foreach (0 .. 3)           { &_get_track(\@filearr); } # co-op p2 notes
-    $temptracks{altp2}{easy}     = &_get_track(\@filearr);
-    $temptracks{altp2}{medium}   = &_get_track(\@filearr);
-    $temptracks{altp2}{hard}     = &_get_track(\@filearr);
-    $temptracks{altp2}{expert}   = &_get_track(\@filearr);
-    #foreach (0 .. 3)           { &_get_track(\@filearr); } # co-op p2 sp
-    $temptracks{altp2sp}{easy}   = &_get_track(\@filearr);
-    $temptracks{altp2sp}{medium} = &_get_track(\@filearr);
-    $temptracks{altp2sp}{hard}   = &_get_track(\@filearr);
-    $temptracks{altp2sp}{expert} = &_get_track(\@filearr);
-    foreach (0 .. 3)            { &_get_track(\@filearr); } # co-op p2 battle phrases
-
-    foreach (0 .. 3)           { &_get_track(\@filearr); } # active sections for face off/boss battle
-
-    $temptracks{timesig}        = &_get_track(\@filearr);
-    $temptracks{beats}          = &_get_track(\@filearr);
-    $temptracks{markers}        = &_get_marker_track(\@filearr);
-
-    my $part   = 'main';
-    my $partsp = $part . 'sp';
-
-    for my $dd (qw(easy medium hard expert)) {
-
-        unless ( defined ($temptracks{$part}{$dd}) ) {
+        unless ( defined ($temptracks{$part}{$diff}) ) {
             print "no section matching $part.\n";
             return;
         }
+
 	## Get the notes down first
-	for (my $i = 0; $i < @{$temptracks{$part}{$dd}}; $i+=3) { 
-	    push @{$self->{_notes}{$dd}}, [ @{$temptracks{$part}{$dd}}[$i .. $i+2] ];
+	for (my $i = 0; $i < @{$temptracks{$part}{$diff}} ; $i+=3) { 
+	    push @{$self->{_notes}{$diff}}, [ @{$temptracks{$part}{$diff}}[$i .. $i+2] ];
 	}
 
 	## Run through the notes to get the SP start points
 	my $spp = 0;
-	my $numspphrases = scalar(@{$temptracks{$partsp}{$dd}});
-	for (my $i = 0; $i < @{$self->{_notes}{$dd}}; $i++) {
+	my $numspphrases = scalar(@{$temptracks{$partsp}{$diff}});
+	for (my $i = 0; $i < @{$self->{_notes}{$diff}}; $i++) {
 	    next if $spp >= $numspphrases;
-	    if ( $self->{_notes}{$dd}[$i][0] >= $temptracks{$partsp}{$dd}[$spp][0] ) { 
-		$self->{_sp}{$dd}[$spp][0] = $i;
-		$self->{_sp}{$dd}[$spp][1] = $i + $temptracks{$partsp}{$dd}[$spp][2] - 1;
+	    if ( $self->{_notes}{$diff}[$i][0] >= $temptracks{$partsp}{$diff}[$spp][0] ) { 
+		$self->{_sp}{$diff}[$spp][0] = $i;
+		$self->{_sp}{$diff}[$spp][1] = $i + $temptracks{$partsp}{$diff}[$spp][2] - 1;
 		$spp++;
 	    }
 	}
     }
 
     ## beat track just moves over
-    @{$self->{_beat}} = @{$temptracks{beats}};
+    @{$self->{'_beat'}} = @{$temptracks{'beats'}};
 
     if ($self->sustainthresh() == 0) {
-	my $st = int (($temptracks{beats}[1] - $temptracks{beats}[0])/2 + 0.0001);
+	my $st = int ( ($self->{'_beat'}[1] - $self->{'_beat'}[0]) / 2 + 0.0001);
         $self->sustainthresh($st);
     }
 
@@ -173,7 +147,6 @@ sub read {
     for (my $i = 0 ; $i < @{$temptracks{timesig}} ; $i++) {
         $self->{_timesig}[$i] = [ $temptracks{timesig}[$i][0], $temptracks{timesig} [$i][1] ];
     }
-
 
     ###################################################################
     ##  BEGIN SECTION NAMES
@@ -192,48 +165,409 @@ sub read {
     }
     close MSECTION;
 
-    ## Now we need to extract the base name of this qb file
-    my $basefilename = "";
-    if     ($filename =~ /(\S+)\/(\S+).mid.qb.*/)  { $basefilename =  "$2"; }
-    elsif  ($filename =~ /(\S+).mid.qb.*/)         { $basefilename =  "$1"; }
-    else                                           { $basefilename =  "deadbeefsdfjdlskjfdklsjflsf"; }
-
     ## Now loop through all of the section names, and if we find one, then we stick it in the hash
-    foreach my $ra (@{$temptracks{markers}}) {
-	my ($tt,$kk) = @$ra;
-	if (exists($db{$basefilename}{$kk})) {
-	    push @{$self->{_markers}}, [ $tt, $db{$basefilename}{$kk} ];
+    my $basename = $self->{'str2crc'}->{'basename'}->{'string'};
+    foreach my $marker ( @{$temptracks{'markers'}} ) {
+        my $crc  = $marker->{'marker'};
+        my $time = $marker->{'time'};
+	if ( exists $db{$basename}{$crc} ) {
+	    push @{$self->{_markers}}, [ $time, $db{$basename}{$crc} ];
 	}
     }
-
     ###################################################################
     ##  END SECTION NAMES
     ###################################################################
+    return $self;
 }
 
+sub _get_section {
+    my $self = shift;
+    my $section_string = shift;
+    croak "Section '$section_string' not found!" unless defined $self->{'_str2crc'}->{$section_string};
+
+    my $debug = $self->debug();
+    if ( $debug > 1 ) {
+        printf "DEBUG: _get_section : '%s' (0x%08x)\n", 
+            $section_string, 
+            $self->{'_str2crc'}->{$section_string}->{'checksum'},
+    }
+
+    my $pos_start = $self->{'_sections'}->[ $self->{'_str2crc'}->{$section_string}->{'pos'} ];
+    my $pos_end   = $self->{'_sections'}->[ $self->{'_str2crc'}->{$section_string}->{'pos'} + 1 ] - 1 ;
+    if ( $debug > 1 ) {
+        printf "DEBUG: _get_section : \$pos_start = %u, \$pos_end = %u\n", 
+            $pos_start, 
+            $pos_end;
+    }
+
+    my @section_data = @{$self->{'_raw'}}[ $pos_start+5..$pos_end ];
+
+    my $section_type = $section_data[ 0 ];
+    if ( $debug > 1 ) {
+        printf "DEBUG: _get_section : \$section_type = 0x%08x\n", $section_type;
+    }
+
+    if    ( $section_type == 0x00010000 ) {
+        # empty
+        $debug && print "DEBUG: Section $section_string is empty\n";
+        return [];
+    }
+    elsif ( $section_type == 0x00010100 ) {
+        # array
+        my @parsed = $self->_parse_array( \@section_data, $section_string );
+        $debug 
+        && printf "DEBUG: Section %s (0x%08x) is valid (%u element array)\n", 
+           $section_string, 
+           $self->{'_str2crc'}->{ $section_string }->{'checksum'}, 
+           scalar @parsed;
+        return \@parsed;
+    }
+    elsif (    $section_type == 0x000c0100
+            || $section_type == 0x00010c00
+    ) 
+    {
+        # array of arrays
+        my @parsed = $self->_parse_arrayOfArrays( \@section_data, $section_string );
+        $debug
+        && printf "DEBUG: Section %s (0x%08x) is valid (%u element array of arrays)\n",
+           $section_string,
+           $self->{'_str2crc'}->{ $section_string }->{'checksum'}, 
+           scalar @parsed;
+        return \@parsed;
+    }
+    elsif (    $section_type == 0x000a0100
+            || $section_type == 0x00010a00
+    ) 
+    {
+        # array of hashes
+        my @parsed = $self->_parse_array_hash( \@section_data, $section_string );
+        $debug
+        && printf "DEBUG: Section %s (0x%08x) is valid (%u element array of hashes)\n",
+           $section_string,
+           $self->{'_str2crc'}->{ $section_string }->{'checksum'}, 
+           scalar @parsed;
+        
+        return \@parsed;
+    }
+    else {
+        carp sprintf "Unrecognised section: '%s' (0x%08x)", $section_string, $section_type;
+        return [];
+    }
+    die "Should never get here!\n";
+}
+
+
+sub qbcrc32 {
+    my $self = shift;
+    my $string = shift;
+    warn 'no string provided!\n' unless defined $string;
+
+    $string = lc $string;
+    $string =~ s#/#\\#g;
+
+    return String::CRC32::crc32( $string ) ^ 0xFFFFFFFF ;
+}
+
+sub generate_checksum_list {
+    my $self = shift;
+    my $filename = shift;
+
+    my $transform;
+    my $checksum;
+
+    # strip off extraneous suffixes
+    $filename =~ s/\.ps2$//;
+    $filename =~ s/\.xen$//;
+    $filename =~ s/\.qb$//;
+    $filename =~ s/\.mid$//;
+
+    # song
+    $checksum = $self->qbcrc32( $filename );
+    $self->{'_str2crc'}->{ 'basename' } = { 'string' => $filename, 'checksum' => $checksum };
+    $self->{'_crc2str'}->{ $checksum } = 'basename';
+
+    # songs\<song>.mid.qb
+    $transform = "songs\\$filename.mid.qb";
+    $checksum = $self->qbcrc32( $transform );
+    $self->{'_str2crc'}->{ 'wholename' } = { 'string' => $transform, 'checksum' => $checksum };
+    $self->{'_crc2str'}->{ $checksum } = 'wholename';
+
+    # data\songs\<song>.mid.qb (ps2)
+    $transform = "data\\songs\\$filename.mid.qb";
+    $checksum = $self->qbcrc32( $transform );
+    $self->{'_str2crc'}->{ 'wholename_ps2' } = { 'string' => $transform, 'checksum' => $checksum };
+    $self->{'_crc2str'}->{ $checksum } = 'wholename_ps2';
+
+    foreach my $part ( qw( timesig fretbars markers faceoffp1 faceoffp2 bossbattlep1 bossbattlep2 ) ) {
+        $self->_push_string_checksum( $filename, $part );
+    }
+
+    foreach my $diff ( qw( easy medium hard expert ) ) {
+
+        my $part;
+        # <filename>_song_<diff>
+        $part = 'song_' . $diff;
+        $self->_push_string_checksum( $filename, $part );
+
+        # <filename>_<diff>_star
+        $part = $diff . '_star';
+        $self->_push_string_checksum( $filename, $part );
+
+        # <filename>_<diff>_star
+        $part = $diff . '_starbattlemode';
+        $self->_push_string_checksum( $filename, $part );
+
+        # <filename>_song_{guitarcoop,rhythm,rhythmcoop}_<diff>
+        foreach my $chart_type ( qw( guitarcoop rhythm rhythmcoop ) ) {
+
+            # song_<type>_<diff>
+            $part = 'song_' . $chart_type . '_' . $diff;
+            $self->_push_string_checksum( $filename, $part );
+
+            # <type>_<diff>_star
+            $part = $chart_type . '_' . $diff . '_star';
+            $self->_push_string_checksum( $filename, $part );
+
+            # <type>_<diff>_starbattlemode
+            $part =  $chart_type . '_' . $diff . '_starbattlemode';
+            $self->_push_string_checksum( $filename, $part );
+        }
+    }
+}
+
+sub _push_string_checksum {
+    my $self = shift;
+    my $filename = shift;
+    my $part = shift;
+    my $hashref_str2crc = shift;
+    my $hashref_crc2str = shift;
+
+    my $transform = $filename . '_' . $part;
+    my $checksum = $self->qbcrc32( $transform );
+    $self->{'_str2crc'}->{ $part } = { 'string' => $transform, 'checksum' => $checksum };
+    $self->{'_crc2str'}->{ $checksum } = $part;
+}
+
+sub _parse_array {
+    my $self = shift;
+    my $debug = $self->debug();
+
+    my $section_AREF = shift;
+    my $section_string = shift;
+    my $section_type = shift @$section_AREF;
+    my $section_length = shift @$section_AREF;
+    my $section_start = shift @$section_AREF;
+
+    if ( $debug > 1 ) {
+        print  "DEBUG: * inside _parse_array\n";
+        printf "DEBUG: * string : %s\n", $section_string;
+        printf "DEBUG: * type   : 0x%08x\n", $section_type;
+        printf "DEBUG: * length : 0x%08x\n", $section_length;
+        printf "DEBUG: * start  : 0x%08x\n", $section_start;
+    }
+
+    if ( scalar @$section_AREF == $section_length ) {
+        return @$section_AREF;
+    }
+    elsif ( scalar @$section_AREF > $section_length ) {
+        carp sprintf 'Section %s array is longer than defined length (%u extra bytes)', $section_string, scalar @$section_AREF - $section_length;
+        return @$section_AREF[ 0..($section_length - 1) ];
+    }
+    else {
+        croak sprintf 'Section %s array is shorter than defined length (got %u, expected %u)', $section_string, scalar @$section_AREF, $section_length;
+    }
+    die "Should never get here!\n";
+}
+
+sub _parse_arrayOfArrays {
+    my $self = shift;
+    my $debug = $self->debug();
+
+    my $section_AREF = shift;
+    my $section_string = shift;
+    my $section_type = shift @$section_AREF;
+    my $section_length = shift @$section_AREF;
+    my $section_start = shift @$section_AREF;
+    
+    if ( $debug > 1 ) {
+        print  "DEBUG: * inside _parse_multi_array\n";
+        printf "DEBUG: * string : %s\n", $section_string;
+        printf "DEBUG: * type   : 0x%08x\n", $section_type;
+        printf "DEBUG: * length : 0x%08x\n", $section_length;
+        printf "DEBUG: * start  : 0x%08x\n", $section_start;
+    }
+
+    my @multiarray;
+    if ( $section_length > 1 ) {
+        # strip off sub-array pointers
+        my @array_pointers = splice @$section_AREF, 0, $section_length;
+
+        if ( $debug > 1 ) {
+            print  "DEBUG: * \@array_pointers:\n";
+            foreach my $i ( @array_pointers ) {
+                printf "DEBUG: * = 0x%08x\n", $i;
+            }
+        }
+
+        foreach ( @array_pointers ) {
+            push @multiarray, $self->_splice_array( $section_AREF, $section_string );
+        }
+    }
+    elsif ( $section_length == 1 ) {
+        push @multiarray, $self->_splice_array( $section_AREF, $section_string );
+    }
+    else {
+        croak sprintf 'Zero length multi-array at 0x%08x.', $section_start;
+    }
+    return @multiarray;
+}
+
+sub _splice_array {
+    my $self = shift;
+    my $section_AREF = shift;
+    my $section_string = shift;
+    my $this_array_length = @$section_AREF[1];
+    my @this_array = splice @$section_AREF, 0, $this_array_length + 3;
+    my @array = $self->_parse_array( \@this_array, $section_string );
+    return \@array;
+}
+
+sub _parse_array_hash {
+    my $self = shift;
+    my $section_AREF = shift;
+    my $section_string = shift;
+
+    my $debug = $self->debug();
+
+    if ( $debug > 1 ) {
+        print  "DEBUG: * inside _parse_array_hash\n";
+        printf "DEBUG: * string : %s\n", $section_string;
+    }
+
+    my $element_count = @$section_AREF[1];
+    my @hash_table = splice @$section_AREF, 0, $element_count + 3;
+
+    my @array_hash;
+    while ( my $hash_entry_magic = shift @$section_AREF ) {
+        unless ( $hash_entry_magic == 0x00000100 ) {
+            croak sprintf 'Unexpected magic (0x%08x) while parsing section \'%s\'.', $hash_entry_magic, $section_string;
+        }
+
+        my $pointer = shift @$section_AREF; # discarded
+
+        my $time;
+        my $marker;
+
+        while ( 1 ) {
+            my $var_type = shift @$section_AREF;
+
+            if    ( $var_type == 0x00000300 || $var_type == 0x00810000 ) {
+                # integer
+                $debug > 1 && printf "DEBUG: variable type - integer (0x%08x)\n", $var_type;
+                my $var_name  = shift @$section_AREF;
+                $debug > 1 && printf "DEBUG: variable name crc - 0x%08x\n", $var_name;
+                unless ( $var_name == 0x906b67ba ) {
+                    croak sprintf 'Unknown variable name (0x%08x) while parsing section \'%s\'.', $var_name, $section_string;
+                }
+                my $var_value = shift @$section_AREF;
+                $debug > 1 && printf "DEBUG: variable value - 0x%08x\n", $var_value;
+                my $pointer   = shift @$section_AREF;
+                $debug > 1 && printf "DEBUG: next value pointer - 0x%08x\n", $pointer;
+
+                $time = $var_value;
+
+                last unless $pointer;
+            }
+            elsif ( $var_type == 0x00003500 || $var_type == 0x009a0000 ) {
+                # string
+                $debug > 1 && printf "DEBUG: variable type - string (0x%08x)\n", $var_type;
+                my $var_name  = shift @$section_AREF;
+                $debug > 1 && printf "DEBUG: variable name crc - 0x%08x\n", $var_name;
+                unless ( $var_name == 0x7d30df01 ) {
+                    croak sprintf 'Unknown variable name (0x%08x) while parsing section \'%s\'.', $var_name, $section_string;
+                }
+                my $var_value = shift @$section_AREF;
+                $debug > 1 && printf "DEBUG: variable value - 0x%08x\n", $var_value;
+                my $pointer   = shift @$section_AREF;
+                $debug > 1 && printf "DEBUG: next value pointer - 0x%08x\n", $pointer;
+
+                $marker = $var_value;
+
+                last unless $pointer;
+            }
+            else {
+                croak sprintf 'Unknown variable type (0x%08x) while parsing section \'%s\'.', $var_type, $section_string;
+            }
+        }
+        $debug > 1 && printf "DEBUG: time: 0x%08x\n", $time;
+        $debug > 1 && printf "DEBUG: marker: 0x%08x\n", $marker;
+        if ( $time && $marker ) {
+            push @array_hash, { 'time' => $time, 'marker' => $marker };
+        }
+        else {
+            croak sprintf 'Missing value while parsing section \'%s\'.', $section_string;
+        }
+    }
+    return @array_hash;
+}
+
+sub _print_hex {
+    my $self = shift;
+    my $array = shift;
+
+    foreach ( @$array ) {
+        printf "0x%08x\n", $_;
+    }
+}
+
+1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##### OLD CODE BEING REWRITTEN #####
 sub _get_track {
     my $ra = shift;
-    $ra->[0] == 787456 or $ra->[0] == 2100224 or die "No track header where one was expected";
+    $ra->[0] == 0x000c0400 or $ra->[0] == 0x00200c00 or die "No track header where one was expected";
     splice @$ra, 0, 5;
 
     my $type = $ra->[0];
-    if    ($type == 256)    { splice @$ra, 0, 3; return []; }
-    if    ($type == 65536)  { splice @$ra, 0, 3; return []; }
-    elsif ($type == 65792)  { return &_parse_simple_list($ra);  }
-    elsif ($type == 786688) { return &_parse_multlist($ra);  }
-    elsif ($type == 68608)  { return &_parse_multlist($ra);  }
-    elsif ($type == 655616) { return &_parse_multlist($ra);  }
-    else                    { die "Got very confused in get_track: type=$type"; }
+    if    ($type == 0x00000100 ) { splice @$ra, 0, 3; return [];    }
+    if    ($type == 0x00010000 ) { splice @$ra, 0, 3; return [];    }
+
+    elsif ($type == 0x00010100 ) { return &_parse_simple_list($ra); }
+
+    elsif ($type == 0x000c0100 ) { return &_parse_multlist($ra);    }
+    elsif ($type == 0x00010c00 ) { return &_parse_multlist($ra);    }
+    elsif ($type == 0x000a0100 ) { return &_parse_multlist($ra);    }
+
+    else                         { die "Got very confused in get_track: type=$type"; }
     ##elsif ($type == 65536)  { &parse_rec65536();  }
 }
 
 sub _get_marker_track {
     my $ra = shift;
     my @out = ();
-    $ra->[0] == 787456 or $ra->[0] == 2100224 or die "No track header where one was expected";
+    $ra->[0] == 0x000c0400 or $ra->[0] == 0x00200c00 or die "No track header where one was expected";
     splice @$ra, 0, 5;
     my $type = $ra->[0];
-    $type == 655616 or $type == 68096 or die "Couldn't find the right marker track, got $type instead";
+    $type == 0x000a0100 or $type == 0x00010a00 or die "Couldn't find the right marker track, got $type instead";
     my $len = $ra->[1];
     splice @$ra, 0, 3;
     if ($len > 1) { splice @$ra, 0, $len; }
@@ -260,7 +594,6 @@ sub _get_marker_track {
     return \@out;
 }
 
-
 sub _parse_simple_list {
     my $ra = shift;
     my $num = $ra->[1];
@@ -281,7 +614,6 @@ sub _parse_multlist {
     return [ @out ];
 }
 
-
 sub __max {
     my $max = $_[0];
     foreach my $a (@_) { $max = $a if $a > $max; }
@@ -294,91 +626,5 @@ sub __min {
     return $min;
 }
 
-sub get_markers {
-    my $self = shift;
-    return $self->{_markers};
-}
-
-sub qbcrc32 {
-    my $self = shift;
-    my $string = shift;
-    warn 'no string provided!\n' unless defined $string;
-
-    $string = lc $string;
-    $string =~ s#/#\\#g;
-
-    return String::CRC32::crc32( $string ) ^ 0xFFFFFFFF ;
-}
-
-sub generate_checksum_list {
-    my $self = shift;
-    my $filename = shift;
-
-    my %song_checksums;
-    my $transform;
-
-    # strip off extraneous suffixes
-    $filename =~ s/\.ps2$//;
-    $filename =~ s/\.xen$//;
-    $filename =~ s/\.qb$//;
-    $filename =~ s/\.mid$//;
-
-    # song
-    $song_checksums{ 'basename' } = { 'string' => $filename, 'checksum' => qbcrc32( $self, $filename ) };
-
-    # songs\<song>.mid.qb
-    $transform = "songs\\$filename.mid.qb";
-    $song_checksums{ 'wholename' } = { 'string' => $transform, 'checksum' => qbcrc32( $self, $transform) };
-
-    foreach my $part ( qw( timesig fretbars markers faceoffp1 faceoffp2 bossbattlep1 bossbattlep2 ) ) {
-        _push_string_checksum( $self, $filename, $part, \%song_checksums );
-    }
-
-    foreach my $diff ( qw( easy medium hard expert ) ) {
-
-        my $part;
-        # <filename>_song_<diff>
-        $part = 'song_' . $diff;
-        _push_string_checksum( $self, $filename, $part, \%song_checksums );
-
-        # <filename>_<diff>_star
-        $part = $diff . '_star';
-        _push_string_checksum( $self, $filename, $part, \%song_checksums );
-
-        # <filename>_<diff>_star
-        $part = $diff . '_starbattlemode';
-        _push_string_checksum( $self, $filename, $part, \%song_checksums );
-
-        # <filename>_song_{guitarcoop,rhythm,rhythmcoop}_<diff>
-        foreach my $chart_type ( qw( guitarcoop rhythm rhythmcoop ) ) {
-
-            # song_<type>_<diff>
-            $part = 'song_' . $chart_type . '_' . $diff;
-            _push_string_checksum( $self, $filename, $part, \%song_checksums );
-
-            # <type>_<diff>_star
-            $part = $chart_type . '_' . $diff . '_star';
-            _push_string_checksum( $self, $filename, $part, \%song_checksums );
-
-            # <type>_<diff>_starbattlemode
-            $part =  $chart_type . '_' . $diff . '_starbattlemode';
-            _push_string_checksum( $self, $filename, $part, \%song_checksums );
-        }
-    }
-    return \%song_checksums;
-}
-
-sub _push_string_checksum {
-    my $self = shift;
-    my $filename = shift;
-    my $part = shift;
-    my $hashref = shift;
-
-    return unless ( defined $part && defined $hashref && ref($hashref) eq 'HASH' );
-
-    my $transform = $filename . '_' . $part;
-    $hashref->{ $part } = { 'string' => $transform, 'checksum' => qbcrc32( $self, $transform ) };
-}
-
-1;
+################## end old ###############
 
