@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.8 2008-10-30 08:43:27 tarragon Exp $
+# $Id: QbFile.pm,v 1.9 2008-10-30 11:13:59 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package QbFile;
@@ -148,10 +148,6 @@ sub read {
         $self->{_timesig}[$i] = [ $temptracks{timesig}[$i][0], $temptracks{timesig} [$i][1] ];
     }
 
-    ###################################################################
-    ##  BEGIN SECTION NAMES
-    ###################################################################
-
     ## for section names, we have to read in the master file
     my $master_file = "";
     if ($filename =~ /(\S+)\/(\S+)/) { $master_file = "$1/master_section_names.txt"; }
@@ -174,9 +170,6 @@ sub read {
 	    push @{$self->{_markers}}, [ $time, $db{$basename}{$crc} ];
 	}
     }
-    ###################################################################
-    ##  END SECTION NAMES
-    ###################################################################
     return $self;
 }
 
@@ -521,110 +514,4 @@ sub _print_hex {
 }
 
 1;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##### OLD CODE BEING REWRITTEN #####
-sub _get_track {
-    my $ra = shift;
-    $ra->[0] == 0x000c0400 or $ra->[0] == 0x00200c00 or die "No track header where one was expected";
-    splice @$ra, 0, 5;
-
-    my $type = $ra->[0];
-    if    ($type == 0x00000100 ) { splice @$ra, 0, 3; return [];    }
-    if    ($type == 0x00010000 ) { splice @$ra, 0, 3; return [];    }
-
-    elsif ($type == 0x00010100 ) { return &_parse_simple_list($ra); }
-
-    elsif ($type == 0x000c0100 ) { return &_parse_multlist($ra);    }
-    elsif ($type == 0x00010c00 ) { return &_parse_multlist($ra);    }
-    elsif ($type == 0x000a0100 ) { return &_parse_multlist($ra);    }
-
-    else                         { die "Got very confused in get_track: type=$type"; }
-    ##elsif ($type == 65536)  { &parse_rec65536();  }
-}
-
-sub _get_marker_track {
-    my $ra = shift;
-    my @out = ();
-    $ra->[0] == 0x000c0400 or $ra->[0] == 0x00200c00 or die "No track header where one was expected";
-    splice @$ra, 0, 5;
-    my $type = $ra->[0];
-    $type == 0x000a0100 or $type == 0x00010a00 or die "Couldn't find the right marker track, got $type instead";
-    my $len = $ra->[1];
-    splice @$ra, 0, 3;
-    if ($len > 1) { splice @$ra, 0, $len; }
-    for my $i ( 0 .. $len ) {
-        ## 10 words each
-	
-	## 0x00010000
-	## start pointer
-	## type = integer
-	## checksum for "time"
-	## time value
-	## pointer
-	## type = basic variable
-	## checksum for "marker"
-	## value of the string checksum
-	## 0x00000000
-
-	my $timestamp       = $ra->[4];
-	my $string_checksum = sprintf "%08x", $ra->[8];
-	$out[$i][0] = $timestamp;
-	$out[$i][1] = $string_checksum;
-        splice @$ra, 0, 10;
-    }
-    return \@out;
-}
-
-sub _parse_simple_list {
-    my $ra = shift;
-    my $num = $ra->[1];
-    my $numm1 = $num - 1;
-    splice @$ra, 0, 3;
-    my $out = [ (@$ra)[0 .. $numm1] ];
-    splice @$ra, 0, $num;
-    return $out;
-}
-
-sub _parse_multlist {
-    my $ra = shift;
-    my $num = $ra->[1];
-    splice @$ra, 0, 3;
-    if ($num > 1) { splice @$ra, 0, $num; }
-    my @out = ();
-    for my $i ( 0 .. $num-1 ) {$out[$i] = &_parse_simple_list($ra); }
-    return [ @out ];
-}
-
-sub __max {
-    my $max = $_[0];
-    foreach my $a (@_) { $max = $a if $a > $max; }
-    return $max;
-}
-
-sub __min {
-    my $min = $_[0];
-    foreach my $a (@_) { $min = $a if $a < $min; }
-    return $min;
-}
-
-################## end old ###############
 
