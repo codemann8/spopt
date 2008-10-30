@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.7 2008-10-30 05:29:30 tarragon Exp $
+# $Id: QbFile.pm,v 1.8 2008-10-30 08:43:27 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package QbFile;
@@ -455,8 +455,8 @@ sub _parse_array_hash {
 
         my $pointer = shift @$section_AREF; # discarded
 
-        my $time;
-        my $marker;
+        my $time = undef;
+        my $marker = undef;
 
         while ( 1 ) {
             my $var_type = shift @$section_AREF;
@@ -501,7 +501,7 @@ sub _parse_array_hash {
         }
         $debug > 1 && printf "DEBUG: time: 0x%08x\n", $time;
         $debug > 1 && printf "DEBUG: marker: 0x%08x\n", $marker;
-        if ( $time && $marker ) {
+        if ( defined $time && defined $marker ) {
             push @array_hash, { 'time' => $time, 'marker' => $marker };
         }
         else {
