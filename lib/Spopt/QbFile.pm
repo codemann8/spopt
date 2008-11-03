@@ -1,27 +1,79 @@
-# $Id: QbFile.pm,v 1.9 2008-10-30 11:13:59 tarragon Exp $
+# $Id: QbFile.pm,v 1.10 2008-11-03 13:59:09 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package QbFile;
 use strict;
 
-use String::CRC32;
-use File::Basename;
-use Carp;
+use Carp qw( carp croak );
 
-sub new               { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
-sub _prop             { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
-sub file              { my $self = shift; return $self->_prop('file',@_);    }
-sub debug             { my $self = shift; return $self->_prop('debug',@_);    }
-sub sustainthresh     { my $self = shift; return $self->_prop('sustainthresh',@_);    }
-sub notepart          { my $self = shift; return $self->_prop('notepart',@_);    }
-sub get_notearr       { my ($self,$diff) = @_; return $self->{'_notes'}{$diff}; }
-sub get_sparr         { my ($self,$diff) = @_; return $self->{'_sp'}{$diff}; }
-sub get_beats         { my ($self) = @_;       return $self->{'_beat'}; }
-sub get_timesig       { my ($self) = @_;       return $self->{'_timesig'}; }
-sub get_str2crc       { my ($self) = @_;       return $self->{'_str2crc'}; }
-sub get_crc2str       { my ($self) = @_;       return $self->{'_crc2str'}; }
-sub get_markers       { my $self = shift; return $self->{_markers}; }
+require String::CRC32;
+require File::Basename;
 
+sub new             { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
+sub _prop           { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
+sub file            { my $self = shift; return $self->_prop('file',@_);    }
+sub debug           { my $self = shift; return $self->_prop('debug',@_);    }
+sub sustainthresh   { my $self = shift; return $self->_prop('sustainthresh',@_);    }
+sub notepart        { my $self = shift; return $self->_prop('notepart',@_);    }
+sub get_notearr     { my ($self,$diff) = @_; return $self->{'_notes'}{$diff}; }
+sub get_sparr       { my ($self,$diff) = @_; return $self->{'_sp'}{$diff}; }
+sub get_beats       { my ($self) = @_;       return $self->{'_beat'}; }
+sub get_timesig     { my ($self) = @_;       return $self->{'_timesig'}; }
+sub get_str2crc     { my ($self) = @_;       return $self->{'_str2crc'}; }
+sub get_crc2str     { my ($self) = @_;       return $self->{'_crc2str'}; }
+sub get_markers     { my $self = shift; return $self->{_markers}; }
+sub dump            { my $self = shift; $self->_dump; return $self; }
+
+sub _dump {
+    my $self = shift;
+    foreach my $section ( @{$self->{'_sections'}} ) {
+        my $crc = $self->{'_raw'}[$section+1];
+        my $string = defined $self->{'_crc2str'}->{ $crc } ? $self->{'_crc2str'}->{ $crc } : '';
+        printf "%u : 0x%08x - %s\n", $section, $crc, $string;
+    }
+    $self->_print_values( $self->_get_section("song_easy"), 2 );
+    return;
+    foreach my $diff ( qw( easy medium hard expert ) ) {
+        $self->_print_notes( $self->{'_notes'}{ $diff } );
+        foreach my $part ( qw( guitarcoop_ rhythm_ rhythmcoop_ ) ) {
+            $self->_print_notes( $self->{'_notes'}{ $part.$diff } );
+        }
+    }
+}
+
+sub _print_notes {
+    my $self = shift;
+    my $notes = shift;
+    print "  Time Notes    Length\n";
+    foreach my $note ( @$notes ) {
+        printf "%6u %08b %5u\n", $note->[0], $note->[2], $note->[1];
+    }
+}
+
+sub _print_values {
+    my $self = shift;
+    my $array = shift;
+    my $width = shift;
+    unless ( defined($width) ) { $width = 1; }
+
+    my $i = 0;
+    foreach ( @$array ) {
+        my ( $u1, $u2, $u3, $u4 );
+        $u1 = ( $_ & 0xff000000 ) / 0x01000000;
+        $u2 = ( $_ & 0x00ff0000 ) / 0x00010000;
+        $u3 = ( $_ & 0x0000ff00 ) / 0x00000100;
+        $u4 = ( $_ & 0x000000ff );
+
+        printf "0x%08x 0b%08b:%08b:%08b:%08b", $_, $u1, $u2, $u3, $u4;
+        $i++;
+        if ( $i % $width ) {
+            print ' - ';
+        }
+        else {
+            print "\n";
+        }
+    }
+}
 
 sub _init {
     my $self = shift;
@@ -35,19 +87,27 @@ sub _init {
     $self->{'_str2crc'}         = {};
     $self->{'_crc2str'}         = {};
     $self->{'_sections'}        = [];
+    $self->{'_sections_crc'}    = {};
     $self->{'_beat'}            = [];
     $self->{'_timesig'}         = [];
     $self->{'_markers'}         = [];
-    $self->{'_notes'}{'easy'}   = [];
-    $self->{'_notes'}{'medium'} = [];
-    $self->{'_notes'}{'hard'}   = [];
-    $self->{'_notes'}{'expert'} = [];
-    $self->{'_sp'}{'easy'}      = [];
-    $self->{'_sp'}{'medium'}    = [];
-    $self->{'_sp'}{'hard'}      = [];
-    $self->{'_sp'}{'expert'}    = [];
+    foreach my $diff ( qw( easy medium hard expert ) ) {
+        $self->{'_notes'}{ $diff }   = [];
+        $self->{'_sp'}{ $diff }      = [];
+        foreach my $part ( qw( guitarcoop_ rhythm_ rhythmcoop_ ) ) {
+            $self->{'_notes'}{ $part.$diff }   = [];
+            $self->{'_sp'}{ $part.$diff }      = [];
+        }
+    }
 }
 
+=head3 read
+
+    $qb->read()
+
+Reads in the file specified, generates a checksum list, and extracts the sections from the file.
+
+=cut
 sub read {
     my $self = shift;
     my $debug = $self->debug();
@@ -80,13 +140,14 @@ sub read {
     }
     close SONGFILE;
 
+## TODO check for QB header
+
     # scan for file checksum and set pointers
-    foreach my $i ( 0 .. ( scalar @{$self->{'_raw'}} ) - 1 ) {
+    foreach my $i ( 1 .. ( scalar @{$self->{'_raw'}} ) - 1 ) {
+        # if current u32 matches the checksum, the previous u32 defines the section
         if ( $self->{'_raw'}->[$i] == $file_checksum ) {
-            my $section_string = $self->{'_crc2str'}->{ $self->{'_raw'}->[$i - 1] };
-            if ( defined $section_string ) {
-                $self->{'_str2crc'}->{$section_string}->{'pos'} = scalar @{$self->{'_sections'}};
-            }
+            my $section_crc = $self->{'_raw'}->[$i - 1];
+            $self->{'_sections_crc'}->{$section_crc} = scalar @{$self->{'_sections'}};
             push @{$self->{'_sections'}}, $i - 2;
         }
     }
@@ -109,6 +170,12 @@ sub read {
     $temptracks{'timesig'} = $self->_get_section('timesig');
     $temptracks{'beats'}   = $self->_get_section('fretbars');
     $temptracks{'markers'} = $self->_get_section('markers');
+    
+    # look for a section specific to GH:WT (gh4)
+    my $gamever = 3;
+    if ( defined $self->_get_section("song_drum_easy") ) {
+        $gamever = 4;
+    }
 
     foreach my $diff ( qw(easy medium hard expert) ) {
 
@@ -117,10 +184,23 @@ sub read {
             return;
         }
 
-	## Get the notes down first
-	for (my $i = 0; $i < @{$temptracks{$part}{$diff}} ; $i+=3) { 
-	    push @{$self->{_notes}{$diff}}, [ @{$temptracks{$part}{$diff}}[$i .. $i+2] ];
-	}
+        ## Get the notes down first
+        if ( $gamever == 3 ) {
+            for (my $i = 0; $i < @{$temptracks{$part}{$diff}} ; $i+=3) { 
+                push @{$self->{_notes}{$diff}}, [ @{$temptracks{$part}{$diff}}[$i .. $i+2] ];
+            }
+        }
+        elsif ( $gamever == 4 ) {
+            for (my $i = 0; $i < @{$temptracks{$part}{$diff}} ; $i+=2) { 
+                my $time   = $temptracks{$part}{$diff}->[0];
+                my $length = ( $temptracks{$part}{$diff}->[1] & 0x0000ffff );
+                my $notes  = ( $temptracks{$part}{$diff}->[1] & 0xffff0000 ) / 0x00010000 ;
+                push @{$self->{_notes}{$diff}}, [ $time, $length, $notes ];
+            }
+        } 
+        else {
+            die "Got confused about the game version.\n";
+        }
 
 	## Run through the notes to get the SP start points
 	my $spp = 0;
@@ -148,27 +228,35 @@ sub read {
         $self->{_timesig}[$i] = [ $temptracks{timesig}[$i][0], $temptracks{timesig} [$i][1] ];
     }
 
+    # process section names, if available
     ## for section names, we have to read in the master file
     my $master_file = "";
-    if ($filename =~ /(\S+)\/(\S+)/) { $master_file = "$1/master_section_names.txt"; }
-        else                         { $master_file = "master_section_names.txt";    }
-    open MSECTION, "$master_file" or die "Could not find section file for opening";
-    my %db = ();
-    while (<MSECTION>) {
-	next unless /(\S+)\s+(\S+)\s+(\S+)\s+(\S.*\S)/;
-	my ($strcrc,$songcrc,$songbase,$string) = ($1,$2,$3,$4);
-	$db{$songbase}{$strcrc} = $string;
+    if ($filename =~ /(\S+)\/(\S+)/) {
+        $master_file = "$1/master_section_names.txt";
     }
-    close MSECTION;
+    else {
+        $master_file = "master_section_names.txt";
+    }
+    if ( -f $master_file ) {
+        open MSECTION, "$master_file" or die "Could not find section file for opening";
+        my %db = ();
+        while (<MSECTION>) {
+            next unless /(\S+)\s+(\S+)\s+(\S+)\s+(\S.*\S)/;
+            my ($strcrc,$songcrc,$songbase,$string) = ($1,$2,$3,$4);
+            $db{$songbase}{$strcrc} = $string;
+        }
+        close MSECTION;
 
-    ## Now loop through all of the section names, and if we find one, then we stick it in the hash
-    my $basename = $self->{'str2crc'}->{'basename'}->{'string'};
-    foreach my $marker ( @{$temptracks{'markers'}} ) {
-        my $crc  = $marker->{'marker'};
-        my $time = $marker->{'time'};
-	if ( exists $db{$basename}{$crc} ) {
-	    push @{$self->{_markers}}, [ $time, $db{$basename}{$crc} ];
-	}
+        ## Now loop through all of the section names, and if we find one, then we stick it in the hash
+        my $basename = $self->{'str2crc'}->{'basename'}->{'string'};
+        foreach my $marker ( @{$temptracks{'markers'}} ) {
+            last unless ref $marker eq 'HASH';
+            my $crc  = $marker->{'marker'};
+            my $time = $marker->{'time'};
+            if ( exists $db{$basename}{$crc} ) {
+                push @{$self->{_markers}}, [ $time, $db{$basename}{$crc} ];
+            }
+        }
     }
     return $self;
 }
@@ -177,16 +265,20 @@ sub _get_section {
     my $self = shift;
     my $section_string = shift;
     croak "Section '$section_string' not found!" unless defined $self->{'_str2crc'}->{$section_string};
+    my $section_crc = $self->{'_str2crc'}->{$section_string}->{'checksum'};
+    unless ( defined $self->{'_sections_crc'}->{$section_crc} ) {
+        return undef;
+    }
 
     my $debug = $self->debug();
     if ( $debug > 1 ) {
         printf "DEBUG: _get_section : '%s' (0x%08x)\n", 
             $section_string, 
-            $self->{'_str2crc'}->{$section_string}->{'checksum'},
+            $section_crc;
     }
 
-    my $pos_start = $self->{'_sections'}->[ $self->{'_str2crc'}->{$section_string}->{'pos'} ];
-    my $pos_end   = $self->{'_sections'}->[ $self->{'_str2crc'}->{$section_string}->{'pos'} + 1 ] - 1 ;
+    my $pos_start = $self->{'_sections'}->[ $self->{'_sections_crc'}->{$section_crc} ];
+    my $pos_end   = $self->{'_sections'}->[ $self->{'_sections_crc'}->{$section_crc} + 1 ] - 1 ;
     if ( $debug > 1 ) {
         printf "DEBUG: _get_section : \$pos_start = %u, \$pos_end = %u\n", 
             $pos_start, 
@@ -291,52 +383,203 @@ sub generate_checksum_list {
     $self->{'_str2crc'}->{ 'wholename_ps2' } = { 'string' => $transform, 'checksum' => $checksum };
     $self->{'_crc2str'}->{ $checksum } = 'wholename_ps2';
 
-    foreach my $part ( qw( timesig fretbars markers faceoffp1 faceoffp2 bossbattlep1 bossbattlep2 ) ) {
+    foreach my $part (
+        'anim',
+        'anim_notes',
+        'aux_faceoffp1',
+        'aux_faceoffp2',
+        'aux_faceoffstar',
+        'backupvocals',
+        'backupvocals_01',
+        'backupvocals_02',
+        'backupvocals_03',
+        'backupvocals_04',
+        'band',
+        'bass',
+        'bassist_moment',
+        'bossbattlep1',
+        'bossbattlep2',
+        'cameras',
+        'cameras_notes',
+        'crowd',
+        'crowd_notes',
+        'cymbals',
+        'drum_faceoffp1',
+        'drum_faceoffp2',
+        'drum_faceoffstar',
+        'drum_markers',
+        'drumfill',
+        'drums',
+        'drums_notes',
+        'drumunmute',
+        'faceoffp1',
+        'faceoffp2',
+        'faceoffstar',
+        'fretbars',
+        'guitar',
+        'guitar_markers',
+        'guitarcoop_faceoffp1',
+        'guitarcoop_faceoffp2',
+        'guitarcoop_faceoffstar',
+        'kickdrum',
+        'leadvocals',
+        'lightshow',
+        'lightshow_notes',
+        'lyrics',
+        'markers',
+        'perf2',
+        'perf2_song_startup',
+        'performance',
+        'rhythm_faceoffp1',
+        'rhythm_faceoffp2',
+        'rhythm_faceoffstar',
+        'rhythm_markers',
+        'rhythmcoop_faceoffp1',
+        'rhythmcoop_faceoffp2',
+        'rhythmcoop_faceoffstar',
+        'scripts',
+        'scripts_notes',
+        'slow_all',
+        'slow_sg',
+        'slow_singer',
+        'snaredrum',
+        'song_startup',
+        'song_vocals',
+        'star',
+        'starbattlemode',
+        'tapping',
+        'timesig',
+        'toms',
+        'triggers',
+        'triggers_notes',
+        'vocals_freeform',
+        'vocals_markers',
+        'vocals_note_range',
+        'vocals_phrases',
+        'whammycontroller',
+    ) {
         $self->_push_string_checksum( $filename, $part );
     }
 
     foreach my $diff ( qw( easy medium hard expert ) ) {
 
         my $part;
+
         # <filename>_song_<diff>
         $part = 'song_' . $diff;
         $self->_push_string_checksum( $filename, $part );
 
-        # <filename>_<diff>_star
-        $part = $diff . '_star';
-        $self->_push_string_checksum( $filename, $part );
-
-        # <filename>_<diff>_star
-        $part = $diff . '_starbattlemode';
-        $self->_push_string_checksum( $filename, $part );
-
-        # <filename>_song_{guitarcoop,rhythm,rhythmcoop}_<diff>
-        foreach my $chart_type ( qw( guitarcoop rhythm rhythmcoop ) ) {
-
-            # song_<type>_<diff>
-            $part = 'song_' . $chart_type . '_' . $diff;
-            $self->_push_string_checksum( $filename, $part );
-
-            # <type>_<diff>_star
-            $part = $chart_type . '_' . $diff . '_star';
-            $self->_push_string_checksum( $filename, $part );
-
-            # <type>_<diff>_starbattlemode
-            $part =  $chart_type . '_' . $diff . '_starbattlemode';
+        # <filename>_<diff>_<section>
+        foreach my $section_type (
+            'anim',
+            'anim_notes',
+            'aux_faceoffp1',
+            'aux_faceoffp2',
+            'aux_faceoffstar',
+            'backupvocals',
+            'backupvocals_01',
+            'backupvocals_02',
+            'backupvocals_03',
+            'backupvocals_04',
+            'band',
+            'bass',
+            'bassist_moment',
+            'bossbattlep1',
+            'bossbattlep2',
+            'cameras',
+            'cameras_notes',
+            'crowd',
+            'crowd_notes',
+            'cymbals',
+            'drum_faceoffp1',
+            'drum_faceoffp2',
+            'drum_faceoffstar',
+            'drum_markers',
+            'drumfill',
+            'drums',
+            'drums_notes',
+            'drumunmute',
+            'faceoffp1',
+            'faceoffp2',
+            'faceoffstar',
+            'fretbars',
+            'guitar',
+            'guitar_markers',
+            'guitarcoop_faceoffp1',
+            'guitarcoop_faceoffp2',
+            'guitarcoop_faceoffstar',
+            'kickdrum',
+            'leadvocals',
+            'lightshow',
+            'lightshow_notes',
+            'lyrics',
+            'markers',
+            'perf2',
+            'perf2_song_startup',
+            'performance',
+            'rhythm_faceoffp1',
+            'rhythm_faceoffp2',
+            'rhythm_faceoffstar',
+            'rhythm_markers',
+            'rhythmcoop_faceoffp1',
+            'rhythmcoop_faceoffp2',
+            'rhythmcoop_faceoffstar',
+            'scripts',
+            'scripts_notes',
+            'slow_all',
+            'slow_sg',
+            'slow_singer',
+            'snaredrum',
+            'song_startup',
+            'song_vocals',
+            'star',
+            'starbattlemode',
+            'tapping',
+            'timesig',
+            'toms',
+            'triggers',
+            'triggers_notes',
+            'vocals_freeform',
+            'vocals_markers',
+            'vocals_note_range',
+            'vocals_phrases',
+            'whammycontroller',
+        ) {
+            $part = $diff . '_' . $section_type;
             $self->_push_string_checksum( $filename, $part );
         }
+
+        # song_<type>_<diff>
+        # <type>_<diff>_star
+        foreach my $chart_type ( '', qw( aux_ drum_ guitarcoop_ rhythm_ rhythmcoop_ ) ) {
+
+            $part = 'song_' . $chart_type . $diff;
+            $self->_push_string_checksum( $filename, $part );
+
+            foreach my $section_type ( qw( star starbattlemode tapping whammycontroller ) ) {
+                $part = $chart_type . $diff . '_' . $section_type;
+                $self->_push_string_checksum( $filename, $part );
+            }
+        }
+
     }
+
 }
 
 sub _push_string_checksum {
     my $self = shift;
     my $filename = shift;
     my $part = shift;
-    my $hashref_str2crc = shift;
-    my $hashref_crc2str = shift;
+
+    my $debug = $self->{'debug'};
 
     my $transform = $filename . '_' . $part;
     my $checksum = $self->qbcrc32( $transform );
+    if ( $debug > 1 ) {
+        print "DEBUG: _push_string_checksum: transform = $transform\n";
+        printf "DEBUG: _push_string_checksum: checksum = 0x%08x\n", $checksum;
+    }
+
     $self->{'_str2crc'}->{ $part } = { 'string' => $transform, 'checksum' => $checksum };
     $self->{'_crc2str'}->{ $checksum } = $part;
 }
@@ -504,14 +747,4 @@ sub _parse_array_hash {
     return @array_hash;
 }
 
-sub _print_hex {
-    my $self = shift;
-    my $array = shift;
-
-    foreach ( @$array ) {
-        printf "0x%08x\n", $_;
-    }
-}
-
 1;
-
