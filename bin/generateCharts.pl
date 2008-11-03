@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.4 2008-09-27 14:29:31 tarragon Exp $
+# $Id: generateCharts.pl,v 1.5 2008-11-03 14:56:14 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -28,7 +28,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.4 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.5 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -78,6 +78,7 @@ my %games =
     'gh3-ps2'           => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
     'gh3-dlc'           => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
     'gh3-aerosmith'     => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
+    'ghwt'              => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
 );
 
 my @diffs = qw(easy medium hard expert);
@@ -143,7 +144,7 @@ sub do_song {
 
     &readmidi($game,\%song);
 
-    if ( $game =~ /^gh3.*/ ) {
+    if ( $game =~ /^gh3.*/ || $game =~ /^ghwt/ ) {
         foreach my $alg (qw(blank lazy-whammy no-squeeze twenty-zero forty-zero sixty-zero eighty-zero hundred-zero)) {
             if ($ALG_REGEX) { next unless $alg =~ /$ALG_REGEX/; }
             &process_song($game,\%song,$diff,$alg,1);
