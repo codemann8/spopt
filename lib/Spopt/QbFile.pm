@@ -1,8 +1,9 @@
-# $Id: QbFile.pm,v 1.10 2008-11-03 13:59:09 tarragon Exp $
+# $Id: QbFile.pm,v 1.11 2008-11-03 16:58:20 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package QbFile;
 use strict;
+use warnings;
 
 use Carp qw( carp croak );
 
@@ -26,18 +27,21 @@ sub dump            { my $self = shift; $self->_dump; return $self; }
 
 sub _dump {
     my $self = shift;
-    foreach my $section ( @{$self->{'_sections'}} ) {
-        my $crc = $self->{'_raw'}[$section+1];
-        my $string = defined $self->{'_crc2str'}->{ $crc } ? $self->{'_crc2str'}->{ $crc } : '';
-        printf "%u : 0x%08x - %s\n", $section, $crc, $string;
-    }
-    $self->_print_values( $self->_get_section("song_easy"), 2 );
-    return;
-    foreach my $diff ( qw( easy medium hard expert ) ) {
-        $self->_print_notes( $self->{'_notes'}{ $diff } );
-        foreach my $part ( qw( guitarcoop_ rhythm_ rhythmcoop_ ) ) {
-            $self->_print_notes( $self->{'_notes'}{ $part.$diff } );
+    my $dump_sections = 0;
+    my $dump_notes = 1;
+    my $dump_other = 0;
+    if ( $dump_sections ) {
+        foreach my $section ( @{$self->{'_sections'}} ) {
+            my $crc = $self->{'_raw'}[$section+1];
+            my $string = defined $self->{'_crc2str'}->{ $crc } ? $self->{'_crc2str'}->{ $crc } : '';
+            printf "%u : 0x%08x - %s\n", $section, $crc, $string;
         }
+    }
+    if ( $dump_notes ) {
+        $self->_print_notes( $self->{'_notes'}{'easy'} );
+    }
+    if ( $dump_other ) {
+        $self->_print_values( $self->_get_section("song_easy"), 2 );
     }
 }
 
@@ -192,9 +196,9 @@ sub read {
         }
         elsif ( $gamever == 4 ) {
             for (my $i = 0; $i < @{$temptracks{$part}{$diff}} ; $i+=2) { 
-                my $time   = $temptracks{$part}{$diff}->[0];
-                my $length = ( $temptracks{$part}{$diff}->[1] & 0x0000ffff );
-                my $notes  = ( $temptracks{$part}{$diff}->[1] & 0xffff0000 ) / 0x00010000 ;
+                my $time   = $temptracks{$part}{$diff}->[$i];
+                my $length = ( $temptracks{$part}{$diff}->[$i+1] & 0x0000ffff );
+                my $notes  = ( $temptracks{$part}{$diff}->[$i+1] & 0xffff0000 ) / 0x00010000 ;
                 push @{$self->{_notes}{$diff}}, [ $time, $length, $notes ];
             }
         } 
