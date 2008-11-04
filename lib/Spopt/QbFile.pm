@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.11 2008-11-03 16:58:20 tarragon Exp $
+# $Id: QbFile.pm,v 1.12 2008-11-04 13:14:00 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package QbFile;
@@ -9,6 +9,8 @@ use Carp qw( carp croak );
 
 require String::CRC32;
 require File::Basename;
+
+## TODO properly document this sucker!
 
 sub new             { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
 sub _prop           { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
@@ -95,10 +97,12 @@ sub _init {
     $self->{'_beat'}            = [];
     $self->{'_timesig'}         = [];
     $self->{'_markers'}         = [];
+## TODO reorganise charts to allow easier selection of non-guitar charts
+## may require work against other libs, or (hopefully) just the generation script
     foreach my $diff ( qw( easy medium hard expert ) ) {
         $self->{'_notes'}{ $diff }   = [];
         $self->{'_sp'}{ $diff }      = [];
-        foreach my $part ( qw( guitarcoop_ rhythm_ rhythmcoop_ ) ) {
+        foreach my $part ( qw( aux_ drum_ guitarcoop_ rhythm_ rhythmcoop_ ) ) {
             $self->{'_notes'}{ $part.$diff }   = [];
             $self->{'_sp'}{ $part.$diff }      = [];
         }
@@ -138,8 +142,7 @@ sub read {
     ## Get the file into an array of 32 bit values
     open SONGFILE, $filename or croak "Could not open file $filename for reading\n";
     binmode SONGFILE;
-    my $buf;
-    for ( my $len ; $len = read SONGFILE, $buf, 65536 ; ! $len ) {
+    while ( read SONGFILE, my $buf, 65536 ) {
         push @{$self->{'_raw'}}, $mode eq 'be' ? unpack 'N*', $buf : unpack 'V*', $buf;
     }
     close SONGFILE;
@@ -252,13 +255,13 @@ sub read {
         close MSECTION;
 
         ## Now loop through all of the section names, and if we find one, then we stick it in the hash
-        my $basename = $self->{'str2crc'}->{'basename'}->{'string'};
+        my $basename = $self->{'_str2crc'}->{'basename'}->{'string'};
         foreach my $marker ( @{$temptracks{'markers'}} ) {
             last unless ref $marker eq 'HASH';
             my $crc  = $marker->{'marker'};
             my $time = $marker->{'time'};
-            if ( exists $db{$basename}{$crc} ) {
-                push @{$self->{_markers}}, [ $time, $db{$basename}{$crc} ];
+            if ( defined $db{$basename} && defined $db{$basename}{$crc} ) {
+                push @{$self->{'_markers'}}, [ $time, $db{$basename}{$crc} ];
             }
         }
     }
