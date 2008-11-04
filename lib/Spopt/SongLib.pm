@@ -525,111 +525,111 @@ sub _init {
     );
 
     push @{$self->{songarr}}, { game => 'ghwt', tier => 0, name => 'Livin\' On A Prayer', file => 'livingonaprayer.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 0, name => 'About A Girl', file => 'aboutagirl.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 0, name => 'About A Girl (Unplugged)', file => 'aboutagirl.mid' };
     push @{$self->{songarr}}, { game => 'ghwt', tier => 0, name => 'Mountain Song', file => 'mountainsong.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 1, name => 'beautifuldisaster.mid', file => 'beautifuldisaster.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 1, name => 'obstacle1.mid', file => 'obstacle1.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 1, name => 'theoneilove.mid', file => 'theoneilove.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 1, name => 'Beautiful Disaster', file => 'beautifuldisaster.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 1, name => 'Obstacle 1', file => 'obstacle1.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 1, name => 'The One I Love', file => 'theoneilove.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 2, name => 'somemightsay.mid', file => 'somemightsay.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 2, name => 'today.mid', file => 'today.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 2, name => 'Some Might Say', file => 'somemightsay.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 2, name => 'Today', file => 'today.mid' };
     # push @{$self->{songarr}}, { game => 'ghwt', tier => 2, name => 'today_perf2.mid', file => 'today_perf2.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 2, name => 'whativedone.mid', file => 'whativedone.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 2, name => 'What I\'ve Done', file => 'whativedone.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 3, name => 'bandontherun.mid', file => 'bandontherun.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 3, name => 'youregonnasayyeah.mid', file => 'youregonnasayyeah.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 3, name => 'uparoundthebend.mid', file => 'uparoundthebend.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 3, name => 'nosleeptillbrooklyn.mid', file => 'nosleeptillbrooklyn.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 3, name => 'Band On The Run', file => 'bandontherun.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 3, name => 'You\'re Gonna Say Yeah', file => 'youregonnasayyeah.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 3, name => 'Up Around The Bend', file => 'uparoundthebend.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 3, name => 'No Sleep Till Brooklyn', file => 'nosleeptillbrooklyn.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 4, name => 'thejoker.mid', file => 'thejoker.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 4, name => 'freakonaleash.mid', file => 'freakonaleash.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 4, name => 'miserybusiness.mid', file => 'miserybusiness.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 4, name => 'hotelcalifornia.mid', file => 'hotelcalifornia.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 4, name => 'The Joker', file => 'thejoker.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 4, name => 'Freak On A Leash', file => 'freakonaleash.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 4, name => 'Misery Business', file => 'miserybusiness.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 4, name => 'Hotel California', file => 'hotelcalifornia.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 5, name => 'parabola.mid', file => 'parabola.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 5, name => 'schism.mid', file => 'schism.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 5, name => 'vicarious.mid', file => 'vicarious.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 5, name => 'Parabola', file => 'parabola.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 5, name => 'Schism', file => 'schism.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 5, name => 'Vicarious', file => 'vicarious.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'eyeofthetiger.mid', file => 'eyeofthetiger.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'spiderwebs.mid', file => 'spiderwebs.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'onewayoranother.mid', file => 'onewayoranother.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'doitagain.mid', file => 'doitagain.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'bosszakk.mid', file => 'bosszakk.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'stillborn.mid', file => 'stillborn.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'Eye Of The Tiger', file => 'eyeofthetiger.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'Spiderwebs', file => 'spiderwebs.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'One Way Or Another', file => 'onewayoranother.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'Do It Again', file => 'doitagain.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'Zakk Wylde Guitar Duel', file => 'bosszakk.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'Stillborn', file => 'stillborn.mid' };
     # push @{$self->{songarr}}, { game => 'ghwt', tier => 6, name => 'stillborn_perf2.mid', file => 'stillborn_perf2.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'themiddle.mid', file => 'themiddle.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'heymanniceshot.mid', file => 'heymanniceshot.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'feelthepain.mid', file => 'feelthepain.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'dammit.mid', file => 'dammit.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'everlong.mid', file => 'everlong.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'The Middle', file => 'themiddle.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'Hey Man Nice Shot', file => 'heymanniceshot.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'Feel The Pain', file => 'feelthepain.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'Dammit', file => 'dammit.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 7, name => 'Everlong', file => 'everlong.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'heartbreaker.mid', file => 'heartbreaker.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'americanwoman.mid', file => 'americanwoman.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'ramblinman.mid', file => 'ramblinman.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'goyourownway.mid', file => 'goyourownway.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'bossted.mid', file => 'bossted.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'stranglehold.mid', file => 'stranglehold.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'Heartbreaker', file => 'heartbreaker.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'American Woman', file => 'americanwoman.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'Ramblin\' Man', file => 'ramblinman.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'Go Your Own Way', file => 'goyourownway.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'Ted Nugent Guitar Duel', file => 'bossted.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 8, name => 'Stranglehold', file => 'stranglehold.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'lvialviaquez.mid', file => 'lvialviaquez.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'kickoutthejams.mid', file => 'kickoutthejams.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'santeria.mid', file => 'santeria.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'ontheroadagain.mid', file => 'ontheroadagain.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'lovemetwotimes.mid', file => 'lovemetwotimes.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'L\'Via L\'Viaquez', file => 'lvialviaquez.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'Kick Out The Jams', file => 'kickoutthejams.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'Santeria', file => 'santeria.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'On The Road Again (Live)', file => 'ontheroadagain.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 9, name => 'Love Me Two Times', file => 'lovemetwotimes.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'monsoon.mid', file => 'monsoon.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'aggro.mid', file => 'aggro.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'rooftops.mid', file => 'rooftops.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'goodgod.mid', file => 'goodgod.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'onearmedscissor.mid', file => 'onearmedscissor.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'Monsoon', file => 'monsoon.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'Aggro', file => 'aggro.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'Rooftops (A Liberation Broadcast)', file => 'rooftops.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'Good God', file => 'goodgod.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 10, name => 'One Armed Scissor', file => 'onearmedscissor.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'thekill.mid', file => 'thekill.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'shiver.mid', file => 'shiver.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'rebelyell.mid', file => 'rebelyell.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'demolitionman.mid', file => 'demolitionman.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'The Kill', file => 'thekill.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'Shiver', file => 'shiver.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'Rebel Yell', file => 'rebelyell.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'Demolition Man (Live)', file => 'demolitionman.mid' };
     # push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'demolitionman_perf2.mid', file => 'demolitionman_perf2.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'beatit.mid', file => 'beatit.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 11, name => 'Beat It', file => 'beatit.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'lazyeye.mid', file => 'lazyeye.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'toomuchtooyoung.mid', file => 'toomuchtooyoung.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'floaton.mid', file => 'floaton.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'nuvole.mid', file => 'nuvole.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'prettyvacant.mid', file => 'prettyvacant.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'Lazy Eye', file => 'lazyeye.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'Too Much, Too Young, Too Fast', file => 'toomuchtooyoung.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'Float On', file => 'floaton.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'Nuvole E Lenzuola', file => 'nuvole.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 12, name => 'Pretty Vacant', file => 'prettyvacant.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'areyougonnagomyway.mid', file => 'areyougonnagomyway.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'sweethomealabama.mid', file => 'sweethomealabama.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'assassin.mid', file => 'assassin.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'escueladecalor.mid', file => 'escueladecalor.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'windcriesmary.mid', file => 'windcriesmary.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'purplehaze.mid', file => 'purplehaze.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'Are You Gonna Go My Way', file => 'areyougonnagomyway.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'Sweet Home Alabama (Live)', file => 'sweethomealabama.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'Assassin', file => 'assassin.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'Escuela de Calor', file => 'escueladecalor.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'The Wind Cries Mary', file => 'windcriesmary.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 13, name => 'Purple Haze (Live)', file => 'purplehaze.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'toyboy.mid', file => 'toyboy.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'hailtothefreaks.mid', file => 'hailtothefreaks.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'vinternoll2.mid', file => 'vinternoll2.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'hollywoodnights.mid', file => 'hollywoodnights.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'souldoubt.mid', file => 'souldoubt.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'Toy Boy', file => 'toyboy.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'Hail To The Freaks', file => 'hailtothefreaks.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'VinterNoll2', file => 'vinternoll2.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'Hollywood Nights', file => 'hollywoodnights.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 14, name => 'Soul Doubt', file => 'souldoubt.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'loveremovalmachine.mid', file => 'loveremovalmachine.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'ourtruth.mid', file => 'ourtruth.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'antisocial.mid', file => 'antisocial.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'prisonerofsociety.mid', file => 'prisonerofsociety.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'mrcrowley.mid', file => 'mrcrowley.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'crazytrain.mid', file => 'crazytrain.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'Love Removal Machine', file => 'loveremovalmachine.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'Our Truth', file => 'ourtruth.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'Antisocial', file => 'antisocial.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'Prisoner Of Society', file => 'prisonerofsociety.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'Mr. Crowley', file => 'mrcrowley.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 15, name => 'Crazy Train', file => 'crazytrain.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'reedthroughlabor.mid', file => 'reedthroughlabor.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'labamba.mid', file => 'labamba.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'screamaimfire.mid', file => 'screamaimfire.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'overkill.mid', file => 'overkill.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'trappedunderice.mid', file => 'trappedunderice.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'byob.mid', file => 'byob.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'hotforteacher.mid', file => 'hotforteacher.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'Re-Education (Through Labor)', file => 'reedthroughlabor.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'La Bamba', file => 'labamba.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'Scream Aim Fire', file => 'screamaimfire.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'Overkill', file => 'overkill.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'Trapped Under Ice', file => 'trappedunderice.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'B.Y.O.B.', file => 'byob.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 16, name => 'Hot For Teacher', file => 'hotforteacher.mid' };
 
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'lovespreads.mid', file => 'lovespreads.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'nevertoolate.mid', file => 'nevertoolate.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'weaponofchoice.mid', file => 'weaponofchoice.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'pullmeunder.mid', file => 'pullmeunder.mid' };
-    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'satchboogie.mid', file => 'satchboogie.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'Love Spreads', file => 'lovespreads.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'Never Too Late', file => 'nevertoolate.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'Weapon Of Choice', file => 'weaponofchoice.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'Pull Me Under', file => 'pullmeunder.mid' };
+    push @{$self->{songarr}}, { game => 'ghwt', tier => 17, name => 'Satch Boogie', file => 'satchboogie.mid' };
 }
 
 1;
