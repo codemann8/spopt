@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateHTML.pl,v 1.1 2008-09-14 14:42:32 tarragon Exp $
+# $Id: generateHTML.pl,v 1.2 2008-11-04 12:51:18 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateHTML.pl,v $
 
 use strict;
@@ -12,7 +12,7 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.1 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.2 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my %TOPSCORES = ();
 
@@ -25,6 +25,7 @@ my @games =
     { 'name' => 'gh3-ps2',       'title' => 'Guitar Hero III'                   },
     { 'name' => 'gh3-dlc',       'title' => 'Guitar Hero III -- DLC'            },
     { 'name' => 'gh3-aerosmith', 'title' => 'Guitar Hero: Aerosmith'            },
+    { 'name' => 'ghwt',          'title' => 'Guitar Hero: World Tour'           },
 );
 
 my @diffs = qw(easy medium hard expert);
