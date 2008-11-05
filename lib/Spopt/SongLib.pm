@@ -518,7 +518,7 @@ sub _init {
         'England - Will Heilm\'s Keep',
         'Canada - Recording Studio',
         'San Francisco - AT&T Park',
-        'Australia - Telsa\'s Coil',
+        'Australia - Tesla\'s Coil',
         'Germany - Ozzfest',
         'New York - Times Square',
         'Asgard - Sunno\'s Chariot',
