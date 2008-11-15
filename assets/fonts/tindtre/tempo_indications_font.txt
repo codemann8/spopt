@@ -1,0 +1,40 @@
+Tempo Indications Font: Key Caps
+________________________________________________
+
+upper- and lowercase letters = bold face 
+
+													 	numbers 0 - 9 = plain face 
+________________________________________________
+
+Musical symbols:
+
+			* = breve
+
+			& = semibreve
+
+			^ = minim
+
+			% = crotchet
+
+			$ = quaver, curved beam
+
+			# = semiquaver, curved beam
+
+			@ = quaver, straight beam
+
+			! = semiquaver, straight beam
+
+________________________________________________
+
+			full stop = dot (for dotted notes)
+
+			_ (shift-hyphen)  = tie
+
+________________________________________________
+
+		 { = left-pointing arrow
+
+	   } = right-pointing arrow 
+________________________________________________
+
+© Matthew Hindson, 1996.
