@@ -2,6 +2,9 @@ package SongPainter;
 
 use strict;
 
+require Image::Magick;
+require FindBin;
+
 our $PIXEL_WIDTH = 1024;
 
 our $BEATS_PER_ROW = 24;
@@ -20,13 +23,21 @@ our $SINGLE_STAFF_LINE_5 = 24 + 4*12;
 sub new    { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
 sub _prop  { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
 
+# song() : song object from Song.pm
 sub song      { my $self = shift; return $self->_prop("song",@_);  }
+# filename() : define the output filename
 sub filename  { my $self = shift; return $self->_prop("filename",@_);  }
+# greenbot() : if set, green notes are rendered at the bottom of the stave
 sub greenbot  { my $self = shift; return $self->_prop("greenbot",@_);  }
+# debug() : turns on various debug options, file dumps, etc
 sub debug     { my $self = shift; return $self->_prop("debug",@_);  }
+# sol() : solution object from Optimizer.pm
 sub sol       { my $self = shift; return $self->_prop("sol",@_);  }
+# title() : main title for the chart
 sub title     { my $self = shift; return $self->_prop("title",@_);  }
+# subtitle() : subtitle for the chart (usually the difficulty)
 sub subtitle  { my $self = shift; return $self->_prop("subtitle",@_);  }
+# outline_only() : defines if star power phrases highlights are fills (rectangles) or outlines (lines)
 sub outline_only  { my $self = shift; return $self->_prop("outline_only",@_);  }
 
 sub whammy_per_quarter_bar  { my $self = shift; return $self->_prop("whammy_per_quarter_bar",@_);  }
@@ -471,7 +482,7 @@ sub _dist_basesust_score {
             my $leftbeat  = $song->m2b($i);
             my $rightbeat = $song->m2b($i+1);
             my $overlap = $self->_calc_overlap($startBeat,$endBeat,$leftbeat,$rightbeat);
-	    my $bs = $chordsize * int ($points * $overlap/$numbeats/$chordsize);
+	    my $bs = $chordsize * int ( $points * $overlap / $numbeats / $chordsize );
 	    $bs = $running_points if $bs > $running_points;
 	    $self->{_basemeasscore}[$i] += $bs;
 	    $running_points -= $bs;
@@ -763,9 +774,14 @@ sub _drawTimeSignature {
 
 sub _draw_tempo {
     my ($self,$tempo,$x,$y) = @_;
-    $self->_drawEllipse("_im_song", "gray65",$x,$y,3,2,-37);
-    $self->_drawLine(   "_im_song", "gray65",1,$x+3,$y,$x+3,$y-9); 
-    $self->_drawText(   "_im_song", "gray65","Helvetica",10,"=$tempo",$x+6,$y+3);
+    #$self->_drawEllipse("_im_song", "gray65",$x,$y,3,2,-37);
+    #$self->_drawLine(   "_im_song", "gray65",1,$x+3,$y,$x+3,$y-9); 
+    #$self->_drawText(   "_im_song", "gray65","Helvetica",10,"=$tempo",$x+6,$y+3);
+
+    my $font = "$FindBin::Bin/../assets/tindtre/TEMPILTR.TTF";
+    #my $font = "$FindBin::Bin/../assets/tmpindlt/TEMPIL__.TTF";
+    $self->_drawText(   '_im_song', 'black',$font,10,"%",$x,$y+3);
+    $self->_drawText(   '_im_song', 'black','Helvetica',10,"=$tempo",$x+6,$y+3);
 }
 
 sub _drawMeasureSustains {
@@ -785,6 +801,8 @@ sub _drawMeasureSustains {
 
     foreach my $n (@$rmn) {
 	next unless $n->sustain();
+        next if $n->purple();
+
 	my $nleft = $n->startMeas();
 	my $nright = $n->endMeas();
 	$nleft = $i if $nleft < $i;
@@ -895,29 +913,34 @@ sub _drawMeasureNotes {
 	next unless $nleft < $i+1 + 1e-7;
 	my $x = int ( 1e-7 + $basex + ($nleft-$i)  * ($right-$basex) );
 
-	if ($n->green()  and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle("_im_song", "green", $x,$staff5); }
-	if ($n->red()    and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle("_im_song", "red",   $x,$staff4); }
-	if ($n->yellow() and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle("_im_song", "yellow",$x,$staff3); }
-	if ($n->blue()   and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle("_im_song", "blue",  $x,$staff2); }
-	if ($n->orange() and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle("_im_song", "orange",$x,$staff1); }
+        #9b30ff80
+        if ($n->purple() and     $n->star() )                          { $self->_drawNoteLineStar('_im_song', '#9b30ff80', $x,$staff1); }
+        if ($n->purple() and not $n->star() )                          { $self->_drawNoteLine    ('_im_song', '#9b30ff80', $x,$staff1); }
 
-	if ($n->green()  and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle("_im_song", "green", $x,$staff1); }
-	if ($n->red()    and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle("_im_song", "red",   $x,$staff2); }
-	if ($n->yellow() and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle("_im_song", "yellow",$x,$staff3); }
-	if ($n->blue()   and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle("_im_song", "blue",  $x,$staff4); }
-	if ($n->orange() and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle("_im_song", "orange",$x,$staff5); }
+        if ($n->green()  and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'green', $x,$staff5); }
+        if ($n->red()    and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'red',   $x,$staff4); }
+        if ($n->yellow() and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'yellow',$x,$staff3); }
+        if ($n->blue()   and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'blue',  $x,$staff2); }
+        if ($n->orange() and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'orange',$x,$staff1); }
 
-	if ($n->green()  and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar("_im_song", "green",   $x,$staff5); }
-	if ($n->red()    and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar("_im_song", "red",     $x,$staff4); }
-	if ($n->yellow() and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar("_im_song", "yellow",  $x,$staff3); }
-	if ($n->blue()   and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar("_im_song", "blue",    $x,$staff2); }
-	if ($n->orange() and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar("_im_song", "orange",  $x,$staff1); }
+        if ($n->green()  and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'green', $x,$staff1); }
+        if ($n->red()    and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'red',   $x,$staff2); }
+        if ($n->yellow() and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'yellow',$x,$staff3); }
+        if ($n->blue()   and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'blue',  $x,$staff4); }
+        if ($n->orange() and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'orange',$x,$staff5); }
 
-	if ($n->green()  and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar("_im_song", "green",   $x,$staff1); }
-	if ($n->red()    and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar("_im_song", "red",     $x,$staff2); }
-	if ($n->yellow() and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar("_im_song", "yellow",  $x,$staff3); }
-	if ($n->blue()   and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar("_im_song", "blue",    $x,$staff4); }
-	if ($n->orange() and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar("_im_song", "orange",  $x,$staff5); }
+        if ($n->green()  and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'green',   $x,$staff5); }
+        if ($n->red()    and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'red',     $x,$staff4); }
+        if ($n->yellow() and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'yellow',  $x,$staff3); }
+        if ($n->blue()   and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'blue',    $x,$staff2); }
+        if ($n->orange() and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'orange',  $x,$staff1); }
+
+        if ($n->green()  and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'green',   $x,$staff1); }
+        if ($n->red()    and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'red',     $x,$staff2); }
+        if ($n->yellow() and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'yellow',  $x,$staff3); }
+        if ($n->blue()   and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'blue',    $x,$staff4); }
+        if ($n->orange() and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'orange',  $x,$staff5); }
+
     }
 }
 
@@ -962,7 +985,7 @@ sub _drawNoteCircle {
 
 sub _drawEllipse {
     my ($self,$imagestr,$color,$x,$y,$rx,$ry,$rot) = @_;
-    if ($self->debug()) { print "Drawing Ellipse ($color,$x,$y,$rx,$ry,rot)\n"; }
+    if ($self->debug()) { print "Drawing Ellipse ($color,$x,$y,$rx,$ry,$rot)\n"; }
     my $im =    $self->{$imagestr};
     my $pointstr = sprintf "\%d,\%d \%d,\%d \%d,\%d", 0,0,$rx,$ry,0,360;
     $x = $im->Draw("primitive"   => "ellipse",
@@ -1000,12 +1023,46 @@ sub _drawNoteStar {
     warn "$x" if "$x";
 }
 
+sub _drawNoteLine {
+    my ($self,$imagestr,$color,$x,$y) = @_;
+    my $im = $self->{$imagestr};
+
+    my $width = 4;
+    my $xOffset = 2;
+    my $height = $SINGLE_STAFF_LINE_5 - $SINGLE_STAFF_LINE_1;
+    my $yOverlap = 3;
+
+    my $topLeftX = $x - $xOffset;
+    my $topLeftY = $y - $yOverlap;
+    my $bottomRightX = $x + $width - $xOffset;
+    my $bottomRightY = $y + $height + $yOverlap;
+
+    if ($self->debug()) { print "Drawing NoteLine ($color,$topLeftX,$topLeftY,$bottomRightX,$bottomRightY)\n"; }
+
+    my $pointstr = sprintf '%d,%d %d,%d %d,%d', $topLeftX, $topLeftY, $bottomRightX, $bottomRightY, 1, 2;
+    $x = $im->Draw(
+        'primitive'   => 'roundrectangle',
+	'points'      => $pointstr,
+	'stroke'      => $color,
+	#'stroke'      => 'black',
+	'strokewidth' => 0.5,
+	'antialias'   => 'false',
+	'fill'        => $color
+    );
+    warn "$x" if "$x";
+}
+
+sub _drawNoteLineStar {
+    _drawNoteLine(@_);
+}
+
 sub _drawText {
     my ($self,$imagestr,$color,$family,$size,$text,$x,$y) = @_;
     if ($self->debug()) { print "Drawing text ($color,$family,$size,$text,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
     $x = $im->Annotate(text      => $text,
 	                  family    => $family,
+                          font      => $family,
 			  fill      => $color,
 			  pointsize => $size,
 			  x         => $x,
