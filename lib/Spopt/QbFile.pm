@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.12 2008-11-04 13:14:00 tarragon Exp $
+# $Id: QbFile.pm,v 1.13 2008-12-07 12:55:56 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package QbFile;
@@ -17,42 +17,112 @@ sub _prop           { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; }
 sub file            { my $self = shift; return $self->_prop('file',@_);    }
 sub debug           { my $self = shift; return $self->_prop('debug',@_);    }
 sub sustainthresh   { my $self = shift; return $self->_prop('sustainthresh',@_);    }
-sub notepart        { my $self = shift; return $self->_prop('notepart',@_);    }
-sub get_notearr     { my ($self,$diff) = @_; return $self->{'_notes'}{$diff}; }
-sub get_sparr       { my ($self,$diff) = @_; return $self->{'_sp'}{$diff}; }
+sub verbose         { my $self = shift; return $self->_prop('verbose',@_);    }
+
 sub get_beats       { my ($self) = @_;       return $self->{'_beat'}; }
 sub get_timesig     { my ($self) = @_;       return $self->{'_timesig'}; }
 sub get_str2crc     { my ($self) = @_;       return $self->{'_str2crc'}; }
 sub get_crc2str     { my ($self) = @_;       return $self->{'_crc2str'}; }
-sub get_markers     { my $self = shift; return $self->{_markers}; }
-sub dump            { my $self = shift; $self->_dump; return $self; }
+sub get_markers     { my $self = shift; return $self->{'_markers'}; }
+sub get_notearr {
+    my ($self,$chart,$diff) = @_;
+    if ( defined $diff ) {
+        return $self->{'_notes'}->{$chart}->{$diff};
+    }
+    else {
+        # backwards compatibility; option is difficulty, chart defaults to guitar
+        return $self->{'_notes'}->{$chart};
+    }
+}
+sub get_sparr {
+    my ($self,$chart,$diff) = @_;
+    if ( defined $diff ) {
+        return $self->{'_sp'}->{$chart}->{$diff};
+    }
+    else {
+        # backwards compatibility; option is difficulty, chart defaults to guitar
+        return $self->{'_sp'}->{$chart};
+    }
+}
 
-sub _dump {
+sub dump {
     my $self = shift;
-    my $dump_sections = 0;
-    my $dump_notes = 1;
-    my $dump_other = 0;
-    if ( $dump_sections ) {
-        foreach my $section ( @{$self->{'_sections'}} ) {
-            my $crc = $self->{'_raw'}[$section+1];
+    my $verbose = $self->{'verbose'};
+
+    print "== sections (",scalar @{$self->{'_sections'}}," entries)\n";
+    if ( $verbose ) {
+        for my $section ( @{$self->{'_sections'}} ) {
+            my $crc = $self->{'_raw'}->[$section+1];
             my $string = defined $self->{'_crc2str'}->{ $crc } ? $self->{'_crc2str'}->{ $crc } : '';
-            printf "%u : 0x%08x - %s\n", $section, $crc, $string;
+            printf "%5u : 0x%08x - %s\n", $section, $crc, $string;
         }
     }
-    if ( $dump_notes ) {
-        $self->_print_notes( $self->{'_notes'}{'easy'} );
+
+    for my $part ( qw( guitar aux drum guitarcoop rhythm rhythmcoop ) ) {
+        for my $diff ( qw( easy medium hard expert ) ) {
+            printf "== %10s - %6s - note section (%5u entries)\n",$part,$diff,scalar @{ $self->{'_notes'}{ $part }{ $diff } };
+            $verbose && $self->_print_notes( $self->{'_notes'}{ $part }{ $diff } );
+            printf "== %10s - %6s -   sp section (%5u entries)\n",$part,$diff,scalar @{ $self->{'_sp'}{ $part }{ $diff } };
+            $verbose == 1 && $self->_print_sp    ( $self->{'_sp'}{ $part }{ $diff } );
+            $verbose > 1  && $self->_print_rawsp ( $part, $diff );
+        }
     }
-    if ( $dump_other ) {
-        $self->_print_values( $self->_get_section("song_easy"), 2 );
+
+    print "== beat section\n";
+    print "   ms\n";
+    for my $beat ( @{$self->{'_beat'}} ) {
+        printf "%06u\n", $beat;
     }
+
+    print "== time signatures\n";
+    print "   ms b/m n/b\n";
+    for my $timesig_ref ( @{$self->{'_timesig'}} ) {
+       printf "%06u %u %u\n", $timesig_ref->[0], $timesig_ref->[1], $timesig_ref->[2];
+    }
+
+    return $self;
 }
 
 sub _print_notes {
     my $self = shift;
     my $notes = shift;
-    print "  Time Notes    Length\n";
-    foreach my $note ( @$notes ) {
-        printf "%6u %08b %5u\n", $note->[0], $note->[2], $note->[1];
+    return unless scalar @$notes;
+    print "      Time Notes    Length\n";
+    for ( my $i = 0 ; $i < scalar @$notes ; $i++ ) { 
+        my $note = $notes->[$i];
+        printf "%4u %6u %016b %5u\n", $i+1, $note->[0], $note->[2], $note->[1];
+    }
+}
+
+sub _print_rawsp {
+    my $self = shift;
+    my $part = shift;
+    my $diff = shift;
+    my $sp   = $self->{'_sp'}{ $part }{ $diff };
+    my $raw;
+    if ( $part eq 'guitar' ) {
+        $raw = $self->_get_section( $diff.'_star' );
+    }
+    else {
+        $raw = $self->_get_section( $part.'_'.$diff.'_star' );
+    }
+        
+    return unless scalar @$sp;
+    print "   Start End rstart   rlen   #\n";
+    for ( my $i = 0 ; $i < scalar @$sp ; $i++ ) {
+        my $thissp = $sp->[$i];
+        my $rawsp = $raw->[$i];
+        printf "%2u %4u %4u %6u %6u %3u\n", $i+1, $thissp->[0], $thissp->[1], $rawsp->[0], $rawsp->[1], $rawsp->[2];
+    }
+}
+
+sub _print_sp {
+    my $self = shift;
+    my $sp = shift;
+    return unless scalar @$sp;
+    print "Start End\n";
+    for my $thissp ( @$sp ) {
+        printf "%4u %4u\n", $thissp->[0], $thissp->[1];
     }
 }
 
@@ -63,7 +133,7 @@ sub _print_values {
     unless ( defined($width) ) { $width = 1; }
 
     my $i = 0;
-    foreach ( @$array ) {
+    for ( @$array ) {
         my ( $u1, $u2, $u3, $u4 );
         $u1 = ( $_ & 0xff000000 ) / 0x01000000;
         $u2 = ( $_ & 0x00ff0000 ) / 0x00010000;
@@ -87,7 +157,8 @@ sub _init {
     $self->file('');
     $self->debug(0);
     $self->sustainthresh(0);
-    $self->notepart('main');
+
+    $self->{'verbose'}          = 0;
 
     $self->{'_raw'}             = [];
     $self->{'_str2crc'}         = {};
@@ -102,9 +173,9 @@ sub _init {
     foreach my $diff ( qw( easy medium hard expert ) ) {
         $self->{'_notes'}{ $diff }   = [];
         $self->{'_sp'}{ $diff }      = [];
-        foreach my $part ( qw( aux_ drum_ guitarcoop_ rhythm_ rhythmcoop_ ) ) {
-            $self->{'_notes'}{ $part.$diff }   = [];
-            $self->{'_sp'}{ $part.$diff }      = [];
+        foreach my $part ( qw( guitar aux drum guitarcoop rhythm rhythmcoop ) ) {
+            $self->{'_notes'}{ $part }{ $diff }   = [];
+            $self->{'_sp'}{ $part }{ $diff }      = [];
         }
     }
 }
@@ -119,9 +190,6 @@ Reads in the file specified, generates a checksum list, and extracts the section
 sub read {
     my $self = shift;
     my $debug = $self->debug();
-
-    my $part   = $self->{'notepart'};
-    my $partsp = $part . 'sp';
 
     my $filename = $self->{'file'};
 
@@ -160,70 +228,120 @@ sub read {
     }
     $debug && printf "DEBUG: Found %u sections\n", scalar @{$self->{'_sections'}};
 
-    my %temptracks = ();
-
-    foreach my $diff ( qw( easy medium hard expert ) ) {
-        # get notes
-        $temptracks{'main'}{ $diff }  = $self->_get_section("song_$diff");
-        $temptracks{'coop'}{ $diff }  = $self->_get_section("song_rhythm_$diff");
-        $temptracks{'altp1'}{ $diff } = $self->_get_section("song_guitarcoop_$diff");
-        $temptracks{'altp2'}{ $diff } = $self->_get_section("song_rhythmcoop_$diff");
-        # get star power
-        $temptracks{'mainsp'}{ $diff }  = $self->_get_section("${diff}_star");
-        $temptracks{'coopsp'}{ $diff }  = $self->_get_section("rhythm_${diff}_star");
-        $temptracks{'altp1sp'}{ $diff } = $self->_get_section("guitarcoop_${diff}_star");
-        $temptracks{'altp2sp'}{ $diff } = $self->_get_section("rhythmcoop_${diff}_star");
-    }
-    $temptracks{'timesig'} = $self->_get_section('timesig');
-    $temptracks{'beats'}   = $self->_get_section('fretbars');
-    $temptracks{'markers'} = $self->_get_section('markers');
-    
     # look for a section specific to GH:WT (gh4)
     my $gamever = 3;
     if ( defined $self->_get_section("song_drum_easy") ) {
         $gamever = 4;
     }
 
-    foreach my $diff ( qw(easy medium hard expert) ) {
+    my $temptracks;
 
-        unless ( defined ($temptracks{$part}{$diff}) ) {
-            print "no section matching $part.\n";
-            return;
+    foreach my $diff ( qw( easy medium hard expert ) ) {
+        $temptracks->{'guitar'}->{'notes'}->{ $diff }     = $self->_get_section("song_$diff");
+        $temptracks->{'guitar'}->{'sp'}->{ $diff }        = $self->_get_section( $diff.'_star' );
+
+        $temptracks->{'rhythm'}->{'notes'}->{ $diff }     = $self->_get_section("song_rhythm_$diff");
+        $temptracks->{'rhythm'}->{'sp'}->{ $diff }        = $self->_get_section('rhythm_'.$diff.'_star');
+
+        $temptracks->{'guitarcoop'}->{'notes'}->{ $diff } = $self->_get_section("song_guitarcoop_$diff");
+        $temptracks->{'guitarcoop'}->{'sp'}->{ $diff }    = $self->_get_section('guitarcoop_'.$diff.'_star');
+
+        $temptracks->{'rhythmcoop'}->{'notes'}->{ $diff } = $self->_get_section("song_rhythmcoop_$diff");
+        $temptracks->{'rhythmcoop'}->{'sp'}->{ $diff }    = $self->_get_section('rhythmcoop_'.$diff.'_star');
+
+        if ( $gamever == 4 ) {
+            $temptracks->{'aux'}->{'notes'}->{ $diff }  = $self->_get_section("song_aux_$diff");
+            $temptracks->{'aux'}->{'sp'}->{ $diff }     = $self->_get_section('aux_'.$diff.'_star');
+            $temptracks->{'drum'}->{'notes'}->{ $diff } = $self->_get_section("song_drum_$diff");
+            $temptracks->{'drum'}->{'sp'}->{ $diff }    = $self->_get_section('drum_'.$diff.'_star');
         }
+    }
+    $temptracks->{'timesig'} = $self->_get_section('timesig');
+    $temptracks->{'beats'}   = $self->_get_section('fretbars');
+    $temptracks->{'markers'} = $self->_get_section('markers');
+    
+    for my $part ( qw(guitar rhythm guitarcoop rhythmcoop aux drum) ) {
+        if ( $part eq 'aux' || $part eq 'drum' && $gamever != 4 ) {
+            next;
+        }
+        for my $diff ( qw(easy medium hard expert) ) {
+            my $thisNotes_aref = $temptracks->{ $part }->{'notes'}->{ $diff };
 
-        ## Get the notes down first
-        if ( $gamever == 3 ) {
-            for (my $i = 0; $i < @{$temptracks{$part}{$diff}} ; $i+=3) { 
-                push @{$self->{_notes}{$diff}}, [ @{$temptracks{$part}{$diff}}[$i .. $i+2] ];
+            ## Get the notes down first
+
+            next unless scalar @$thisNotes_aref;
+
+            my ( $time, $length, $notes );
+            my $noteArray_aref = $self->{'_notes'}->{ $part }->{ $diff };
+
+            if ( $gamever == 3 ) {
+                warn "Invalid number of values in note array while parsing $part:$diff\n" if scalar @$thisNotes_aref % 3;
+                for ( my $i = 0 ; $i < scalar @$thisNotes_aref ; $i+=3 ) { 
+                    $time   = $thisNotes_aref->[$i    ];
+                    $length = $thisNotes_aref->[$i + 1];
+                    $notes  = $thisNotes_aref->[$i + 2];
+                    push @$noteArray_aref, [ $time, $length, $notes ];
+                }
+            }
+            elsif ( $gamever == 4 ) {
+                warn "Invalid number of values in note array while parsing $part:$diff\n" if scalar @$thisNotes_aref % 2;
+                for (my $i = 0; $i < @$thisNotes_aref ; $i+=2) { 
+                    $time   =   $thisNotes_aref->[$i  ];
+                    $length = ( $thisNotes_aref->[$i+1] & 0x0000ffff );
+                    $notes  = ( $thisNotes_aref->[$i+1] & 0xffff0000 ) / 0x00010000 ;
+                    push @$noteArray_aref, [ $time, $length, $notes ];
+                }
+            } 
+            else {
+                die "Invalid game version: $gamever.\n";
+            }
+
+            ## Run through the notes to get the SP start points
+
+            my $thisSP_aref  = $temptracks->{ $part }->{'sp'}->{ $diff };
+            unless ( scalar @$thisSP_aref ) {
+                $thisSP_aref = $temptracks->{ $part }->{'sp'}->{ 'expert' };
+            }
+            next unless scalar @$thisSP_aref;
+
+            my $spArray_aref = $self->{'_sp'}->{ $part }->{ $diff };
+
+            my $spp = 0;
+            my $numspphrases = scalar @$thisSP_aref;
+            for ( my $i = 0 ; $i < scalar @$noteArray_aref ; $i++ ) {
+                last if $spp >= $numspphrases;
+
+                my $spStartms = $thisSP_aref->[ $spp ]->[0];
+                my $spEndms = $thisSP_aref->[ $spp ]->[0] + $thisSP_aref->[ $spp ]->[1];
+                my $spNoteCount = $thisSP_aref->[ $spp ]->[2];
+
+                if ( $noteArray_aref->[ $i ]->[0] >= $spStartms ) { 
+                    $spArray_aref->[ $spp ]->[0] = $i;
+                    for ( my $endNote = $i ; $endNote < scalar @$noteArray_aref ; $endNote++ ) {
+                        if ( $noteArray_aref->[ $endNote ]->[0] > $spEndms ) { 
+                            $spArray_aref->[ $spp ]->[1] = $endNote - 1;
+                            last;
+                        }
+                    }
+                    $spp++;
+                }
+#                if ( $noteArray_aref->[ $i ]->[0] >= $thisSP_aref->[ $spp ]->[0] ) { 
+#                    $spArray_aref->[ $spp ]->[0] = $i;
+#                    $spArray_aref->[ $spp ]->[1] = $i + $thisSP_aref->[ $spp ]->[2] - 1;
+#                    $spp++;
+#                }
             }
         }
-        elsif ( $gamever == 4 ) {
-            for (my $i = 0; $i < @{$temptracks{$part}{$diff}} ; $i+=2) { 
-                my $time   = $temptracks{$part}{$diff}->[$i];
-                my $length = ( $temptracks{$part}{$diff}->[$i+1] & 0x0000ffff );
-                my $notes  = ( $temptracks{$part}{$diff}->[$i+1] & 0xffff0000 ) / 0x00010000 ;
-                push @{$self->{_notes}{$diff}}, [ $time, $length, $notes ];
-            }
-        } 
-        else {
-            die "Got confused about the game version.\n";
-        }
+    }
 
-	## Run through the notes to get the SP start points
-	my $spp = 0;
-	my $numspphrases = scalar(@{$temptracks{$partsp}{$diff}});
-	for (my $i = 0; $i < @{$self->{_notes}{$diff}}; $i++) {
-	    next if $spp >= $numspphrases;
-	    if ( $self->{_notes}{$diff}[$i][0] >= $temptracks{$partsp}{$diff}[$spp][0] ) { 
-		$self->{_sp}{$diff}[$spp][0] = $i;
-		$self->{_sp}{$diff}[$spp][1] = $i + $temptracks{$partsp}{$diff}[$spp][2] - 1;
-		$spp++;
-	    }
-	}
+    # copy to legacy variables
+    for my $diff ( qw(easy medium hard expert) ) {
+        $self->{'_notes'}->{ $diff }   = $self->{'_notes'}->{'guitar'}->{ $diff };
+        $self->{'_sp'}->{ $diff }      = $self->{'_sp'}->{'guitar'}->{ $diff };
     }
 
     ## beat track just moves over
-    @{$self->{'_beat'}} = @{$temptracks{'beats'}};
+    @{$self->{'_beat'}} = @{$temptracks->{'beats'}};
 
     if ($self->sustainthresh() == 0) {
 	my $st = int ( ($self->{'_beat'}[1] - $self->{'_beat'}[0]) / 2 + 0.0001);
@@ -231,8 +349,11 @@ sub read {
     }
 
     ## massage the time sig track a little
-    for (my $i = 0 ; $i < @{$temptracks{timesig}} ; $i++) {
-        $self->{_timesig}[$i] = [ $temptracks{timesig}[$i][0], $temptracks{timesig} [$i][1] ];
+    for (my $i = 0 ; $i < @{$temptracks->{'timesig'}} ; $i++) {
+        my $ms          = $temptracks->{'timesig'}->[$i]->[0];
+        my $numerator   = $temptracks->{'timesig'}->[$i]->[1];
+        my $denominator = $temptracks->{'timesig'}->[$i]->[2];
+        $self->{'_timesig'}->[$i] = [ $ms, $numerator, $denominator ];
     }
 
     # process section names, if available
@@ -256,7 +377,7 @@ sub read {
 
         ## Now loop through all of the section names, and if we find one, then we stick it in the hash
         my $basename = $self->{'_str2crc'}->{'basename'}->{'string'};
-        foreach my $marker ( @{$temptracks{'markers'}} ) {
+        foreach my $marker ( @{$temptracks->{'markers'}} ) {
             last unless ref $marker eq 'HASH';
             my $crc  = $marker->{'marker'};
             my $time = $marker->{'time'};
@@ -265,6 +386,10 @@ sub read {
             }
         }
     }
+
+    # release some memory
+    undef $temptracks;
+
     return $self;
 }
 
