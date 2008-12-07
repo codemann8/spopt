@@ -12,20 +12,21 @@ sub new        { my $type = shift; my @args = @_; my $self = {}; bless $self, $t
 sub _prop      { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
 
 ## Source fields
-sub green      { my $self = shift; return $self->_prop("green",@_);     }
-sub red        { my $self = shift; return $self->_prop("red",@_);       }
-sub yellow     { my $self = shift; return $self->_prop("yellow",@_);    }
-sub blue       { my $self = shift; return $self->_prop("blue",@_);      }
-sub orange     { my $self = shift; return $self->_prop("orange",@_);    }
-sub startTick  { my $self = shift; return $self->_prop("startTick",@_); }
-sub endTick    { my $self = shift; return $self->_prop("endTick",@_);   }
-sub star       { my $self = shift; return $self->_prop("star",@_);      }
-sub mult       { my $self = shift; return $self->_prop("mult",@_);      }
-sub multsust   { my $self = shift; return $self->_prop("multsust",@_);  }
-sub prevTempo  { my $self = shift; return $self->_prop("prevTempo",@_); }
-sub currTempo  { my $self = shift; return $self->_prop("currTempo",@_); }
-sub nextTempo  { my $self = shift; return $self->_prop("nextTempo",@_); }
-sub idx        { my $self = shift; return $self->_prop("idx",@_);       }
+sub green      { my $self = shift; return $self->_prop('green',@_);     }
+sub red        { my $self = shift; return $self->_prop('red',@_);       }
+sub yellow     { my $self = shift; return $self->_prop('yellow',@_);    }
+sub blue       { my $self = shift; return $self->_prop('blue',@_);      }
+sub orange     { my $self = shift; return $self->_prop('orange',@_);    }
+sub purple     { my $self = shift; return $self->_prop('purple',@_);    }
+sub startTick  { my $self = shift; return $self->_prop('startTick',@_); }
+sub endTick    { my $self = shift; return $self->_prop('endTick',@_);   }
+sub star       { my $self = shift; return $self->_prop('star',@_);      }
+sub mult       { my $self = shift; return $self->_prop('mult',@_);      }
+sub multsust   { my $self = shift; return $self->_prop('multsust',@_);  }
+sub prevTempo  { my $self = shift; return $self->_prop('prevTempo',@_); }
+sub currTempo  { my $self = shift; return $self->_prop('currTempo',@_); }
+sub nextTempo  { my $self = shift; return $self->_prop('nextTempo',@_); }
+sub idx        { my $self = shift; return $self->_prop('idx',@_);       }
 
 ## Derived fields
 sub notestr         { my $self = shift; return $self->_prop("notestr",@_);        }
@@ -86,6 +87,7 @@ sub _init {
     $self->yellow(0);
     $self->blue(0);
     $self->orange(0);
+    $self->purple(0);
     $self->startTick(0);
     $self->endTick(0);
     $self->star(0);
@@ -112,6 +114,7 @@ sub calc_unsqueezed_data {
     if ($self->yellow()) { $notestr .= "Y"; $chordsize++; }
     if ($self->blue())   { $notestr .= "B"; $chordsize++; }
     if ($self->orange()) { $notestr .= "O"; $chordsize++; }
+    if ($self->purple()) { $notestr .= "P"; $chordsize++; }
     $self->notestr($notestr);
     $self->chordsize($chordsize);
 
