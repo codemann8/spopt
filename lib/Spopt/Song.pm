@@ -10,6 +10,7 @@ sub _prop         { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } r
 sub filetype      { my $self = shift; return $self->_prop("filetype",@_);    }
 sub game          { my $self = shift; return $self->_prop("game",@_);    }
 sub diff          { my $self = shift; return $self->_prop("diff",@_);    }
+sub chart         { my $self = shift; return $self->_prop('chart',@_);    }
 sub midifile      { my $self = shift; return $self->_prop("midifile",@_);    }
 sub notearr       { my $self = shift; return $self->_prop("notearr",@_);    }
 sub tempoarr      { my $self = shift; return $self->_prop("tempoarr",@_);    }
@@ -38,9 +39,6 @@ sub t2m           { my ($self,$t) = @_; return $self->{t2mpwl}->interpolate($t);
 
 sub bpm           { my ($self,$m) = @_; return $self->{bpm}{$m}; }
 
-sub coop          { my $self = shift; return $self->_prop("coop",@_);    }
-sub coop_notearr  { my $self = shift; return $self->_prop("coop_notearr",@_);    }
-
 sub estimate_scores {
     my $self = shift;
     my $na = $self->notearr();
@@ -57,26 +55,30 @@ sub estimate_scores {
 
 sub _init {
     my $self = shift;
-    $self->diff("expert");
-    $self->coop(0);
-    $self->notearr([]);
-    $self->tempoarr([]);
-    $self->timesigarr([]);
-    $self->game("gh2");
-    $self->sparr([]);
-    $self->filetype("midi");
-    $self->b2mpwl("");
-    $self->b2tpwl("");
-    $self->t2bpwl("");
-    $self->t2mpwl("");
-    $self->m2bpwl("");
-    $self->m2tpwl("");
+
+    $self->diff('expert');
+    $self->chart('guitar');
+    $self->game('gh3');
+    $self->filetype('qb');
     $self->squeeze_percent(0);
     $self->sp_squeeze_percent(0);
     $self->whammy_delay(0);
     $self->whammy_percent(1.00);
-    $self->{bpm} = {};
-    $self->{sectionnames} = [];
+
+    $self->notearr([]);
+    $self->tempoarr([]);
+    $self->timesigarr([]);
+    $self->sparr([]);
+
+    $self->b2mpwl('');
+    $self->b2tpwl('');
+    $self->t2bpwl('');
+    $self->t2mpwl('');
+    $self->m2bpwl('');
+    $self->m2tpwl('');
+
+    $self->{'bpm'} = {};
+    $self->{'sectionnames'} = [];
 }
 
 sub init_phrase_sp_pwls {
@@ -184,19 +186,15 @@ sub construct_song {
 	$self->_gen_sectionnames();
     }
 
-    elsif ($self->filetype() eq "qb") {
+    elsif ($self->filetype() eq 'qb') {
         $self->_qb_gen_tempo_timesig_measure_beat_stuff();
-        $self->_qb_gen_note_arr(1,"notearr");
+        $self->_qb_gen_note_arr(1,'notearr');
 	$self->_qb_gen_sectionnames();
     }
 
-    else { die "Couldn't figure out filetype in Song::construct_song"; }
+    else { die "Couldn't figure out filetype in Song::construct_song\n"; }
 
     $self->_associate_tempos("notearr");
-    ##if ($self->coop()) {
-    ##    $self->_gen_note_arr(2,"coop_notearr");
-    ##    $self->_associate_tempos("coop_notearr");
-    ##}
     $self->initialize_multipliers();
 }
 
@@ -503,32 +501,35 @@ sub _weed_out_bad_noteon_events {
 sub _qb_gen_note_arr {
     my ($self,$tracknum,$arrstring) = @_;
     my $diff = $self->diff();
+    my $chart = $self->chart();
     my $qbf = $self->midifile();
-    my $qbfna = $qbf->get_notearr($diff);
+    my $qbfna = $qbf->get_notearr($chart,$diff);
     my $sustainthresh = $qbf->sustainthresh();
     for (my $i = 0; $i < @$qbfna; $i++) {
 	my ($msstart,$mslen,$notebv) = @{$qbfna->[$i]};
 	my $nn = Note->new();
 	$nn->idx($i);
 	$nn->star(0);
-	$notebv = $notebv & 0x1f;
+	$notebv = $notebv & 0b00111111;
 	if ($notebv & 0x1)  { $nn->green(1);}
 	if ($notebv & 0x2)  { $nn->red(1);}
 	if ($notebv & 0x4)  { $nn->yellow(1);}
 	if ($notebv & 0x8)  { $nn->blue(1);}
 	if ($notebv & 0x10) { $nn->orange(1);}
+	if ($notebv & 0x20) { $nn->purple(1);}
 	$nn->startTick($self->{_qbstuff}{ms2tick}->interpolate($msstart));
 	$nn->endTick($mslen > $sustainthresh ? $self->{_qbstuff}{ms2tick}->interpolate($msstart+$mslen) : $nn->startTick());
 	push @{$self->{$arrstring}}, $nn;
     }
 
     ## Now we do the SP stuff
-    my $qbfspa = $qbf->get_sparr($diff);
+    my $qbfspa = $qbf->get_sparr($chart,$diff);
     $self->{sparr} = [];
     for (my $i = 0; $i < @$qbfspa; $i++) {
 	push @{$self->{sparr}}, [ @{$qbfspa->[$i]} ];
-	for (my $j = $qbfspa->[$i][0]; $j <= $qbfspa->[$i][1]; $j++) { $self->{$arrstring}[$j]->star(1); }
-
+	for ( my $j = $qbfspa->[$i][0]; $j <= $qbfspa->[$i][1]; $j++ ) {
+            $self->{$arrstring}[$j]->star(1);
+        }
     }
 }
 
