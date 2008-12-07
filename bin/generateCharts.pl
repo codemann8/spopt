@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.5 2008-11-03 14:56:14 tarragon Exp $
+# $Id: generateCharts.pl,v 1.6 2008-12-07 12:44:06 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -9,6 +9,7 @@ use warnings;
 
 use Config::General;
 use File::Basename;
+use File::Path qw(mkpath);
 
 use FindBin;
 use lib "$FindBin::Bin/../lib";
@@ -28,7 +29,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.5 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.6 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -82,6 +83,14 @@ my %games =
 );
 
 my @diffs = qw(easy medium hard expert);
+my %charts = (
+    'guitar' => 'Guitar',
+    'rhythm' => 'Bass/Rhythm',
+    'guitarcoop' => 'Guitar CO-OP',
+    'rhythmcoop' => 'Bass/Rhythm CO-OP',
+    'drum' => 'Drums',
+    'aux' => 'Auxilary',
+);
 
 sub usage {
     my $filename = basename( $0 );
@@ -109,24 +118,28 @@ my $FILE_REGEX  = defined $config{'FILE_REGEX'} ? $config{'FILE_REGEX'} : qw{.*}
 my $ALG_REGEX   = defined $config{'ALG_REGEX'}  ? $config{'ALG_REGEX'}  : qw{.*};
 my $OUTPUT_DIR  = defined $config{'OUTPUT_DIR'} ? $config{'OUTPUT_DIR'} : qw{.};
 my $WHAMMY_RATE = defined $config{'WHAMMY_RATE'} ? $config{'WHAMMY_RATE'} : 0;
+my $CHART_REGEX = defined $config{'CHART_REGEX'} ? $config{'CHART_REGEX'} : 'guitar';
 
 ## Loop through all of the songs
 my $sl = SongLib->new();
 foreach my $game ( keys %games ) {
     my @songarr = $sl->get_songarr_for_game( $game );
     foreach my $song ( @songarr ) {
-        foreach my $diff ( reverse @diffs ) {
-	    my $tier  = $song->{tier};
-	    my $title = $song->{name};
-	    my $file  = $song->{file};
+        for my $chart ( keys %charts ) {
+            foreach my $diff ( reverse @diffs ) {
+                my $tier  = $song->{tier};
+                my $title = $song->{name};
+                my $file  = $song->{file};
 
-            next unless $game =~ /$GAME_REGEX/;
-            next unless $diff =~ /$DIFF_REGEX/;
-            next unless $tier =~ /$TIER_REGEX/;
-            next unless $file =~ /$FILE_REGEX/;
+                next unless $game =~ /$GAME_REGEX/;
+                next unless $diff =~ /$DIFF_REGEX/;
+                next unless $tier =~ /$TIER_REGEX/;
+                next unless $file =~ /$FILE_REGEX/;
+                next unless $chart =~ /$CHART_REGEX/;
 
-	    &do_song( $game, $diff, $tier, $title, $file );
-	}
+                &do_song( $game, $diff, $tier, $title, $file, $chart );
+            }
+        }
     }
 }
 
@@ -135,8 +148,8 @@ exit;
 ## SUBROUTINES
 
 sub do_song {
-    my ($game,$diff,$tier,$title,$file) = @_;
-    my %song = (tier => $tier, name => $title, file => $file);
+    my ($game,$diff,$tier,$title,$file,$chart) = @_;
+    my %song = (tier => $tier, name => $title, file => $file, chart => $chart);
 
     ## This should keep some of the leaks down
     %SONGDB = ();
@@ -204,20 +217,20 @@ sub process_song {
     my $mfkey = $rsong->{file};
     my $songkey = $mfkey; $songkey =~ s/.mid$//;
     my $tier = $rsong->{tier};
+    my $chart = $rsong->{chart};
     my $sp = $ALGORITHM{$alg}{sp};
     my $sq = $ALGORITHM{$alg}{sq};
     my $wp = $ALGORITHM{$alg}{wp};
     my $wd = $ALGORITHM{$alg}{wd};
 
-    my $gamedir = "$OUTPUT_DIR/$game";
-    my $diffdir = "$OUTPUT_DIR/$game/$diff";
-    mkdir($gamedir,0777) unless -d $gamedir;
-    mkdir($diffdir,0777) unless -d $diffdir;
+    my $diffdir = "$OUTPUT_DIR/$game/$chart/$diff";
+    mkpath( $diffdir ) unless -d $diffdir;
 
     my $song = new Song;
     $song->game( $games{$game}->{'optimizer'} );
     $song->filetype( $games{$game}->{'filetype'} );
     $song->diff($diff);
+    $song->chart($chart);
     $song->midifile($SONGDB{$game}{$mfkey});
     $song->squeeze_percent($sq);
     $song->sp_squeeze_percent($sp);
@@ -229,7 +242,7 @@ sub process_song {
     $song->init_phrase_sp_pwls();
 
     if ($alg eq "blank") {
-        print "Generating blank chart for $game:$mfkey:$diff\n";
+        print "Generating blank chart for $game:$mfkey:$chart:$diff\n";
 
         ## Make the blank notechart
         my $painter0 = new SongPainter;
@@ -238,14 +251,14 @@ sub process_song {
         $painter0->filename("$diffdir/$songkey.blank.png");
         $painter0->greenbot(0);
         $painter0->title($title);
-        $painter0->subtitle("$diff");
-        $painter0->outline_only(1);
+        $painter0->subtitle("$charts{$chart} $diff");
+        $painter0->outline_only(0);
         &highlight_blank_phrases($song,$painter0);
         $painter0->paintsong();
 
     }
     else {
-        print "Generating $alg algorithm chart for $game:$mfkey:$diff\n";
+        print "Generating $alg algorithm chart for $game:$mfkey:$chart:$diff\n";
 
         my ($dum1,$dum2,$dum3,$perfect) = $song->estimate_scores();
         $RESULTSDB{$game}{$mfkey}{$diff}{"no-sp"}{best}{score} = $perfect; 

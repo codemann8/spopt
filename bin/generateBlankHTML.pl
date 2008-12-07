@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateBlankHTML.pl,v 1.1 2008-11-04 12:51:18 tarragon Exp $
+# $Id: generateBlankHTML.pl,v 1.2 2008-12-07 12:44:06 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateBlankHTML.pl,v $
 
 use strict;
@@ -14,7 +14,7 @@ use SongLib;
 
 use CGI qw/:standard *table *Tr/;
 
-my $version = do { my @r=(q$Revision: 1.1 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.2 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my %TOPSCORES = ();
 
@@ -31,6 +31,15 @@ my @games =
 );
 
 my @diffs = qw(easy medium hard expert);
+
+my %charts = (
+    'guitar' => 'Guitar',
+    'rhythm' => 'Bass/Rhythm',
+    'guitarcoop' => 'Guitar CO-OP',
+    'rhythmcoop' => 'Bass/Rhythm CO-OP',
+    'drum' => 'Drums',
+    'aux' => 'Auxilary',
+);
 
 sub usage {
     my $filename = basename( $0 );
@@ -55,26 +64,35 @@ my $GAME_REGEX = defined $config{'GAME_REGEX'} ? $config{'GAME_REGEX'} : qw{.*};
 my $DIFF_REGEX = defined $config{'DIFF_REGEX'} ? $config{'DIFF_REGEX'} : qw{.*};
 my $TIER_REGEX = defined $config{'TIER_REGEX'} ? $config{'TIER_REGEX'} : qw{.*};
 my $OUTPUT_DIR = defined $config{'OUTPUT_DIR'} ? $config{'OUTPUT_DIR'} : qw{.};
+my $CHART_REGEX = defined $config{'CHART_REGEX'} ? $config{'CHART_REGEX'} : 'guitar';
 
 my $SL = new SongLib;
 
-foreach my $game_hash ( @games ) {
-    my $game  = $game_hash->{'name'};
-    my $title = $game_hash->{'title'};
+for my $chart ( keys %charts ) {
+    next unless $chart =~ /$CHART_REGEX/;
 
-    next unless $game =~ /$GAME_REGEX/;
-    gen_index( $game, $title );
+    foreach my $game_hash ( @games ) {
+        my $game  = $game_hash->{'name'};
+        my $title = $game_hash->{'title'};
+        next unless $game =~ /$GAME_REGEX/;
+        my $filename = 'blank_'.$game.'_'.$chart.'.html';
+        open FILE, ">$filename";
+        select FILE;
+        gen_index( $game, $title, $chart );
+        select STDOUT;
+        close FILE;
+    }
 }
 
 exit;
 
 sub gen_index {
-    my ( $game, $title ) = @_;
+    my ( $game, $title, $chart ) = @_;
     my @tt = $SL->get_tier_titles_for_game($game);
     my @sa = $SL->get_songarr_for_game($game);
     my $maxtier = scalar(@tt)-1;
 
-    print start_html("Blank Charts for $title"), "\n";
+    print start_html("Blank Charts for $title $charts{$chart}"), "\n";
     print start_table, "\n";
 
     for my $tier (0 .. $maxtier) {
@@ -88,7 +106,7 @@ sub gen_index {
             my $base = $rs->{'file'};
             $base =~ s/(.*).mid/$1/;
             foreach my $diff ( qw( easy medium hard expert ) ) {
-                print td( a({href=>"/ghwt/$diff/$base.blank.png"},$diff) ), "\n";
+                print td( a({href=>"/ghwt/$chart/$diff/$base.blank.png"},$diff) ), "\n";
             }
             print end_Tr, "\n";
 	}
