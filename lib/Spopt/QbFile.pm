@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.13 2008-12-07 12:55:56 tarragon Exp $
+# $Id: QbFile.pm,v 1.14 2008-12-10 10:10:24 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package QbFile;
@@ -318,7 +318,7 @@ sub read {
                 if ( $noteArray_aref->[ $i ]->[0] >= $spStartms ) { 
                     $spArray_aref->[ $spp ]->[0] = $i;
                     for ( my $endNote = $i ; $endNote < scalar @$noteArray_aref ; $endNote++ ) {
-                        if ( $noteArray_aref->[ $endNote ]->[0] > $spEndms ) { 
+                        if ( $noteArray_aref->[ $endNote ]->[0] >= $spEndms ) { 
                             $spArray_aref->[ $spp ]->[1] = $endNote - 1;
                             last;
                         }
@@ -388,7 +388,7 @@ sub read {
     }
 
     # release some memory
-    undef $temptracks;
+    # undef $temptracks;
 
     return $self;
 }
