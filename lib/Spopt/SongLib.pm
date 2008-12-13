@@ -414,7 +414,7 @@ sub _init {
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 3, name => 'Walk This Way (Run DMC)',       file => 'walkthiswayrundmc.mid' };
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 4, name => 'Hard to Handle',                file => 'hardtohandle.mid' };
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 4, name => 'Always On The Run',             file => 'alwaysontherun.mid' };
-    push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 4, name => 'Back In THe Saddle',            file => 'backinthesaddle.mid' };
+    push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 4, name => 'Back In The Saddle',            file => 'backinthesaddle.mid' };
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 4, name => 'Beyond Beautiful',              file => 'beyondbeautiful.mid' };
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 4, name => 'Dream On',                      file => 'dreamon.mid' };
     push @{$self->{songarr}}, { game => 'gh3-aerosmith', tier => 5, name => 'Cat Scratch Fever',             file => 'catscratchfever.mid' };
