@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.6 2008-12-07 12:44:06 tarragon Exp $
+# $Id: generateCharts.pl,v 1.7 2009-01-13 11:35:28 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -29,7 +29,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.6 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.7 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -118,7 +118,7 @@ my $FILE_REGEX  = defined $config{'FILE_REGEX'} ? $config{'FILE_REGEX'} : qw{.*}
 my $ALG_REGEX   = defined $config{'ALG_REGEX'}  ? $config{'ALG_REGEX'}  : qw{.*};
 my $OUTPUT_DIR  = defined $config{'OUTPUT_DIR'} ? $config{'OUTPUT_DIR'} : qw{.};
 my $WHAMMY_RATE = defined $config{'WHAMMY_RATE'} ? $config{'WHAMMY_RATE'} : 0;
-my $CHART_REGEX = defined $config{'CHART_REGEX'} ? $config{'CHART_REGEX'} : 'guitar';
+my $CHART_REGEX = defined $config{'CHART_REGEX'} ? $config{'CHART_REGEX'} : '^guitar$';
 
 ## Loop through all of the songs
 my $sl = SongLib->new();
