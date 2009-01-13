@@ -12,14 +12,19 @@ use SongPainter;
 
 my $qb = new QbFile;
 $qb->file("$FindBin::Bin/../qb/ghwt/byob.mid.qb.xen");
+# $qb->file("$FindBin::Bin/../qb/ghwt/floaton.mid.qb.xen");
+# $qb->file("$FindBin::Bin/../qb/ghwt/trappedunderice.mid.qb.xen");
 $qb->read();
+
+# guitar aux drum guitarcoop rhythm rhythmcoop
+my $chart = 'rhythm';
 
 for my $diff ( qw( Easy Medium Hard Expert ) ) {
     my $song = new Song;
     $song->game('gh3');
     $song->filetype('qb');
     $song->diff( lc $diff );
-    $song->chart('rhythm');
+    $song->chart( $chart );
     $song->midifile( $qb );
 
     $song->construct_song();
@@ -30,10 +35,10 @@ for my $diff ( qw( Easy Medium Hard Expert ) ) {
     my $painter = new SongPainter;
     $painter->debug(0);
     $painter->song( $song );
-    $painter->filename( 'byob_bass_' . lc $diff . '.png' );
+    $painter->filename( 'test_chart_' . lc $diff . '.png' );
     $painter->greenbot(0);
-    $painter->title( 'B.Y.O.B.' );
-    $painter->subtitle( "$diff Bass" );
+    $painter->title( 'Test Chart' );
+    $painter->subtitle( "$diff $chart" );
     $painter->outline_only(0);
     highlight_blank_phrases($song,$painter);
     $painter->paintsong();
