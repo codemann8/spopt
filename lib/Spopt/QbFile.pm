@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.14 2008-12-10 10:10:24 tarragon Exp $
+# $Id: QbFile.pm,v 1.15 2009-01-13 09:55:25 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package QbFile;
@@ -168,8 +168,6 @@ sub _init {
     $self->{'_beat'}            = [];
     $self->{'_timesig'}         = [];
     $self->{'_markers'}         = [];
-## TODO reorganise charts to allow easier selection of non-guitar charts
-## may require work against other libs, or (hopefully) just the generation script
     foreach my $diff ( qw( easy medium hard expert ) ) {
         $self->{'_notes'}{ $diff }   = [];
         $self->{'_sp'}{ $diff }      = [];
@@ -311,8 +309,8 @@ sub read {
             for ( my $i = 0 ; $i < scalar @$noteArray_aref ; $i++ ) {
                 last if $spp >= $numspphrases;
 
-                my $spStartms = $thisSP_aref->[ $spp ]->[0];
-                my $spEndms = $thisSP_aref->[ $spp ]->[0] + $thisSP_aref->[ $spp ]->[1];
+                my $spStartms   = $thisSP_aref->[ $spp ]->[0];
+                my $spEndms     = $thisSP_aref->[ $spp ]->[0] + $thisSP_aref->[ $spp ]->[1];
                 my $spNoteCount = $thisSP_aref->[ $spp ]->[2];
 
                 if ( $noteArray_aref->[ $i ]->[0] >= $spStartms ) { 
