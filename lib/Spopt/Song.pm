@@ -81,6 +81,32 @@ sub _init {
     $self->{'sectionnames'} = [];
 }
 
+# do a consistency check over the song data
+sub check {
+    my $self = shift;
+
+    print  "Running Song consistency check.\n";
+    printf "Chart: %s\n", $self->chart;
+    printf "Difficulty: %s\n", $self->diff;
+
+    my $notes_ref = $self->notearr;
+    printf "Chart has %u notes.\n", scalar @$notes_ref;
+
+    print  "Checking notes...\n";
+    for my $ref ( @$notes_ref ) {
+        
+    }
+
+    my $starPower_ref = $self->sparr;
+    my $tempo_ref = $self->tempoarr;
+    my $timeSig_ref = $self->timesigarr;
+
+    # use Data::Dumper;
+    # print Dumper $self->notearr;
+
+    return $self;
+}
+
 sub init_phrase_sp_pwls {
     my $self = shift;
     my $spa  = $self->sparr();
