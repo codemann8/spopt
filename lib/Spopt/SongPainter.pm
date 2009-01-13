@@ -5,53 +5,76 @@ use strict;
 require Image::Magick;
 require FindBin;
 
-our $PIXEL_WIDTH = 1024;
+my $PIXEL_WIDTH = 1024;
 
-our $BEATS_PER_ROW = 24;
-our $LEFT_MARGIN_PIXELS = 16;
-our $PIXELS_PER_BEAT = 40;
-our $HEADER_PIXELS = 90;
-our $FOOTER_PIXELS = 40;
-our $PIXELS_PER_SINGLE_ROW = 114;
+my $BEATS_PER_ROW = 24;
+my $LEFT_MARGIN_PIXELS = 16;
+my $PIXELS_PER_BEAT = 40;
+my $HEADER_PIXELS = 90;
+my $FOOTER_PIXELS = 40;
+my $PIXELS_PER_SINGLE_ROW = 114;
 
-our $SINGLE_STAFF_LINE_1 = 24 + 0;
-our $SINGLE_STAFF_LINE_2 = 24 + 1*12;
-our $SINGLE_STAFF_LINE_3 = 24 + 2*12;
-our $SINGLE_STAFF_LINE_4 = 24 + 3*12;
-our $SINGLE_STAFF_LINE_5 = 24 + 4*12;
+my @STAFF_LINES_a = (
+    -1,         # special for "purple" notes
+    24 + 0,
+    24 + 1*12,
+    24 + 2*12,
+    24 + 3*12,
+    24 + 4*12,
+);
+
+my %noteInfo_h = (
+    'P' => { 'col' => '#9b30ff80', 'pos' => 0 },
+    'R' => { 'col' => 'red',       'pos' => 1 },
+    'G' => { 'col' => 'green',     'pos' => 2 },
+    'Y' => { 'col' => 'yellow',    'pos' => 3 },
+    'B' => { 'col' => 'blue',      'pos' => 4 },
+    'O' => { 'col' => 'orange',    'pos' => 5 },
+);
 
 sub new    { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
 sub _prop  { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
 
 # song() : song object from Song.pm
-sub song      { my $self = shift; return $self->_prop("song",@_);  }
+sub song      { my $self = shift; return $self->_prop('song',@_);  }
+
 # filename() : define the output filename
-sub filename  { my $self = shift; return $self->_prop("filename",@_);  }
+sub filename  { my $self = shift; return $self->_prop('filename',@_);  }
+
 # greenbot() : if set, green notes are rendered at the bottom of the stave
-sub greenbot  { my $self = shift; return $self->_prop("greenbot",@_);  }
+sub greenbot  { my $self = shift; return $self->_prop('greenbot',@_);  }
+
 # debug() : turns on various debug options, file dumps, etc
-sub debug     { my $self = shift; return $self->_prop("debug",@_);  }
+sub debug     { my $self = shift; return $self->_prop('debug',@_);  }
+
 # sol() : solution object from Optimizer.pm
-sub sol       { my $self = shift; return $self->_prop("sol",@_);  }
+sub sol       { my $self = shift; return $self->_prop('sol',@_);  }
+
 # title() : main title for the chart
-sub title     { my $self = shift; return $self->_prop("title",@_);  }
+sub title     { my $self = shift; return $self->_prop('title',@_);  }
+
 # subtitle() : subtitle for the chart (usually the difficulty)
-sub subtitle  { my $self = shift; return $self->_prop("subtitle",@_);  }
+sub subtitle  { my $self = shift; return $self->_prop('subtitle',@_);  }
+
 # outline_only() : defines if star power phrases highlights are fills (rectangles) or outlines (lines)
-sub outline_only  { my $self = shift; return $self->_prop("outline_only",@_);  }
+sub outline_only  { my $self = shift; return $self->_prop('outline_only',@_);  }
 
-sub whammy_per_quarter_bar  { my $self = shift; return $self->_prop("whammy_per_quarter_bar",@_);  }
+# note_order() : define the note order on the charts by colour. takes a list of letters 
+# corresponding to the colour, e.g. qw( G R Y B O )
+sub note_order { my $self = shift; return $self->_prop('note_order',@_); }
 
+# define the amount of star power gained per quarter bar of whammy for the sp calculator
+sub whammy_per_quarter_bar  { my $self = shift; return $self->_prop('whammy_per_quarter_bar',@_);  }
 
-sub clear_unrestricted    { my $self = shift; $self->{unrestricted} = []; }
-sub clear_partial         { my $self = shift; $self->{partial}   = []; }
-sub clear_trailing        { my $self = shift; $self->{trailing}   = []; }
-sub clear_spsqueeze       { my $self = shift; $self->{spsqueeze}   = []; }
+sub clear_unrestricted    { my $self = shift; $self->{unrestricted}   = []; }
+sub clear_partial         { my $self = shift; $self->{partial}        = []; }
+sub clear_trailing        { my $self = shift; $self->{trailing}       = []; }
+sub clear_spsqueeze       { my $self = shift; $self->{spsqueeze}      = []; }
 sub clear_nwunrestricted  { my $self = shift; $self->{nwunrestricted} = []; }
-sub clear_nwpartial       { my $self = shift; $self->{nwpartial}   = []; }
-sub clear_nwtrailing      { my $self = shift; $self->{nwtrailing}   = []; }
-sub clear_activation      { my $self = shift; $self->{activation}   = []; }
-sub clear_squeeze         { my $self = shift; $self->{squeeze}   = []; }
+sub clear_nwpartial       { my $self = shift; $self->{nwpartial}      = []; }
+sub clear_nwtrailing      { my $self = shift; $self->{nwtrailing}     = []; }
+sub clear_activation      { my $self = shift; $self->{activation}     = []; }
+sub clear_squeeze         { my $self = shift; $self->{squeeze}        = []; }
 
 sub add_unrestricted    { my ($self,$start,$stop) = @_; push @{$self->{unrestricted}},   [$start,$stop]; }
 sub add_partial         { my ($self,$start,$stop) = @_; push @{$self->{partial}},        [$start,$stop]; }
@@ -65,11 +88,19 @@ sub add_squeeze         { my ($self,$start,$stop) = @_; push @{$self->{squeeze}}
 
 sub _init {
     my $self = shift;
-    $self->song("");
-    $self->filename("");
-    $self->title("");
-    $self->subtitle("");
-    $self->sol("NONE");
+
+    $self->song('');
+    $self->filename('');
+    $self->title('');
+    $self->subtitle('');
+    $self->sol('NONE');
+
+    $self->note_order( qw( G R Y B O ) );
+    $self->outline_only(0);
+    $self->greenbot(0);
+    $self->whammy_per_quarter_bar(7.5);
+    $self->debug(0);
+
     $self->clear_unrestricted();
     $self->clear_partial();
     $self->clear_trailing();
@@ -79,10 +110,6 @@ sub _init {
     $self->clear_nwtrailing();
     $self->clear_activation();
     $self->clear_squeeze();
-    $self->outline_only(0);
-    $self->greenbot(1);
-    $self->whammy_per_quarter_bar(7.5);
-    $self->debug(0);
 }
 
 
@@ -256,6 +283,15 @@ sub _highlight_activation {
 
 sub paintsong {
     my $self = shift;
+
+    my $song = $self->song();
+    my $na = $song->notearr();
+    # check for an empty chart
+    if ( scalar @$na == 0 ) {
+	print "No notes in this chart.\n";
+	return 1;
+    }
+
     $self->_calc_last_measure();
     $self->_calc_stats_per_measure();
     $self->_map_measures_to_coords();
@@ -287,7 +323,15 @@ sub _paintSectionLabels {
 	$meas = int ($meas + 0.5); ## round to the nearest measure to be sure to have room to type the text
         my $basex = $self->{_measureCoords}{$meas}{x};
         my $basey = $self->{_measureCoords}{$meas}{y};
-        $self->_drawText("_im_song", "Black","Helvetica",10,"$txt",$basex+20,$basey+$SINGLE_STAFF_LINE_1-5);
+        $self->_drawText(
+            '_im_song',
+            'Black',
+            'Helvetica',
+            10,
+            $txt,
+            $basex + 20,
+            $basey + $STAFF_LINES_a[1] - 5,
+        );
     }
 }
 
@@ -308,12 +352,12 @@ sub _merge_images {
     warn $x if $x;
 
     if ($self->outline_only()) {
-        $x = $self->{_im_song}->Composite(image => $self->{_im_lo},  compose=>'Dissolve', opacity=>32000, x=>0, y=>0);
+        $x = $self->{_im_song}->Composite(image => $self->{_im_lo},  compose=>'Dissolve', opacity=>200, x=>0, y=>0);
         warn $x if $x;
     }
     
     else {
-        $x = $self->{_im_song}->Composite(image => $self->{_im_lo},  compose=>'Dissolve', opacity=>20000, x=>0, y=>0);
+        $x = $self->{_im_song}->Composite(image => $self->{_im_lo},  compose=>'Dissolve', opacity=>100, x=>0, y=>0);
         warn $x if $x;
     }
 }
@@ -322,9 +366,6 @@ sub _printTitles() {
     my $self = shift;
     my $title = $self->title();
     my $subtitle = $self->subtitle();
-    # hack:
-    # added to distinguish the chart when generating coop, altp1 and altp2 blanks - tma
-    # $subtitle .= ' main';
     $self->_drawCenteredText("_im_song","black","Times",50,$title,512,40) if $title;
     $self->_drawCenteredText("_im_song","black","Times",30,$subtitle,512,80) if $subtitle;
 }
@@ -647,11 +688,11 @@ sub _print_tempos {
 	my $offset = $PIXELS_PER_BEAT * ($song->t2b($tick) - $song->m2b($meas));
         my $basex = $self->{_measureCoords}{$meas}{x};
         my $basey = $self->{_measureCoords}{$meas}{y};
-        my $staff1 = $basey + $SINGLE_STAFF_LINE_1;
+        my $staff1 = $basey + $STAFF_LINES_a[1];
 	$self->_draw_tempo($tempo,$basex+$offset,$staff1-20);
         #print '===' . "\n"; ## DEBUG
         #print '$meas='.$meas."\n"; ## DEBUG
-        #print '$SINGLE_STAFF_LINE_1=' . $SINGLE_STAFF_LINE_1 ."\n"; ## DEBUG
+        #print '$STAFF_LINES_a[1]=' . $STAFF_LINES_a[1] ."\n"; ## DEBUG
         #print '$basex=' . $basex ."\n"; ## DEBUG
         #print '$basey=' . $basey ."\n"; ## DEBUG
         #print '$tempo=' . $tempo ."\n"; ##DEBUG
@@ -699,11 +740,11 @@ sub _highlight_regions {
     my $basey = $self->{_measureCoords}{$i}{y};
     my $bpm = $song->bpm($i);
     my $right = int($basex + $PIXELS_PER_BEAT * $bpm + 1e-7);
-    my $staff1 = $basey + $SINGLE_STAFF_LINE_1;
-    my $staff2 = $basey + $SINGLE_STAFF_LINE_2;
-    my $staff3 = $basey + $SINGLE_STAFF_LINE_3;
-    my $staff4 = $basey + $SINGLE_STAFF_LINE_4;
-    my $staff5 = $basey + $SINGLE_STAFF_LINE_5;
+    my $staff1 = $basey + $STAFF_LINES_a[1];
+    my $staff2 = $basey + $STAFF_LINES_a[2]; 
+    my $staff3 = $basey + $STAFF_LINES_a[3]; 
+    my $staff4 = $basey + $STAFF_LINES_a[4]; 
+    my $staff5 = $basey + $STAFF_LINES_a[5]; 
 
     foreach my $ra (@{$self->{$name}}) {
 	my ($s1,$s2) = @$ra;
@@ -764,8 +805,8 @@ sub _drawTimeSignature {
     if ($i == 0 or $i == 1 or $song->bpm($i) != $song->bpm($i-1)) {
         my $basex = $self->{_measureCoords}{$i}{x};
         my $basey = $self->{_measureCoords}{$i}{y};
-        my $staff3 = $basey + $SINGLE_STAFF_LINE_3;
-        my $staff5 = $basey + $SINGLE_STAFF_LINE_5;
+        my $staff3 = $basey + $STAFF_LINES_a[3];
+        my $staff5 = $basey + $STAFF_LINES_a[5];
 	my $bpm = $song->bpm($i);
         $self->_drawText("_im_song","gray80","Times",32,"$bpm",$basex+3,$staff3);
         $self->_drawText("_im_song","gray80","Times",32,"4"   ,$basex+3,$staff5);
@@ -793,12 +834,6 @@ sub _drawMeasureSustains {
     my $bpm = $song->bpm($i);
     my $right = int($basex + $PIXELS_PER_BEAT * $bpm + 1e-7);
 
-    my $staff1 = $basey + $SINGLE_STAFF_LINE_1;
-    my $staff2 = $basey + $SINGLE_STAFF_LINE_2;
-    my $staff3 = $basey + $SINGLE_STAFF_LINE_3;
-    my $staff4 = $basey + $SINGLE_STAFF_LINE_4;
-    my $staff5 = $basey + $SINGLE_STAFF_LINE_5;
-
     foreach my $n (@$rmn) {
 	next unless $n->sustain();
         next if $n->purple();
@@ -810,17 +845,27 @@ sub _drawMeasureSustains {
 	my $x1 = int ( 1e-7 + $basex + ($nleft-$i)  * ($right-$basex) );
 	my $x2 = int ( 1e-7 + $basex + ($nright-$i) * ($right-$basex) );
 
-	if ($n->green()  and $self->greenbot())     { $self->_drawLine("_im_song", "green", 3,$x1,$staff5,$x2,$staff5); }
-	if ($n->red()    and $self->greenbot())     { $self->_drawLine("_im_song", "red",   3,$x1,$staff4,$x2,$staff4); }
-	if ($n->yellow() and $self->greenbot())     { $self->_drawLine("_im_song", "yellow",3,$x1,$staff3,$x2,$staff3); }
-	if ($n->blue()   and $self->greenbot())     { $self->_drawLine("_im_song", "blue",  3,$x1,$staff2,$x2,$staff2); }
-	if ($n->orange() and $self->greenbot())     { $self->_drawLine("_im_song", "orange",3,$x1,$staff1,$x2,$staff1); }
+        my $noteCode;
+        if ( $n->green()  ) { $noteCode = 'G'; };
+        if ( $n->red()    ) { $noteCode = 'R'; };
+        if ( $n->yellow() ) { $noteCode = 'Y'; };
+        if ( $n->blue()   ) { $noteCode = 'B'; };
+        if ( $n->orange() ) { $noteCode = 'O'; };
+        if ( $n->purple() ) { $noteCode = 'P'; };
 
-	if ($n->green()  and not $self->greenbot()) { $self->_drawLine("_im_song", "green", 3,$x1,$staff1,$x2,$staff1); }
-	if ($n->red()    and not $self->greenbot()) { $self->_drawLine("_im_song", "red",   3,$x1,$staff2,$x2,$staff2); }
-	if ($n->yellow() and not $self->greenbot()) { $self->_drawLine("_im_song", "yellow",3,$x1,$staff3,$x2,$staff3); }
-	if ($n->blue()   and not $self->greenbot()) { $self->_drawLine("_im_song", "blue",  3,$x1,$staff4,$x2,$staff4); }
-	if ($n->orange() and not $self->greenbot()) { $self->_drawLine("_im_song", "orange",3,$x1,$staff5,$x2,$staff5); }
+        my $noteCol    = $noteInfo_h{ $noteCode }->{'col'};
+        my $notePosRef = $noteInfo_h{ $noteCode }->{'pos'};
+        my $notePos    = $STAFF_LINES_a[ $notePosRef ] + $basey;
+
+        $self->_drawLine(
+            '_im_song', # base image to draw on
+            $noteCol,   # colour of the note
+            3,          # width of the note in pixels, not including border?
+            $x1,        # x position for start of note
+            $notePos,   # y position for start of note
+            $x2,        # x position for end of note
+            $notePos,   # y position for end of note
+        );
     }
 }
 
@@ -832,17 +877,17 @@ sub _paintMeasureScores {
     my $bpm = $song->bpm($i);
     my $left = $basex;
     my $right = int($left + $PIXELS_PER_BEAT * $bpm + 1e-7);
-    my $top = $basey + $SINGLE_STAFF_LINE_1;
-    my $bot = $basey + $SINGLE_STAFF_LINE_5;
+    my $top = $basey + $STAFF_LINES_a[1];
+    my $bot = $basey + $STAFF_LINES_a[5];
     ##my $scoretxt = sprintf "\%d/\%d", $self->{_basemeasscore}[$i],$self->{_multmeasscore}[$i];
     my $basescoretxt = sprintf "\%d", $self->{_basemeasscore}[$i];
     my $multscoretxt = sprintf "\%d", $self->{_multmeasscore}[$i];
     my $sptxt    = sprintf "%.2fSP", $self->{_spmeas}[$i];
 
-    $self->_drawRightText("_im_song", "grey60",   "Helvetica",10,$basescoretxt,$right-3,$basey+$SINGLE_STAFF_LINE_5+10);
-    $self->_drawRightText("_im_song", "DarkGreen","Helvetica",10,$multscoretxt,$right-3,$basey+$SINGLE_STAFF_LINE_5+20);
+    $self->_drawRightText("_im_song", "grey60",   "Helvetica",10,$basescoretxt,$right-3,$basey+$STAFF_LINES_a[5]+10);
+    $self->_drawRightText("_im_song", "DarkGreen","Helvetica",10,$multscoretxt,$right-3,$basey+$STAFF_LINES_a[5]+20);
     if ($self->{_spmeas}[$i] > 0) {
-        $self->_drawRightText("_im_song", "SteelBlue3","Helvetica",10,$sptxt,$right-3,$basey+$SINGLE_STAFF_LINE_5+30);
+        $self->_drawRightText("_im_song", "SteelBlue3","Helvetica",10,$sptxt,$right-3,$basey+$STAFF_LINES_a[5]+30);
     }
 }
 
@@ -855,14 +900,14 @@ sub _drawMeasureGrid {
 
     my $left = $basex;
     my $right = int($left + $PIXELS_PER_BEAT * $bpm + 1e-7);
-    my $top = $basey + $SINGLE_STAFF_LINE_1;
-    my $bot = $basey + $SINGLE_STAFF_LINE_5;
+    my $top = $basey + $STAFF_LINES_a[1];
+    my $bot = $basey + $STAFF_LINES_a[5];
 
-    my $staff1 = $basey + $SINGLE_STAFF_LINE_1;
-    my $staff2 = $basey + $SINGLE_STAFF_LINE_2;
-    my $staff3 = $basey + $SINGLE_STAFF_LINE_3;
-    my $staff4 = $basey + $SINGLE_STAFF_LINE_4;
-    my $staff5 = $basey + $SINGLE_STAFF_LINE_5;
+    my $staff1 = $basey + $STAFF_LINES_a[1];
+    my $staff2 = $basey + $STAFF_LINES_a[2];
+    my $staff3 = $basey + $STAFF_LINES_a[3];
+    my $staff4 = $basey + $STAFF_LINES_a[4];
+    my $staff5 = $basey + $STAFF_LINES_a[5];
 
     ## Do the eighth notes
     for my $i (0 .. $bpm - 1 ) {
@@ -901,11 +946,11 @@ sub _drawMeasureNotes {
     my $basey = $self->{_measureCoords}{$i}{y};
     my $right = int($basex + $PIXELS_PER_BEAT * $bpm + 1e-7);
 
-    my $staff1 = $basey + $SINGLE_STAFF_LINE_1;
-    my $staff2 = $basey + $SINGLE_STAFF_LINE_2;
-    my $staff3 = $basey + $SINGLE_STAFF_LINE_3;
-    my $staff4 = $basey + $SINGLE_STAFF_LINE_4;
-    my $staff5 = $basey + $SINGLE_STAFF_LINE_5;
+    my $staff1 = $basey + $STAFF_LINES_a[1];
+    my $staff2 = $basey + $STAFF_LINES_a[2];
+    my $staff3 = $basey + $STAFF_LINES_a[3];
+    my $staff4 = $basey + $STAFF_LINES_a[4];
+    my $staff5 = $basey + $STAFF_LINES_a[5];
 
     foreach my $n (@$rmn) {
 	my $nleft = $n->startMeas();
@@ -913,34 +958,58 @@ sub _drawMeasureNotes {
 	next unless $nleft < $i+1 + 1e-7;
 	my $x = int ( 1e-7 + $basex + ($nleft-$i)  * ($right-$basex) );
 
-        #9b30ff80
-        if ($n->purple() and     $n->star() )                          { $self->_drawNoteLineStar('_im_song', '#9b30ff80', $x,$staff1); }
-        if ($n->purple() and not $n->star() )                          { $self->_drawNoteLine    ('_im_song', '#9b30ff80', $x,$staff1); }
+        my $noteCode;
+        if ( $n->green()  ) { $noteCode = 'G'; };
+        if ( $n->red()    ) { $noteCode = 'R'; };
+        if ( $n->yellow() ) { $noteCode = 'Y'; };
+        if ( $n->blue()   ) { $noteCode = 'B'; };
+        if ( $n->orange() ) { $noteCode = 'O'; };
+        if ( $n->purple() ) { $noteCode = 'P'; };
 
-        if ($n->green()  and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'green', $x,$staff5); }
-        if ($n->red()    and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'red',   $x,$staff4); }
-        if ($n->yellow() and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'yellow',$x,$staff3); }
-        if ($n->blue()   and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'blue',  $x,$staff2); }
-        if ($n->orange() and not $n->star() and     $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'orange',$x,$staff1); }
+        my $noteCol    = $noteInfo_h{ $noteCode }->{'col'};
+        my $notePosRef = $noteInfo_h{ $noteCode }->{'pos'};
+        my $notePos    = $STAFF_LINES_a[ $notePosRef ] + $basey;
 
-        if ($n->green()  and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'green', $x,$staff1); }
-        if ($n->red()    and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'red',   $x,$staff2); }
-        if ($n->yellow() and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'yellow',$x,$staff3); }
-        if ($n->blue()   and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'blue',  $x,$staff4); }
-        if ($n->orange() and not $n->star() and not $self->greenbot()) { $self->_drawNoteCircle('_im_song', 'orange',$x,$staff5); }
-
-        if ($n->green()  and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'green',   $x,$staff5); }
-        if ($n->red()    and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'red',     $x,$staff4); }
-        if ($n->yellow() and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'yellow',  $x,$staff3); }
-        if ($n->blue()   and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'blue',    $x,$staff2); }
-        if ($n->orange() and     $n->star() and     $self->greenbot()) { $self->_drawNoteStar('_im_song', 'orange',  $x,$staff1); }
-
-        if ($n->green()  and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'green',   $x,$staff1); }
-        if ($n->red()    and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'red',     $x,$staff2); }
-        if ($n->yellow() and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'yellow',  $x,$staff3); }
-        if ($n->blue()   and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'blue',    $x,$staff4); }
-        if ($n->orange() and     $n->star() and not $self->greenbot()) { $self->_drawNoteStar('_im_song', 'orange',  $x,$staff5); }
-
+        if ( $n->star() ) {
+            if ( $notePosRef == 0 ) {
+                # draw a lined star note (i.e. "purple" note)
+                $self->_drawNoteLineStar(
+                    '_im_song',
+                    $noteCol,
+                    $x,
+                    $STAFF_LINES_a[1] + $basey, # hardcoded to start on the top line
+                ); 
+            }
+            else {
+                # draw a regular star note
+                $self->_drawNoteStar(
+                    '_im_song',
+                    $noteCol,
+                    $x,
+                    $notePos,
+                );
+            }
+        }
+        else {
+            if ( $notePosRef == 0 ) {
+                # draw a lined note (i.e. "purple" note)
+                $self->_drawNoteLine(
+                    '_im_song',
+                    $noteCol,
+                    $x,
+                    $STAFF_LINES_a[1] + $basey, # hardcoded to start on the top line
+                ); 
+            }
+            else {
+                # draw a regular note
+                $self->_drawNoteCircle(
+                    '_im_song',
+                    $noteCol,
+                    $x,
+                    $notePos,
+                );
+            }
+        }
     }
 }
 
@@ -1029,7 +1098,7 @@ sub _drawNoteLine {
 
     my $width = 4;
     my $xOffset = 2;
-    my $height = $SINGLE_STAFF_LINE_5 - $SINGLE_STAFF_LINE_1;
+    my $height = $STAFF_LINES_a[5] - $STAFF_LINES_a[1];
     my $yOverlap = 3;
 
     my $topLeftX = $x - $xOffset;
