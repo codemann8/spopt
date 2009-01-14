@@ -41,9 +41,6 @@ sub song      { my $self = shift; return $self->_prop('song',@_);  }
 # filename() : define the output filename
 sub filename  { my $self = shift; return $self->_prop('filename',@_);  }
 
-# greenbot() : if set, green notes are rendered at the bottom of the stave
-sub greenbot  { my $self = shift; return $self->_prop('greenbot',@_);  }
-
 # debug() : turns on various debug options, file dumps, etc
 sub debug     { my $self = shift; return $self->_prop('debug',@_);  }
 
@@ -59,9 +56,24 @@ sub subtitle  { my $self = shift; return $self->_prop('subtitle',@_);  }
 # outline_only() : defines if star power phrases highlights are fills (rectangles) or outlines (lines)
 sub outline_only  { my $self = shift; return $self->_prop('outline_only',@_);  }
 
-# note_order() : define the note order on the charts by colour. takes a list of letters 
-# corresponding to the colour, e.g. qw( G R Y B O )
-sub note_order { my $self = shift; return $self->_prop('note_order',@_); }
+# note_order() : define the note order on the chart. 
+#   options: 'guitar', 'drum', or 'custom'.
+#   'custom' takes a list of letters corresponding to the colour, 
+#   e.g. $painter->note_order('custom', [ qw( P G R Y B O ) ]);
+sub note_order {
+    my $self = shift; 
+    my $order = shift;
+    my $order_a;
+    if ( $order eq 'guitar' ) { @$order_a = qw( P G R Y B O ) };
+    if ( $order eq 'drum'   ) { @$order_a = qw( P R Y B O G ) };
+    if ( $order eq 'custom' ) { @$order_a = shift };
+    
+    for my $pos ( 0 .. scalar @$order_a ) {
+        my $note = $order_a->[$pos];
+        $noteInfo_h{ $note }->{'pos'} = $pos;
+    }
+    return $self->_prop('note_order',@_); 
+}
 
 # define the amount of star power gained per quarter bar of whammy for the sp calculator
 sub whammy_per_quarter_bar  { my $self = shift; return $self->_prop('whammy_per_quarter_bar',@_);  }
@@ -95,9 +107,8 @@ sub _init {
     $self->subtitle('');
     $self->sol('NONE');
 
-    $self->note_order( qw( G R Y B O ) );
+    $self->note_order('guitar');
     $self->outline_only(0);
-    $self->greenbot(0);
     $self->whammy_per_quarter_bar(7.5);
     $self->debug(0);
 
@@ -845,27 +856,29 @@ sub _drawMeasureSustains {
 	my $x1 = int ( 1e-7 + $basex + ($nleft-$i)  * ($right-$basex) );
 	my $x2 = int ( 1e-7 + $basex + ($nright-$i) * ($right-$basex) );
 
-        my $noteCode;
-        if ( $n->green()  ) { $noteCode = 'G'; };
-        if ( $n->red()    ) { $noteCode = 'R'; };
-        if ( $n->yellow() ) { $noteCode = 'Y'; };
-        if ( $n->blue()   ) { $noteCode = 'B'; };
-        if ( $n->orange() ) { $noteCode = 'O'; };
-        if ( $n->purple() ) { $noteCode = 'P'; };
+        my @noteCode_a;
+        if ( $n->green()  ) { push @noteCode_a, 'G'; };
+        if ( $n->red()    ) { push @noteCode_a, 'R'; };
+        if ( $n->yellow() ) { push @noteCode_a, 'Y'; };
+        if ( $n->blue()   ) { push @noteCode_a, 'B'; };
+        if ( $n->orange() ) { push @noteCode_a, 'O'; };
+        if ( $n->purple() ) { push @noteCode_a, 'P'; };
 
-        my $noteCol    = $noteInfo_h{ $noteCode }->{'col'};
-        my $notePosRef = $noteInfo_h{ $noteCode }->{'pos'};
-        my $notePos    = $STAFF_LINES_a[ $notePosRef ] + $basey;
+        for my $noteCode ( @noteCode_a ) {
+            my $noteCol    = $noteInfo_h{ $noteCode }->{'col'};
+            my $notePosRef = $noteInfo_h{ $noteCode }->{'pos'};
+            my $notePos    = $STAFF_LINES_a[ $notePosRef ] + $basey;
 
-        $self->_drawLine(
-            '_im_song', # base image to draw on
-            $noteCol,   # colour of the note
-            3,          # width of the note in pixels, not including border?
-            $x1,        # x position for start of note
-            $notePos,   # y position for start of note
-            $x2,        # x position for end of note
-            $notePos,   # y position for end of note
-        );
+            $self->_drawLine(
+                '_im_song', # base image to draw on
+                $noteCol,   # colour of the note
+                3,          # width of the note in pixels, not including border?
+                $x1,        # x position for start of note
+                $notePos,   # y position for start of note
+                $x2,        # x position for end of note
+                $notePos,   # y position for end of note
+            );
+        }
     }
 }
 
@@ -958,56 +971,58 @@ sub _drawMeasureNotes {
 	next unless $nleft < $i+1 + 1e-7;
 	my $x = int ( 1e-7 + $basex + ($nleft-$i)  * ($right-$basex) );
 
-        my $noteCode;
-        if ( $n->green()  ) { $noteCode = 'G'; };
-        if ( $n->red()    ) { $noteCode = 'R'; };
-        if ( $n->yellow() ) { $noteCode = 'Y'; };
-        if ( $n->blue()   ) { $noteCode = 'B'; };
-        if ( $n->orange() ) { $noteCode = 'O'; };
-        if ( $n->purple() ) { $noteCode = 'P'; };
+        my @noteCode_a;
+        if ( $n->green()  ) { push @noteCode_a, 'G'; };
+        if ( $n->red()    ) { push @noteCode_a, 'R'; };
+        if ( $n->yellow() ) { push @noteCode_a, 'Y'; };
+        if ( $n->blue()   ) { push @noteCode_a, 'B'; };
+        if ( $n->orange() ) { push @noteCode_a, 'O'; };
+        if ( $n->purple() ) { push @noteCode_a, 'P'; };
 
-        my $noteCol    = $noteInfo_h{ $noteCode }->{'col'};
-        my $notePosRef = $noteInfo_h{ $noteCode }->{'pos'};
-        my $notePos    = $STAFF_LINES_a[ $notePosRef ] + $basey;
+        for my $noteCode ( @noteCode_a ) {
+            my $noteCol    = $noteInfo_h{ $noteCode }->{'col'};
+            my $notePosRef = $noteInfo_h{ $noteCode }->{'pos'};
+            my $notePos    = $STAFF_LINES_a[ $notePosRef ] + $basey;
 
-        if ( $n->star() ) {
-            if ( $notePosRef == 0 ) {
-                # draw a lined star note (i.e. "purple" note)
-                $self->_drawNoteLineStar(
-                    '_im_song',
-                    $noteCol,
-                    $x,
-                    $STAFF_LINES_a[1] + $basey, # hardcoded to start on the top line
-                ); 
+            if ( $n->star() ) {
+                if ( $notePosRef == 0 ) {
+                    # draw a lined star note (i.e. "purple" note)
+                    $self->_drawNoteLineStar(
+                        '_im_song',
+                        $noteCol,
+                        $x,
+                        $STAFF_LINES_a[1] + $basey, # hardcoded to start on the top line
+                    ); 
+                }
+                else {
+                    # draw a regular star note
+                    $self->_drawNoteStar(
+                        '_im_song',
+                        $noteCol,
+                        $x,
+                        $notePos,
+                    );
+                }
             }
             else {
-                # draw a regular star note
-                $self->_drawNoteStar(
-                    '_im_song',
-                    $noteCol,
-                    $x,
-                    $notePos,
-                );
-            }
-        }
-        else {
-            if ( $notePosRef == 0 ) {
-                # draw a lined note (i.e. "purple" note)
-                $self->_drawNoteLine(
-                    '_im_song',
-                    $noteCol,
-                    $x,
-                    $STAFF_LINES_a[1] + $basey, # hardcoded to start on the top line
-                ); 
-            }
-            else {
-                # draw a regular note
-                $self->_drawNoteCircle(
-                    '_im_song',
-                    $noteCol,
-                    $x,
-                    $notePos,
-                );
+                if ( $notePosRef == 0 ) {
+                    # draw a lined note (i.e. "purple" note)
+                    $self->_drawNoteLine(
+                        '_im_song',
+                        $noteCol,
+                        $x,
+                        $STAFF_LINES_a[1] + $basey, # hardcoded to start on the top line
+                    ); 
+                }
+                else {
+                    # draw a regular note
+                    $self->_drawNoteCircle(
+                        '_im_song',
+                        $noteCol,
+                        $x,
+                        $notePos,
+                    );
+                }
             }
         }
     }
