@@ -17,9 +17,10 @@ $qb->file("$FindBin::Bin/../qb/ghwt/byob.mid.qb.xen");
 $qb->read();
 
 # guitar aux drum guitarcoop rhythm rhythmcoop
-my $chart = 'rhythm';
+my $chart = 'drum';
 
-for my $diff ( qw( Easy Medium Hard Expert ) ) {
+# for my $diff ( qw( Easy Medium Hard Expert ) ) {
+for my $diff ( qw( Expert ) ) {
     my $song = new Song;
     $song->game('gh3');
     $song->filetype('qb');
@@ -36,7 +37,8 @@ for my $diff ( qw( Easy Medium Hard Expert ) ) {
     $painter->debug(0);
     $painter->song( $song );
     $painter->filename( 'test_chart_' . lc $diff . '.png' );
-    $painter->greenbot(0);
+    $painter->note_order('drum');
+    # $painter->note_order( 'custom', qw( R Y P B O G ) );
     $painter->title( 'Test Chart' );
     $painter->subtitle( "$diff $chart" );
     $painter->outline_only(0);
