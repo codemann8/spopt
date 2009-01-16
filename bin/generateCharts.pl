@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.8 2009-01-16 00:30:52 tarragon Exp $
+# $Id: generateCharts.pl,v 1.9 2009-01-16 22:01:20 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -30,7 +30,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.8 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.9 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -258,17 +258,17 @@ sub process_song {
         print "Generating blank chart for $game:$mfkey:$chart:$diff\n";
 
         ## Make the blank notechart
-        my $painter0 = new SongPainter;
-        $painter0->debug(0);
-        $painter0->song($song);
-        $painter0->filename("$diffdir/$songkey.blank.png");
-        $painter0->note_order( $NOTE_PRESET, $NOTE_ORDER );
-        $painter0->title($title);
-        $painter0->subtitle("$charts{$chart} $diff");
-        $painter0->outline_only(0);
-        &highlight_blank_phrases($song,$painter0);
+        my $painter = new SongPainter;
+        $painter->debug(0);
+        $painter->song($song);
+        $painter->filename("$diffdir/$songkey.blank.png");
+        $painter->note_order( $NOTE_PRESET, $NOTE_ORDER );
+        $painter->title($title);
+        $painter->subtitle("$charts{$chart} $diff");
+        $painter->outline_only(0);
+        highlight_blank_phrases($song,$painter);
         my $timerImageGen = [gettimeofday];
-        $painter0->paintsong();
+        $painter->paintsong();
         printf "-image generation time: %.3f\n", tv_interval( $timerImageGen );
 
     }
