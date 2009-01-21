@@ -4,6 +4,7 @@ use strict;
 
 require Image::Magick;
 require FindBin;
+use Time::HiRes qw ( gettimeofday tv_interval );
 
 my $QUANTUM_DEPTH = Image::Magick->QuantumDepth;
 
@@ -34,6 +35,8 @@ my %noteInfo_h = (
     'O' => { 'col' => 'orange',    'pos' => 5 },
 );
 
+my @timers;
+
 sub new    { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
 sub _prop  { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
 
@@ -45,6 +48,9 @@ sub filename  { my $self = shift; return $self->_prop('filename',@_);  }
 
 # debug() : turns on various debug options, file dumps, etc
 sub debug     { my $self = shift; return $self->_prop('debug',@_);  }
+
+# timing() : output timing information
+sub timing    { my $self = shift; return $self->_prop('timing',@_);  }
 
 # sol() : solution object from Optimizer.pm
 sub sol       { my $self = shift; return $self->_prop('sol',@_);  }
@@ -113,6 +119,7 @@ sub _init {
     $self->outline_only(0);
     $self->whammy_per_quarter_bar(7.5);
     $self->debug(0);
+    $self->timing(0);
 
     $self->clear_unrestricted();
     $self->clear_partial();
@@ -125,10 +132,30 @@ sub _init {
     $self->clear_squeeze();
 }
 
+# start a timer event
+sub _set_timer {
+    my $self  = shift;
+    push @timers, [gettimeofday];
+}
+
+# pull last timer event and calculate time taken
+sub _get_timer {
+    my $self = shift;
+    my $level = shift;
+    $level = defined $level ? $level : 1 ;
+
+    my @caller_a = caller 1;
+    my $time = tv_interval( pop @timers );
+    if ( $self->timing >= $level ) {
+        printf "%-40s: %.3f\n", $caller_a[3], $time;
+    }
+}
 
 sub paintsol {
     my ($self,$sol) = @_;
+    $self->_set_timer();
     $self->sol($sol);
+    if ( $self->timing ) { };
     my $sp = $self;
     my $song = $self->song();
     my $na = $song->notearr();
@@ -170,10 +197,12 @@ sub paintsol {
     }
 
     $sp->paintsong();
+    $self->_get_timer();
 }
 
 sub _highlight_activation {
     my ($self,$ract,$spcursor) = @_;
+    $self->_set_timer();
     my $song = $self->song();
     my $spa = $song->sparr();
     my $na  = $song->notearr();
@@ -291,12 +320,13 @@ sub _highlight_activation {
 	    }
         }
     }
+    $self->_get_timer();
     return $nextspidx;
 }
 
 sub paintsong {
     my $self = shift;
-
+    $self->_set_timer();
     my $song = $self->song();
     my $na = $song->notearr();
     # check for an empty chart
@@ -325,10 +355,12 @@ sub paintsong {
     $self->_paintSectionLabels();
     $self->_merge_images();
     $self->_save_file();
+    $self->_get_timer();
 }
 
 sub _paintSectionLabels {
-    my ($self) = shift;
+    my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $ra = $song->sectionnames();
     foreach my $rra (@$ra) {
@@ -346,10 +378,12 @@ sub _paintSectionLabels {
             $basey + $STAFF_LINES_a[1] - 5,
         );
     }
+    $self->_get_timer();
 }
 
 sub _merge_images {
     my $self = shift;
+    $self->_set_timer();
     my $x;
     my $debug = $self->debug();
 
@@ -377,14 +411,17 @@ sub _merge_images {
         $x = $self->{_im_song}->Composite(image => $self->{_im_lo},  compose=>'Dissolve', opacity=>$opacity, x=>0, y=>0);
         warn $x if $x;
     }
+    $self->_get_timer();
 }
 
 sub _printTitles() {
     my $self = shift;
+    $self->_set_timer();
     my $title = $self->title();
     my $subtitle = $self->subtitle();
     $self->_drawCenteredText("_im_song","black","Times",50,$title,512,40) if $title;
     $self->_drawCenteredText("_im_song","black","Times",30,$subtitle,512,80) if $subtitle;
+    $self->_get_timer();
 }
 
 sub _calc_overlap {
@@ -400,14 +437,17 @@ sub _calc_overlap {
 
 sub _calc_last_measure {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $na = $song->notearr();
     my $last_measure = int($na->[-1]->endMeas() + 1e-7);
     $self->{_lastMeasure} = $last_measure;
+    $self->_get_timer();
 }
 
 sub _calc_stats_per_measure {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $na = $song->notearr();
     my $lm = $self->{_lastMeasure};
@@ -422,26 +462,32 @@ sub _calc_stats_per_measure {
     if ($self->sol() ne "NONE") { $self->_calc_sp_multscore_stat_per_meas(); }
     $self->_make_multmeasscore_cumulative();
     $self->_calc_sp_stat_per_meas();
+    $self->_get_timer();
 }
 
 sub _calc_sp_multscore_stat_per_meas {
     my $self = shift;
+    $self->_set_timer();
     my $sol = $self->sol();
     my $ract = $sol->activations();
     foreach my $act (@$ract) { $self->_dist_sp_activation($act); }
+    $self->_get_timer();
 }
 
 sub _make_multmeasscore_cumulative() {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $na = $song->notearr();
     my $lm = $self->{_lastMeasure};
     next if $lm == 1;
     for my $i ( 2 .. $lm) { $self->{_multmeasscore}[$i] += $self->{_multmeasscore}[$i-1]; }
+    $self->_get_timer();
 }
 
 sub _calc_notescore_stat_per_meas {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $na = $song->notearr();
     foreach my $n (@$na) {
@@ -449,10 +495,12 @@ sub _calc_notescore_stat_per_meas {
 	$self->{_basemeasscore}[$meas] += $n->baseNoteScore();
 	$self->{_multmeasscore}[$meas] += $n->multNoteScore();
     }
+    $self->_get_timer();
 }
 
 sub _calc_sustscore_stat_per_meas {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $na = $song->notearr();
 
@@ -467,10 +515,12 @@ sub _calc_sustscore_stat_per_meas {
 	$self->_dist_basesust_score($basesustscore,$chordsize,$startBeat,$endBeat);
 	$self->_dist_multsust_score($multsustscore,$chordsize,$mult,$startBeat,$endBeat);
     }
+    $self->_get_timer();
 }
 
 sub _dist_sp_activation {
     my ($self,$act) = @_;
+    $self->_set_timer();
     my $song = $self->song();
     my $na = $song->notearr();
     my $leftlimit =      $act->leftNoteIdxLimit();
@@ -522,10 +572,12 @@ sub _dist_sp_activation {
 	    }
 	}
     }
+    $self->_get_timer();
 }
 
 sub _dist_basesust_score {
     my ($self,$points,$chordsize,$startBeat,$endBeat) = @_;
+    $self->_set_timer();
     my $song = $self->song();
     my $startMeas = $song->b2m($startBeat);
     my $endMeas   = $song->b2m($endBeat);
@@ -547,10 +599,12 @@ sub _dist_basesust_score {
 	}
     }
     $self->{_basemeasscore}[$rightmeas] += $running_points;
+    $self->_get_timer();
 }
 
 sub _dist_multsust_score {
     my ($self,$points,$chordsize,$mult,$startBeat,$endBeat) = @_;
+    $self->_set_timer();
     my $song = $self->song();
     my $startMeas = $song->b2m($startBeat);
     my $endMeas   = $song->b2m($endBeat);
@@ -572,10 +626,12 @@ sub _dist_multsust_score {
 	}
     }
     $self->{_multmeasscore}[$rightmeas] += $running_points;
+    $self->_get_timer();
 }
 
 sub _calc_sp_stat_per_meas {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $na = $song->notearr();
 
@@ -603,10 +659,12 @@ sub _calc_sp_stat_per_meas {
 	}
 	$self->{_spmeas}[$rightmeas] += $totsp;
     }
+    $self->_get_timer();
 }
 
 sub _initialize_im {
-    my ($self) = @_;
+    my $self = shift;
+    $self->_set_timer();
     my $x = $PIXEL_WIDTH;
     my $y = $self->{_numrows} * $PIXELS_PER_SINGLE_ROW + $HEADER_PIXELS + $FOOTER_PIXELS;
     my $im = Image::Magick->new(size=>"${x}x$y");
@@ -618,19 +676,23 @@ sub _initialize_im {
     ##"stroke"      => "white",
     ##"fill"        => "white",
     ##"strokewidth" => 1);
+    $self->_get_timer();
 }
 
 sub _save_file {
-    my ($self) = @_;
+    my $self = shift;
+    $self->_set_timer();
     my $im = $self->{_im_song};
     my $filename = $self->filename();
     ##my $x = $im->Write($self->{filename});
     my $x = $im->Write($filename);
     warn "$x" if "$x";
+    $self->_get_timer();
 }
 
 sub _map_measures_to_coords {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     $self->{_measureCoords} = {};
     my $last_measure = $self->{_lastMeasure};
@@ -645,10 +707,12 @@ sub _map_measures_to_coords {
     }
 
     $self->{_numrows} = $row+1;
+    $self->_get_timer();
 }
 
 sub _map_notes_to_measures {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $na = $song->notearr();
     $self->{_measNotes} = {};
@@ -657,10 +721,12 @@ sub _map_notes_to_measures {
 	my $ee = int($n->endMeas()+1e-7);
 	for my $i ($ss .. $ee) { push @{$self->{_measNotes}{$i}}, $n; }
     }
+    $self->_get_timer();
 }
 
 sub _print_measures {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $last_measure = $self->{_lastMeasure};
     for my $i ( 1 .. $last_measure ) {
@@ -682,10 +748,12 @@ sub _print_measures {
     for my $i ( 1 .. $last_measure ) { $self->_drawMeasureSustains($i); }
     for my $i ( 1 .. $last_measure ) { $self->_drawMeasureNotes($i);    }
     for my $i ( 1 .. $last_measure ) { $self->_paintMeasureScores($i);    }
+    $self->_get_timer();
 }
 
 sub _print_tempos {
     my $self = shift;
+    $self->_set_timer();
     my $song = $self->song();
     my $tarr = $song->tempoarr();
 
@@ -716,10 +784,14 @@ sub _print_tempos {
         #print '$offset=' . $offset ."\n"; ##DEBUG
         #print '$staff1=' . $staff1 ."\n"; ## DEBUG
     }
+    $self->_get_timer();
 }
 
 sub _filter_tempos() {
-    my ($self,$tarr) = @_;
+    my $self = shift;
+    $self->_set_timer();
+
+    my $tarr = shift;
 
     my @final = ();
     my %tset = ();
@@ -748,10 +820,13 @@ sub _filter_tempos() {
     }
 
     @$tarr = @final;
+    $self->_get_timer();
 }
 
 sub _highlight_regions { 
-    my ($self,$i,$name,$imtag,$color) = @_;
+    my $self = shift;
+    $self->_set_timer();
+    my ($i,$name,$imtag,$color) = @_;
     my $song = $self->song();
     my $basex = $self->{_measureCoords}{$i}{x};
     my $basey = $self->{_measureCoords}{$i}{y};
@@ -814,10 +889,12 @@ sub _highlight_regions {
 	    }
 	}
     }
+    $self->_get_timer(2);
 }
 
 sub _drawTimeSignature {
     my ($self,$i) = @_;
+    $self->_set_timer();
     my $song = $self->song();
     if ($i == 0 or $i == 1 or $song->bpm($i) != $song->bpm($i-1)) {
         my $basex = $self->{_measureCoords}{$i}{x};
@@ -828,22 +905,23 @@ sub _drawTimeSignature {
         $self->_drawText("_im_song","gray80","Times",32,"$bpm",$basex+3,$staff3);
         $self->_drawText("_im_song","gray80","Times",32,"4"   ,$basex+3,$staff5);
     }
+    $self->_get_timer(2);
 }
 
 sub _draw_tempo {
     my ($self,$tempo,$x,$y) = @_;
-    #$self->_drawEllipse("_im_song", "gray65",$x,$y,3,2,-37);
-    #$self->_drawLine(   "_im_song", "gray65",1,$x+3,$y,$x+3,$y-9); 
-    #$self->_drawText(   "_im_song", "gray65","Helvetica",10,"=$tempo",$x+6,$y+3);
+    $self->_set_timer();
 
     my $font = "$FindBin::Bin/../assets/tindtre/TEMPILTR.TTF";
     #my $font = "$FindBin::Bin/../assets/tmpindlt/TEMPIL__.TTF";
     $self->_drawText(   '_im_song', 'black',$font,10,"%",$x,$y+3);
     $self->_drawText(   '_im_song', 'black','Helvetica',10,"=$tempo",$x+6,$y+3);
+    $self->_get_timer(2);
 }
 
 sub _drawMeasureSustains {
     my ($self,$i) = @_;
+    $self->_set_timer();
     my $rmn = $self->{_measNotes}{$i};
     my $song = $self->song();
     my $basex = $self->{_measureCoords}{$i}{x};
@@ -886,10 +964,12 @@ sub _drawMeasureSustains {
             );
         }
     }
+    $self->_get_timer(2);
 }
 
 sub _paintMeasureScores {
     my ($self,$i) = @_;
+    $self->_set_timer();
     my $song = $self->song();
     my $basex = $self->{_measureCoords}{$i}{x};
     my $basey = $self->{_measureCoords}{$i}{y};
@@ -908,10 +988,12 @@ sub _paintMeasureScores {
     if ($self->{_spmeas}[$i] > 0) {
         $self->_drawRightText("_im_song", "SteelBlue3","Helvetica",10,$sptxt,$right-3,$basey+$STAFF_LINES_a[5]+30);
     }
+    $self->_get_timer(2);
 }
 
 sub _drawMeasureGrid {
     my ($self,$i) = @_;
+    $self->_set_timer();
     my $song = $self->song();
     my $basex = $self->{_measureCoords}{$i}{x};
     my $basey = $self->{_measureCoords}{$i}{y};
@@ -954,10 +1036,12 @@ sub _drawMeasureGrid {
     ## Do the measure number
     $self->_drawText("_im_song", "DarkRed","Helvetica",10,"$i",$left,$staff1-5);
     #my ($self,$color,$family,$size,$text,$x,$y) = @_;
+    $self->_get_timer(2);
 }
 
 sub _drawMeasureNotes {
     my ($self,$i) = @_;
+    $self->_set_timer();
     my $rmn = $self->{_measNotes}{$i};
     my $song = $self->song();
     my $bpm = $song->bpm($i);
@@ -1032,10 +1116,12 @@ sub _drawMeasureNotes {
             }
         }
     }
+    $self->_get_timer(2);
 }
 
 sub _drawLine {
     my ($self,$imagestr,$color,$width,$x1,$y1,$x2,$y2) = @_;
+    $self->_set_timer();
     if ($self->debug()) { print "Drawing Line ($color,$width,$x1,$y1,$x2,$y2)\n"; }
     my $im =    $self->{$imagestr};
     my $x = $im->Draw("primitive"   => "line",
@@ -1044,10 +1130,12 @@ sub _drawLine {
 	      "stroke"      => $color,
 	      "strokewidth" => $width);
     warn "$x" if "$x";
+    $self->_get_timer(2);
 }
 
 sub _drawRect {
     my ($self,$imagestr,$color,$x1,$y1,$x2,$y2) = @_;
+    $self->_set_timer();
     if ($self->debug()) { print "Drawing Rect ($color,$x1,$y1,$x2,$y2)\n"; }
     my $im =    $self->{$imagestr};
     my $x = $im->Draw("primitive"   => "rectangle",
@@ -1057,10 +1145,12 @@ sub _drawRect {
 	      "stroke"      => $color,
 	      "strokewidth" => 0.5);
     warn "$x" if "$x";
+    $self->_get_timer(2);
 }
 
 sub _drawNoteCircle {
     my ($self,$imagestr,$color,$x,$y) = @_;
+    $self->_set_timer();
     if ($self->debug()) { print "Drawing NoteCircle ($color,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
     my $pointstr = sprintf "\%d,\%d \%d,\%d", $x,$y,$x+3,$y;
@@ -1071,26 +1161,12 @@ sub _drawNoteCircle {
 	      "antialias"   => "false",
 	      "fill"        => $color);
     warn "$x" if "$x";
-}
-
-sub _drawEllipse {
-    my ($self,$imagestr,$color,$x,$y,$rx,$ry,$rot) = @_;
-    if ($self->debug()) { print "Drawing Ellipse ($color,$x,$y,$rx,$ry,$rot)\n"; }
-    my $im =    $self->{$imagestr};
-    my $pointstr = sprintf "\%d,\%d \%d,\%d \%d,\%d", 0,0,$rx,$ry,0,360;
-    $x = $im->Draw("primitive"   => "ellipse",
-	      "points"      => $pointstr,
-	      "stroke"      => $color,
-	      "rotate"      => $rot,
-	      "translate"   => "$x,$y",
-	      "strokewidth" => 0.5,
-	      "antialias"   => "true",
-	      "fill"        => $color);
-    warn "$x" if "$x";
+    $self->_get_timer(2);
 }
 
 sub _drawNoteStar {
     my ($self,$imagestr,$color,$x,$y) = @_;
+    $self->_set_timer();
     if ($self->debug()) { print "Drawing NoteStar ($color,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
     my $pointstr = sprintf "\%d,\%d \%d,\%d \%d,\%d \%d,\%d \%d,\%d,\%d,\%d \%d,\%d \%d,\%d \%d,\%d \%d,\%d",
@@ -1111,10 +1187,12 @@ sub _drawNoteStar {
 	      "antialias"   => "false",
 	      "fill"        => $color);
     warn "$x" if "$x";
+    $self->_get_timer(2);
 }
 
 sub _drawNoteLine {
     my ($self,$imagestr,$color,$x,$y) = @_;
+    $self->_set_timer();
     my $im = $self->{$imagestr};
 
     my $width = 4;
@@ -1140,6 +1218,7 @@ sub _drawNoteLine {
 	'fill'        => $color
     );
     warn "$x" if "$x";
+    $self->_get_timer(2);
 }
 
 sub _drawNoteLineStar {
@@ -1148,6 +1227,7 @@ sub _drawNoteLineStar {
 
 sub _drawText {
     my ($self,$imagestr,$color,$family,$size,$text,$x,$y) = @_;
+    $self->_set_timer();
     if ($self->debug()) { print "Drawing text ($color,$family,$size,$text,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
     $x = $im->Annotate(text      => $text,
@@ -1158,10 +1238,12 @@ sub _drawText {
 			  x         => $x,
 			  y         => $y);
     warn "$x" if "$x";
+    $self->_get_timer(2);
 }
 
 sub _drawRightText {
     my ($self,$imagestr,$color,$family,$size,$text,$x,$y) = @_;
+    $self->_set_timer();
     if ($self->debug()) { print "Drawing text ($color,$family,$size,$text,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
     $x = $im->Annotate(text      => $text,
@@ -1173,10 +1255,12 @@ sub _drawRightText {
 			  x         => $x,
 			  y         => $y);
     warn "$x" if "$x";
+    $self->_get_timer(2);
 }
 
 sub _drawCenteredText {
     my ($self,$imagestr,$color,$family,$size,$text,$x,$y) = @_;
+    $self->_set_timer();
     if ($self->debug()) { print "Drawing text ($color,$family,$size,$text,$x,$y)\n"; }
     my $im =    $self->{$imagestr};
     $x = $im->Annotate(text      => $text,
@@ -1188,6 +1272,7 @@ sub _drawCenteredText {
 			  x         => $x,
 			  y         => $y);
     warn "$x" if "$x";
+    $self->_get_timer(2);
 }
 
 sub __min {
