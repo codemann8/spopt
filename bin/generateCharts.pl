@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.9 2009-01-16 22:01:20 tarragon Exp $
+# $Id: generateCharts.pl,v 1.10 2009-01-21 08:54:53 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -10,7 +10,6 @@ use warnings;
 use Config::General;
 use File::Basename;
 use File::Path qw(mkpath);
-use Time::HiRes qw ( gettimeofday tv_interval );
 
 use FindBin;
 use lib "$FindBin::Bin/../lib";
@@ -30,7 +29,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.9 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.10 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -112,20 +111,21 @@ unless ( -f $configFile && -r $configFile ) {
 
 my %config = new Config::General( $configFile )->getall;
 
-my $GAME_REGEX  = defined $config{'GAME_REGEX'} ? $config{'GAME_REGEX'} : qw{.*};
-my $DIFF_REGEX  = defined $config{'DIFF_REGEX'} ? $config{'DIFF_REGEX'} : qw{.*};
-my $TIER_REGEX  = defined $config{'TIER_REGEX'} ? $config{'TIER_REGEX'} : qw{.*};
-my $FILE_REGEX  = defined $config{'FILE_REGEX'} ? $config{'FILE_REGEX'} : qw{.*};
-my $ALG_REGEX   = defined $config{'ALG_REGEX'}  ? $config{'ALG_REGEX'}  : qw{.*};
-my $OUTPUT_DIR  = defined $config{'OUTPUT_DIR'} ? $config{'OUTPUT_DIR'} : qw{.};
+my $GAME_REGEX  = defined $config{'GAME_REGEX'}  ? $config{'GAME_REGEX'}  : qw{.*};
+my $DIFF_REGEX  = defined $config{'DIFF_REGEX'}  ? $config{'DIFF_REGEX'}  : qw{.*};
+my $TIER_REGEX  = defined $config{'TIER_REGEX'}  ? $config{'TIER_REGEX'}  : qw{.*};
+my $FILE_REGEX  = defined $config{'FILE_REGEX'}  ? $config{'FILE_REGEX'}  : qw{.*};
+my $ALG_REGEX   = defined $config{'ALG_REGEX'}   ? $config{'ALG_REGEX'}   : qw{.*};
+my $OUTPUT_DIR  = defined $config{'OUTPUT_DIR'}  ? $config{'OUTPUT_DIR'}  : qw{.};
 my $WHAMMY_RATE = defined $config{'WHAMMY_RATE'} ? $config{'WHAMMY_RATE'} : 0;
 my $CHART_REGEX = defined $config{'CHART_REGEX'} ? $config{'CHART_REGEX'} : '^guitar$';
 my $NOTE_PRESET = defined $config{'NOTE_PRESET'} ? $config{'NOTE_PRESET'} : 'guitar';
-my $NOTE_ORDER  = defined $config{'NOTE_ORDER'} ? $config{'NOTE_ORDER'} : '';
+my $NOTE_ORDER  = defined $config{'NOTE_ORDER'}  ? $config{'NOTE_ORDER'}  : '';
+my $DEBUG       = defined $config{'DEBUG'}       ? $config{'DEBUG'}       : 0;
+my $TIMING      = defined $config{'TIMING'}      ? $config{'TIMING'}      : 0;
 
 ## Loop through all of the songs
 my $sl = SongLib->new();
-my $timerTotal = [gettimeofday];
 foreach my $game ( keys %games ) {
     my @songarr = $sl->get_songarr_for_game( $game );
     foreach my $song ( @songarr ) {
@@ -141,15 +141,12 @@ foreach my $game ( keys %games ) {
                 next unless $file =~ /$FILE_REGEX/;
                 next unless $chart =~ /$CHART_REGEX/;
 
-                my $timerSong = [gettimeofday];
                 do_song( $game, $diff, $tier, $title, $file, $chart );
-                printf "-combined generation time: %.3f\n", tv_interval( $timerSong ) ;
             }
         }
     }
 }
 
-printf "Total time taken: %.3f\n", tv_interval( $timerTotal ) ;
 exit;
 
 ## SUBROUTINES
@@ -162,24 +159,18 @@ sub do_song {
     %SONGDB = ();
     %RESULTSDB = ();
 
-    my $timerRead = [gettimeofday];
     readmidi($game,\%song);
-    printf "-file parser time: %.3f\n", tv_interval( $timerRead ) ;
 
     if ( $game =~ /^gh3.*/ || $game =~ /^ghwt/ ) {
         foreach my $alg (qw(blank lazy-whammy no-squeeze twenty-zero forty-zero sixty-zero eighty-zero hundred-zero)) {
             if ($ALG_REGEX) { next unless $alg =~ /$ALG_REGEX/; }
-            my $timerProcess = [gettimeofday];
             process_song($game,\%song,$diff,$alg,1);
-            printf "-file processing time: %.3f\n", tv_interval( $timerProcess ) ;
         }
     }
     else {
         foreach my $alg (qw(blank lazy-whammy no-squeeze big-squeeze bigger-squeeze nearly-ideal upper-bound)) {
             if ($ALG_REGEX) { next unless $alg =~ /$ALG_REGEX/; }
-            my $timerProcess = [gettimeofday];
             process_song($game,\%song,$diff,$alg,1);
-            printf "-file processing time: %.3f\n", tv_interval( $timerProcess ) ;
         }
     }
 }
@@ -259,7 +250,8 @@ sub process_song {
 
         ## Make the blank notechart
         my $painter = new SongPainter;
-        $painter->debug(0);
+        $painter->debug( $DEBUG );
+        $painter->timing( $TIMING );
         $painter->song($song);
         $painter->filename("$diffdir/$songkey.blank.png");
         $painter->note_order( $NOTE_PRESET, $NOTE_ORDER );
@@ -267,9 +259,7 @@ sub process_song {
         $painter->subtitle("$charts{$chart} $diff");
         $painter->outline_only(0);
         highlight_blank_phrases($song,$painter);
-        my $timerImageGen = [gettimeofday];
         $painter->paintsong();
-        printf "-image generation time: %.3f\n", tv_interval( $timerImageGen );
 
     }
     else {
@@ -316,9 +306,7 @@ sub process_song {
             $painter->filename("$diffdir/$songkey.$alg.best.png");
             $painter->note_order( $NOTE_PRESET, $NOTE_ORDER );
             $painter->title($title);
-            my $timerImageGen = [gettimeofday];
             $painter->paintsol($sol[0]);
-            printf "-image generation time: %.3f\n", tv_interval( $timerImageGen );
 	}
 
         printf "$game %-25s %-8s %-20s score:%6s path:$pathstr\n", $mfkey, $diff, $alg, $totscore;
