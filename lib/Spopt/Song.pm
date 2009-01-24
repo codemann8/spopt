@@ -526,6 +526,7 @@ sub _weed_out_bad_noteon_events {
 
 sub _qb_gen_note_arr {
     my ($self,$tracknum,$arrstring) = @_;
+    my $game = $self->game();
     my $diff = $self->diff();
     my $chart = $self->chart();
     my $qbf = $self->midifile();
@@ -543,9 +544,12 @@ sub _qb_gen_note_arr {
 	if ($notebv & 0x8)  { $nn->blue(1);}
 	if ($notebv & 0x10) { $nn->orange(1);}
 	if ($notebv & 0x20) {
-            $nn->purple(1);
-            $mslen = $sustainthresh; # strip sustains off purple notes
+            if ( $game eq 'ghwt' ) { # purple notes only in ghwt
+                $nn->purple(1);
+                $mslen = $sustainthresh; # strip sustains off purple notes
+            }
         }
+
 	$nn->startTick(
             $self->{'_qbstuff'}{'ms2tick'}->interpolate( $msstart )
         );
