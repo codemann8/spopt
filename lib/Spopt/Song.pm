@@ -542,19 +542,32 @@ sub _qb_gen_note_arr {
 	if ($notebv & 0x4)  { $nn->yellow(1);}
 	if ($notebv & 0x8)  { $nn->blue(1);}
 	if ($notebv & 0x10) { $nn->orange(1);}
-	if ($notebv & 0x20) { $nn->purple(1);}
-	$nn->startTick($self->{_qbstuff}{ms2tick}->interpolate($msstart));
-	$nn->endTick($mslen > $sustainthresh ? $self->{_qbstuff}{ms2tick}->interpolate($msstart+$mslen) : $nn->startTick());
+	if ($notebv & 0x20) {
+            $nn->purple(1);
+            $mslen = $sustainthresh; # strip sustains off purple notes
+        }
+	$nn->startTick(
+            $self->{'_qbstuff'}{'ms2tick'}->interpolate( $msstart )
+        );
+	$nn->endTick( 
+            $mslen > $sustainthresh ? 
+            $self->{'_qbstuff'}{'ms2tick'}->interpolate($msstart+$mslen) : 
+            $nn->startTick()
+        );
 	push @{$self->{$arrstring}}, $nn;
     }
 
     ## Now we do the SP stuff
     my $qbfspa = $qbf->get_sparr($chart,$diff);
-    $self->{sparr} = [];
-    for (my $i = 0; $i < @$qbfspa; $i++) {
-	push @{$self->{sparr}}, [ @{$qbfspa->[$i]} ];
+    $self->{'sparr'} = [];
+    for ( my $i = 0; $i < @$qbfspa; $i++ ) {
+        my $spHasNotes = 0; # if there are no notes in star power array, we should skip it completely
 	for ( my $j = $qbfspa->[$i][0]; $j <= $qbfspa->[$i][1]; $j++ ) {
             $self->{$arrstring}[$j]->star(1);
+            $spHasNotes = 1;
+        }
+	if ( $spHasNotes ) {
+            push @{ $self->{'sparr'} }, [ @{ $qbfspa->[$i] } ];
         }
     }
 }
