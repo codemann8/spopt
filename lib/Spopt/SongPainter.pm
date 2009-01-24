@@ -400,14 +400,14 @@ sub _merge_images {
 
     if ($self->outline_only()) {
         my $opacity = 200;
-        if ( $QUANTUM_DEPTH = 16 ) { $opacity *= 256 };
+        if ( $QUANTUM_DEPTH == 16 ) { $opacity *= 256 };
         $x = $self->{_im_song}->Composite(image => $self->{_im_lo},  compose=>'Dissolve', opacity=>$opacity, x=>0, y=>0);
         warn $x if $x;
     }
     
     else {
         my $opacity = 100;
-        if ( $QUANTUM_DEPTH = 16 ) { $opacity *= 256 };
+        if ( $QUANTUM_DEPTH == 16 ) { $opacity *= 256 };
         $x = $self->{_im_song}->Composite(image => $self->{_im_lo},  compose=>'Dissolve', opacity=>$opacity, x=>0, y=>0);
         warn $x if $x;
     }
