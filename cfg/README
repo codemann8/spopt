@@ -1,0 +1,60 @@
+
+# configuration file options
+
+# GAME_REGEX   = gh-ps2
+# GAME_REGEX   = gh2-ps2
+# GAME_REGEX   = gh2-x360
+# GAME_REGEX   = ghrt80s-ps2
+# GAME_REGEX   = gh3-ps2
+# GAME_REGEX   = gh3-dlc
+# GAME_REGEX   = gh3-aerosmith
+# GAME_REGEX   = ghwt
+
+# DIFF_REGEX   = easy
+# DIFF_REGEX   = medium
+# DIFF_REGEX   = hard
+# DIFF_REGEX   = expert
+
+# TIER_REGEX = 10
+
+# FILE_REGEX   = hotel.*
+
+# ALG_REGEX    = blank
+# ALG_REGEX    = zero-zero
+# ALG_REGEX    = twenty-twenty
+# ALG_REGEX    = forty-forty
+# ALG_REGEX    = sixty-sixty
+# ALG_REGEX    = eighty-eighty
+# ALG_REGEX    = twenty-zero
+# ALG_REGEX    = forty-twenty
+# ALG_REGEX    = sixty-forty
+# ALG_REGEX    = eighty-sixty
+# ALG_REGEX    = forty-zero
+# ALG_REGEX    = sixty-twenty
+# ALG_REGEX    = eighty-forty
+# ALG_REGEX    = sixty-zero
+# ALG_REGEX    = eighty-twenty
+# ALG_REGEX    = eighty-zero
+# ALG_REGEX    = hundred-zero
+# ALG_REGEX    = lazy-whammy
+# ALG_REGEX    = no-squeeze
+# ALG_REGEX    = big-squeeze
+# ALG_REGEX    = bigger-squeeze
+# ALG_REGEX    = nearly-ideal
+# ALG_REGEX    = upper-bound
+
+# CHART_REGEX  = guitar
+# CHART_REGEX  = rhythm
+# CHART_REGEX  = guitarcoop
+# CHART_REGEX  = rhythmcoop
+# CHART_REGEX  = drum
+# CHART_REGEX  = aux
+
+# NOTE_PRESET  = guitar (default)
+# NOTE_PRESET  = drum
+
+# DEBUG        = 0
+# TIMING       = 0
+
+# OUTPUT_DIR   = /some/path
+
