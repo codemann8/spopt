@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.10 2009-01-21 08:54:53 tarragon Exp $
+# $Id: generateCharts.pl,v 1.11 2009-01-25 05:45:47 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -29,7 +29,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.10 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.11 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -72,14 +72,14 @@ my %ALGORITHM =
 
 my %games = 
 (
-    'gh-ps2'            => { 'optimizer' => 'gh',  'whammyrate' => 7.5,  'filetype' => 'midi' },
-    'gh2-ps2'           => { 'optimizer' => 'gh2', 'whammyrate' => 7.5,  'filetype' => 'midi' },
-    'gh2-x360'          => { 'optimizer' => 'gh2', 'whammyrate' => 7.5,  'filetype' => 'midi' },
-    'ghrt80s-ps2'       => { 'optimizer' => 'gh2', 'whammyrate' => 7.5,  'filetype' => 'midi' },
-    'gh3-ps2'           => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
-    'gh3-dlc'           => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
-    'gh3-aerosmith'     => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
-    'ghwt'              => { 'optimizer' => 'gh3', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
+    'gh-ps2'            => { 'optimizer' => 'gh',   'whammyrate' => 7.5,  'filetype' => 'midi' },
+    'gh2-ps2'           => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'filetype' => 'midi' },
+    'gh2-x360'          => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'filetype' => 'midi' },
+    'ghrt80s-ps2'       => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'filetype' => 'midi' },
+    'gh3-ps2'           => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'filetype' => 'qb'   },
+    'gh3-dlc'           => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'filetype' => 'qb'   },
+    'gh3-aerosmith'     => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'filetype' => 'qb'   },
+    'ghwt'              => { 'optimizer' => 'ghwt', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
 );
 
 my @diffs = qw(easy medium hard expert);
@@ -161,7 +161,7 @@ sub do_song {
 
     readmidi($game,\%song);
 
-    if ( $game =~ /^gh3.*/ || $game =~ /^ghwt/ ) {
+    if ( $game =~ m/gh3.*|ghwt/ ) {
         foreach my $alg (qw(blank lazy-whammy no-squeeze twenty-zero forty-zero sixty-zero eighty-zero hundred-zero)) {
             if ($ALG_REGEX) { next unless $alg =~ /$ALG_REGEX/; }
             process_song($game,\%song,$diff,$alg,1);
