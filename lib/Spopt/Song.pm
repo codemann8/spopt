@@ -187,7 +187,7 @@ sub calc_squeezed_data {
     ##my $rawsec = $diff eq "easy"   ? 1.0/12.0 :
     ##             $diff eq "medium" ? 1.0/12.0 : 1.0/12.0;
 
-    my $rawsec = $self->game() eq "gh3" ? 1/10.0 : 1/12.0;
+    my $rawsec = $self->game() =~ m/gh3|ghwt/ ? 1/10.0 : 1/12.0;
 
     my $ss   = $rawsec * $self->squeeze_percent();
     my $ssps = $rawsec * $self->sp_squeeze_percent();

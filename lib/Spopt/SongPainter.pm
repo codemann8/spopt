@@ -7,7 +7,7 @@ use FindBin;
 use Time::HiRes qw ( gettimeofday tv_interval );
 use POSIX qw( strftime );
 
-our $VERSION = do { my @r=(q$Revision: 1.12 $=~/\d+/g); sprintf '%d.'.'%03d'x$#r,@r };
+our $VERSION = do { my @r=(q$Revision: 1.13 $=~/\d+/g); sprintf '%d.'.'%03d'x$#r,@r };
 
 my $QUANTUM_DEPTH = Image::Magick->QuantumDepth;
 
@@ -630,7 +630,7 @@ sub _dist_basesust_score {
             my $leftbeat  = $song->m2b($i);
             my $rightbeat = $song->m2b($i+1);
             my $overlap = $self->_calc_overlap($startBeat,$endBeat,$leftbeat,$rightbeat);
-	    my $bs = $chordsize * int ( $points * $overlap / $numbeats / $chordsize );
+            my $bs = $chordsize * int ( $points * $overlap / $numbeats / $chordsize );
 	    $bs = $running_points if $bs > $running_points;
 	    $self->{_basemeasscore}[$i] += $bs;
 	    $running_points -= $bs;

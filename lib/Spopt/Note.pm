@@ -104,7 +104,7 @@ sub calc_unsqueezed_data {
     my $song = shift;
     my $game = $song->game();
 
-    my $min_sust_sep = $game eq "gh3" ? $GH3_MIN_SUSTAIN_SEPARATION : $MIN_SUSTAIN_SEPARATION; 
+    my $min_sust_sep = $game =~ m/gh3|ghwt/ ? $GH3_MIN_SUSTAIN_SEPARATION : $MIN_SUSTAIN_SEPARATION; 
 
     ## Do note string and chord size first
     my $notestr = "";
@@ -118,11 +118,15 @@ sub calc_unsqueezed_data {
     $self->notestr($notestr);
     $self->chordsize($chordsize);
 
+    my ( $st, $et ) = ( $self->startTick(), $self->endTick() );
+
     ## Now we do a simple check to see if the note is a sustain
     my $sustain = 0;
-    my ($st,$et) = ($self->startTick(),$self->endTick());
-    if ( ($et-$st) >= $min_sust_sep) { $sustain = 1; }
-    else                             { $et = $st; }
+    if ( !$self->purple() && $et - $st >= $min_sust_sep ){
+        $sustain = 1;
+    } else {
+        $et = $st;
+    }
     $self->sustain($sustain);
 
     ## Now we do all of the beat/meas conversions
@@ -147,7 +151,7 @@ sub calc_unsqueezed_data {
     $self->lenBeat($eb-$sb);
     $self->lenMeas($em-$sm);
 
-    if ($game eq "gh3" and $self->star() and $self->sustain()) {
+    if ($game eq "gh3" && $self->star() && $self->sustain()) {
        $self->baseSpTick($et-$st-120 > 0 ? $et-$st-120 : 0);
        $self->baseSpBeat($et-$st-120 > 0 ? $song->t2b($et-120)-$sb : 0);
     }
