@@ -151,7 +151,7 @@ sub calc_unsqueezed_data {
     $self->lenBeat($eb-$sb);
     $self->lenMeas($em-$sm);
 
-    if ($game eq "gh3" && $self->star() && $self->sustain()) {
+    if ($game =~ m/gh3|ghwt/ && $self->star() && $self->sustain()) {
        $self->baseSpTick($et-$st-120 > 0 ? $et-$st-120 : 0);
        $self->baseSpBeat($et-$st-120 > 0 ? $song->t2b($et-120)-$sb : 0);
     }
@@ -167,17 +167,17 @@ sub calc_unsqueezed_data {
 
     my $bns = 50 * $chordsize;
     my $bss = $sustain ? $chordsize * int ( 25 * ($eb-$sb) + $EPS ) : 0;
-    if ($game eq "gh3") { $bss = $sustain ? int ( 25 * ($eb-$sb) + 0.5 + $EPS ) : 0; }
+    if ($game = m/gh3|ghwt/) { $bss = $sustain ? int ( 25 * ($eb-$sb) + 0.5 + $EPS ) : 0; }
     my $bts = $bns + $bss;
 
     my $ghexns = $bns;
     my $ghexss = $sustain ? int ( 25 * $chordsize * ($eb-$sb) + $EPS ) : 0;
-    if ($game eq "gh3") { $ghexss = $sustain ? int ( 25 * ($eb-$sb) + $EPS ) : 0; }
+    if ($game = m/gh3|ghwt/) { $ghexss = $sustain ? int ( 25 * ($eb-$sb) + $EPS ) : 0; }
     my $ghexts = $ghexns+$ghexss;
 
     my $pns = $bns;
     my $pss = $sustain ? $chordsize * int ( 25 * ($eb-$sb) + 0.5 + $EPS ) : 0;
-    if ($game eq "gh3") { $pss = $sustain ? int ( 25 * ($eb-$sb) + 0.5 + $EPS ) : 0; }
+    if ($game = m/gh3|ghwt/) { $pss = $sustain ? int ( 25 * ($eb-$sb) + 0.5 + $EPS ) : 0; }
     my $pts = $pns+$pss;
 
     my $mult = $self->mult();
