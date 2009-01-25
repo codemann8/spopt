@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateBlankHTML.pl,v 1.2 2008-12-07 12:44:06 tarragon Exp $
+# $Id: generateBlankHTML.pl,v 1.3 2009-01-25 12:09:27 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateBlankHTML.pl,v $
 
 use strict;
@@ -14,7 +14,7 @@ use SongLib;
 
 use CGI qw/:standard *table *Tr/;
 
-my $version = do { my @r=(q$Revision: 1.2 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.3 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my %TOPSCORES = ();
 
@@ -78,7 +78,7 @@ for my $chart ( keys %charts ) {
         my $filename = 'blank_'.$game.'_'.$chart.'.html';
         open FILE, ">$filename";
         select FILE;
-        gen_index( $game, $title, $chart );
+        gen_index_alpha( $game, $title, $chart );
         select STDOUT;
         close FILE;
     }
@@ -110,6 +110,30 @@ sub gen_index {
             }
             print end_Tr, "\n";
 	}
+    }
+    print end_table, "\n";
+    print end_html, "\n";
+}
+
+sub gen_index_alpha {
+    my ( $game, $title, $chart ) = @_;
+    my @sa = $SL->get_songarr_for_game($game);
+
+    print start_html("Blank Charts for $title $charts{$chart}"), "\n";
+    print start_table, "\n";
+
+    # my @songs = grep { $_->{'tier'} == $tier } @sa;
+    my @songs = sort { $a->{'name'} cmp $b->{'name'} } @sa;
+
+    foreach my $rs (@songs) {
+        print start_Tr, "\n";
+        print td( $rs->{'name'} ), "\n";
+        my $base = $rs->{'file'};
+        $base =~ s/(.*).mid/$1/;
+        foreach my $diff ( qw( easy medium hard expert ) ) {
+            print td( a({href=>"/ghwt/$chart/$diff/$base.blank.png"},$diff) ), "\n";
+        }
+        print end_Tr, "\n";
     }
     print end_table, "\n";
     print end_html, "\n";
