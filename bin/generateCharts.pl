@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.11 2009-01-25 05:45:47 tarragon Exp $
+# $Id: generateCharts.pl,v 1.12 2009-01-31 08:31:12 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -29,7 +29,7 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.11 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.12 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
@@ -123,6 +123,12 @@ my $NOTE_PRESET = defined $config{'NOTE_PRESET'} ? $config{'NOTE_PRESET'} : 'gui
 my $NOTE_ORDER  = defined $config{'NOTE_ORDER'}  ? $config{'NOTE_ORDER'}  : '';
 my $DEBUG       = defined $config{'DEBUG'}       ? $config{'DEBUG'}       : 0;
 my $TIMING      = defined $config{'TIMING'}      ? $config{'TIMING'}      : 0;
+
+$OUTPUT_DIR = glob $OUTPUT_DIR;
+unless ( -d $OUTPUT_DIR ) {
+    print "Output directory ($OUTPUT_DIR) not found!\n";
+    exit 1;
+}
 
 ## Loop through all of the songs
 my $sl = SongLib->new();
