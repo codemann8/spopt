@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.12 2009-01-31 08:31:12 tarragon Exp $
+# $Id: generateCharts.pl,v 1.13 2009-02-10 13:17:15 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -29,11 +29,12 @@ use Activation;
 use Solution;
 use SongLib;
 
-my $version = do { my @r=(q$Revision: 1.12 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.13 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 my $QBDIR   = "$GHROOT/qb";
 my $MIDIDIR = "$GHROOT/midi";
+my $ASSETS  = "$GHROOT/assets";
 my %SONGDB;
 my %RESULTSDB;
 
@@ -72,24 +73,26 @@ my %ALGORITHM =
 
 my %games = 
 (
-    'gh-ps2'            => { 'optimizer' => 'gh',   'whammyrate' => 7.5,  'filetype' => 'midi' },
-    'gh2-ps2'           => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'filetype' => 'midi' },
-    'gh2-x360'          => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'filetype' => 'midi' },
-    'ghrt80s-ps2'       => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'filetype' => 'midi' },
-    'gh3-ps2'           => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'filetype' => 'qb'   },
-    'gh3-dlc'           => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'filetype' => 'qb'   },
-    'gh3-aerosmith'     => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'filetype' => 'qb'   },
-    'ghwt'              => { 'optimizer' => 'ghwt', 'whammyrate' => 7.75, 'filetype' => 'qb'   },
+    'gh-ps2'        => { 'optimizer' => 'gh',   'whammyrate' => 7.5,  'platform' => 'ps2',  'path' => "$ASSETS/GuitarHero" },
+    'gh2-ps2'       => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'platform' => 'ps2',  'path' => "$ASSETS/GuitarHero2" },
+    'gh2-x360'      => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'platform' => 'x360', 'path' => "$ASSETS/GuitarHero2" },
+    'gh2-x360-dlc'  => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'platform' => 'x360', 'path' => "$ASSETS/GuitarHero2DLC" },
+    'ghrt80s-ps2'   => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'platform' => 'ps2',  'path' => "$ASSETS/GuitarHeroEncoreRocksThe80s" },
+    'gh3-ps2'       => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHero3LegendsOfRock" },
+    'gh3-dlc'       => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHero3LegendsOfRockDLC" },
+    'gh3-aerosmith' => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHeroAerosmith" },
+    'ghwt'          => { 'optimizer' => 'ghwt', 'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHeroWorldTour" },
+    'ghwt-dlc'      => { 'optimizer' => 'ghwt', 'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHeroWorldTourDLC" },
 );
 
 my @diffs = qw(easy medium hard expert);
 my %charts = (
-    'guitar' => 'Guitar',
-    'rhythm' => 'Bass/Rhythm',
+    'guitar'     => 'Guitar',
+    'rhythm'     => 'Bass/Rhythm',
     'guitarcoop' => 'Guitar CO-OP',
     'rhythmcoop' => 'Bass/Rhythm CO-OP',
-    'drum' => 'Drums',
-    'aux' => 'Auxilary',
+    'drum'       => 'Drums',
+    'aux'        => 'Auxilary',
 );
 
 sub usage {
@@ -183,8 +186,8 @@ sub do_song {
 
 sub readmidi {
     my ($game,$rsong) = @_;
-    my $basefilename = $rsong->{file};
-    my $tier = $rsong->{tier};
+    my $basefilename = $rsong->{'file'};
+    my $tier = $rsong->{'tier'};
     my $title = $rsong->{'name'};
     print "Reading game:$game midi:$basefilename title:$title...\n";
 
