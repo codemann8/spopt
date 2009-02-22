@@ -1,4 +1,4 @@
-# $Id: Song.pm,v 1.9 2009-02-22 00:52:26 tarragon Exp $
+# $Id: Song.pm,v 1.10 2009-02-22 01:00:09 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/Song.pm,v $
 
 package Spopt::Song;
@@ -401,7 +401,7 @@ sub _qb_gen_tempo_timesig_measure_beat_stuff {
 	my $beat = $self->{_qbstuff}{ms2beat}->interpolate($ms);
 	my $tick = 30 * int(16 * $beat + 0.5);
 	$tick % 480 == 0 or print STDERR "Timesig event doesn't align to a beat boundary here\n";
-	my $te = new TimesigEvent;
+	my $te = new Spopt::TimesigEvent;
 	$te->tick($tick);
 	$te->bpm($rtimesig->[$i][1]);
 	push @{$self->{timesigarr}}, $te;
@@ -437,7 +437,7 @@ sub _qb_gen_tempo_timesig_measure_beat_stuff {
             if ($bb + $bpmeas < $numbeats - 1) { $tempo = int (1000 * ($rbeat->[$bb+$bpmeas] - $rbeat->[$bb]) / (1.0 * $bpmeas) ); }
 	    else                               { $tempo = int (1000 * ($rbeat->[$numbeats-1] - $rbeat->[$bb]) / (1.0 * ($numbeats-$bb-1) ) ); }
 	    my $tick = 480 * $bb;
-	    my $te = new TempoEvent;
+	    my $te = new Spopt::TempoEvent;
 	    $te->tick($tick);
 	    $te->tempo($tempo);
 	    push @{$self->{tempoarr}}, $te;
@@ -453,12 +453,12 @@ sub _gen_tempo_array() {
     my $self = shift;
     my $mf = $self->midifile();
     my @aa = $mf->gettrack(0);
-    my $lte = new TempoEvent;
+    my $lte = new Spopt::TempoEvent;
     my $lasttick = 0;
     foreach my $e (@aa) {
 	$lte->tick($e->tick());
 	next unless $e->eventstr() eq "tempo";
-	my $te = new TempoEvent;
+	my $te = new Spopt::TempoEvent;
 	$te->populateFromMidiEvent($e);
 	$lte->tempo($te->tempo());
 	push @{$self->{tempoarr}}, $te;
@@ -470,12 +470,12 @@ sub _gen_timesig_array() {
     my $self = shift;
     my $mf = $self->midifile();
     my @aa = $mf->gettrack(0);
-    my $lte = new TimesigEvent;
+    my $lte = new Spopt::TimesigEvent;
     my $lasttick = 0;
     foreach my $e (@aa) {
 	$lte->tick($e->tick());
 	next unless $e->eventstr() eq "timesig";
-	my $te = new TimesigEvent;
+	my $te = new Spopt::TimesigEvent;
 	$te->populateFromMidiEvent($e);
 	$lte->bpm($te->bpm());
 	push @{$self->{timesigarr}}, $te;

@@ -1,4 +1,4 @@
-# $Id: Optimizer.pm,v 1.4 2009-02-22 00:52:26 tarragon Exp $
+# $Id: Optimizer.pm,v 1.5 2009-02-22 01:00:09 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/Optimizer.pm,v $
 
 package Spopt::Optimizer;
@@ -186,7 +186,7 @@ sub get_compressed_activation {
 	##    $rightTick = $song->m2t($rightmeas);
 	##}
 
-	my $act = new Activation;
+	my $act = new Spopt::Activation;
 	$act->song($song);
 	$act->compulsorySP($compsp);
 	$act->optionalSPAvailable($totsp-$compsp);
@@ -273,7 +273,7 @@ sub get_uncompressed_activation {
 	$endtick  = $song->m2t($endmeas);
 
 	if ($totsp >= 4.00 - 1e-7) {
-	    my $act = new Activation;
+	    my $act = new Spopt::Activation;
 	    $act->song($song);
 	    $act->compulsorySP($compsp);
 	    $act->optionalSPAvailable($totoptsp);
@@ -294,7 +294,7 @@ sub get_uncompressed_activation {
             for (my $i = $idx+1; $i < @$spa; $i++) {
 		last if ($act->endTick() <  $na->[$spa->[$i][0]]->leftStartTick());
 		next if ($act->endTick() >= $na->[$spa->[$i][0]]->rightStartTick());
-	        my $act2 = new Activation;
+	        my $act2 = new Spopt::Activation;
 	        $act2->song($song);
 	        $act2->compulsorySP($compsp);
 	        $act2->optionalSPAvailable($totoptsp);
@@ -375,9 +375,9 @@ sub get_uncompressed_activation {
 
 sub _gen_sp_pwls {
     my ($self,$idx,$sp,$left,$right) = @_;
-    my $s2epwl = new Pwl;
-    my $e2spwl = new Pwl;
-    my $sppwl  = new Pwl;
+    my $s2epwl = new Spopt::Pwl;
+    my $e2spwl = new Spopt::Pwl;
+    my $sppwl  = new Spopt::Pwl;
     my $xover  = [];
     my $song = $self->song();
     my @pwl_points = $song->get_sptick_pwl_points($idx);
@@ -571,7 +571,7 @@ sub optimize_me {
     my $scoreboard = $self->{_scoreboard};
     my $wpqb = $self->whammy_per_quarter_bar();
 
-    my $start_solution = new Solution;
+    my $start_solution = new Spopt::Solution;
     $start_solution->song($song);
     push @{$scoreboard->[0]}, $start_solution;
 
@@ -625,7 +625,7 @@ sub optimize_me {
 sub save_sol {
     my ($self,$oldsol,$i) = @_;
     my $wpqb = $self->whammy_per_quarter_bar();
-    my $newsol = new Solution;
+    my $newsol = new Spopt::Solution;
     $newsol->score($oldsol->score());
     $newsol->song($oldsol->song());
     my $song = $self->song();
@@ -651,7 +651,7 @@ sub save_sol {
 sub add_act_to_sol {
     my ($self,$oldsol,$act) = @_;
     my $next = $act->nextSPidx();
-    my $newsol = new Solution;
+    my $newsol = new Spopt::Solution;
     $newsol->song($oldsol->song());
     my $song = $self->song();
     my $score = $oldsol->score() + $act->totScore();

@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.16 2009-02-22 00:52:26 tarragon Exp $
+# $Id: QbFile.pm,v 1.17 2009-02-22 01:00:09 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package Spopt::QbFile;
@@ -8,7 +8,7 @@ use warnings;
 use Carp qw( carp croak );
 
 use String::CRC32;
-use ile::Basename;
+use File::Basename;
 
 ## TODO properly document this sucker!
 
