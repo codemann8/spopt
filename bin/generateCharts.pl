@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.13 2009-02-10 13:17:15 tarragon Exp $
+# $Id: generateCharts.pl,v 1.14 2009-02-22 01:10:40 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -7,36 +7,24 @@
 use strict;
 use warnings;
 
-use Config::General;
-use File::Basename;
-use File::Path qw(mkpath);
-
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use MidiEvent;
-use MidiFile;
-use QbFile;
-use Note;
-use Pwl;
-use Song;
-use TempoEvent;
-use TimesigEvent;
-use SongPainter;
+use Config::General;
+use File::Basename;
+use File::Path qw(mkpath);
 use Image::Magick;
-use Optimizer;
-use Activation;
-use Solution;
-use SongLib;
+use Spopt;
 
-my $version = do { my @r=(q$Revision: 1.13 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.14 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
+my %SONGDB;
+my %RESULTSDB;
+
 my $QBDIR   = "$GHROOT/qb";
 my $MIDIDIR = "$GHROOT/midi";
 my $ASSETS  = "$GHROOT/assets";
-my %SONGDB;
-my %RESULTSDB;
 
 my %ALGORITHM =
 (
@@ -134,7 +122,7 @@ unless ( -d $OUTPUT_DIR ) {
 }
 
 ## Loop through all of the songs
-my $sl = SongLib->new();
+my $sl = new Spopt::SongLib;
 foreach my $game ( keys %games ) {
     my @songarr = $sl->get_songarr_for_game( $game );
     foreach my $song ( @songarr ) {
@@ -203,7 +191,7 @@ sub readmidi {
             print STDERR "ERROR: Couldn't find file '$filename'\n";
             return 1;
         }
-        my $mf = new QbFile;
+        my $mf = new Spopt::QbFile;
         $mf->file($filename);
 
 	##my $sustthresh = $rsong->{sustthresh};
@@ -216,7 +204,7 @@ sub readmidi {
     else {
         my $filename = "$MIDIDIR/$game/$basefilename";
         print STDERR "ERROR: Couldn't find file '$filename'\n" unless -f $filename;
-        my $mf = new MidiFile;
+        my $mf = new Spopt::MidiFile;
         $mf->file($filename);
         ##$mf->maxtrack(2);
         $mf->read();
@@ -239,7 +227,7 @@ sub process_song {
     my $diffdir = "$OUTPUT_DIR/$game/$chart/$diff";
     mkpath( $diffdir ) unless -d $diffdir;
 
-    my $song = new Song;
+    my $song = new Spopt::Song;
     $song->game( $games{$game}->{'optimizer'} );
     $song->filetype( $games{$game}->{'filetype'} );
     $song->diff($diff);
@@ -258,7 +246,7 @@ sub process_song {
         print "Generating blank chart for $game:$mfkey:$chart:$diff\n";
 
         ## Make the blank notechart
-        my $painter = new SongPainter;
+        my $painter = new Spopt::SongPainter;
         $painter->debug( $DEBUG );
         $painter->timing( $TIMING );
         $painter->song($song);
@@ -277,7 +265,7 @@ sub process_song {
         my ($dum1,$dum2,$dum3,$perfect) = $song->estimate_scores();
         $RESULTSDB{$game}{$mfkey}{$diff}{"no-sp"}{best}{score} = $perfect; 
 
-        my $optimizer = new Optimizer;
+        my $optimizer = new Spopt::Optimizer;
         $optimizer->song($song);
         $optimizer->gen_interesting_events();
         $optimizer->debug(0);
@@ -303,7 +291,7 @@ sub process_song {
         close AAA;
 
 	if ($pic) {
-            my $painter = new SongPainter;
+            my $painter = new Spopt::SongPainter;
             if ( $WHAMMY_RATE ) {
                 $painter->whammy_per_quarter_bar( $WHAMMY_RATE );
             }

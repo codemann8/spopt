@@ -1,4 +1,4 @@
-# $Id: SongPainter.pm,v 1.14 2009-02-22 00:52:26 tarragon Exp $
+# $Id: SongPainter.pm,v 1.15 2009-02-22 01:10:41 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/SongPainter.pm,v $
 
 package Spopt::SongPainter;
@@ -10,9 +10,9 @@ use FindBin;
 use Time::HiRes qw ( gettimeofday tv_interval );
 use POSIX qw( strftime );
 
-our $VERSION = do { my @r=(q$Revision: 1.14 $=~/\d+/g); sprintf '%d.'.'%03d'x$#r,@r };
+our $VERSION = do { my @r=(q$Revision: 1.15 $=~/\d+/g); sprintf '%d.'.'%03d'x$#r,@r };
 
-my $QUANTUM_DEPTH = Image::Magick->QuantumDepth;
+my $QUANTUM_DEPTH;
 
 my $PIXEL_WIDTH = 1024;
 
@@ -709,6 +709,7 @@ sub _initialize_im {
     my $x = $PIXEL_WIDTH;
     my $y = $self->{_numrows} * $PIXELS_PER_SINGLE_ROW + $HEADER_PIXELS + $FOOTER_PIXELS;
     my $im = Image::Magick->new(size=>"${x}x$y");
+    $QUANTUM_DEPTH = $im->QuantumDepth();
     $im->Read("xc:white");
     ##my $pointstr = sprintf "\%d,\%d \%d,\%d", 0,0,$x-1,$y-1;
     ##$im->Draw("primitive"   => "rectangle",
