@@ -1,9 +1,12 @@
-package Song;
+# $Id: Song.pm,v 1.9 2009-02-22 00:52:26 tarragon Exp $
+# $Source: /var/lib/cvs/spopt/lib/Spopt/Song.pm,v $
+
+package Spopt::Song;
 use strict;
-use TempoEvent;
-use TimesigEvent;
-use Note;
-use Pwl;
+use Spopt::TempoEvent;
+use Spopt::TimesigEvent;
+use Spopt::Note;
+use Spopt::Pwl;
 
 sub new           { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
 sub _prop         { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }

@@ -1,7 +1,10 @@
-package Optimizer;
+# $Id: Optimizer.pm,v 1.4 2009-02-22 00:52:26 tarragon Exp $
+# $Source: /var/lib/cvs/spopt/lib/Spopt/Optimizer.pm,v $
+
+package Spopt::Optimizer;
 use strict;
-use Activation;
-use Solution;
+use Spopt::Activation;
+use Spopt::Solution;
 
 sub new        { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
 sub _prop      { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }

@@ -1,4 +1,7 @@
-package Activation;
+# $Id: Activation.pm,v 1.2 2009-02-22 00:52:26 tarragon Exp $
+# $Source: /var/lib/cvs/spopt/lib/Spopt/Activation.pm,v $
+
+package Spopt::Activation;
 use strict;
 
 sub new    { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; return $self;}

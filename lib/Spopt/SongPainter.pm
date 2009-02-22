@@ -1,4 +1,7 @@
-package SongPainter;
+# $Id: SongPainter.pm,v 1.14 2009-02-22 00:52:26 tarragon Exp $
+# $Source: /var/lib/cvs/spopt/lib/Spopt/SongPainter.pm,v $
+
+package Spopt::SongPainter;
 
 use strict;
 
@@ -7,7 +10,7 @@ use FindBin;
 use Time::HiRes qw ( gettimeofday tv_interval );
 use POSIX qw( strftime );
 
-our $VERSION = do { my @r=(q$Revision: 1.13 $=~/\d+/g); sprintf '%d.'.'%03d'x$#r,@r };
+our $VERSION = do { my @r=(q$Revision: 1.14 $=~/\d+/g); sprintf '%d.'.'%03d'x$#r,@r };
 
 my $QUANTUM_DEPTH = Image::Magick->QuantumDepth;
 

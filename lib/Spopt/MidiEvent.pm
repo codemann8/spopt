@@ -1,6 +1,7 @@
-#!/usr/bin/perl5
+# $Id: MidiEvent.pm,v 1.3 2009-02-22 00:52:26 tarragon Exp $
+# $Source: /var/lib/cvs/spopt/lib/Spopt/MidiEvent.pm,v $
 
-package MidiEvent;
+package Spopt::MidiEvent;
 use strict;
 
 sub new        { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}

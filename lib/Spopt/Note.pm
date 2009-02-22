@@ -1,6 +1,7 @@
-#!/usr/bin/perl5
+# $Id: Note.pm,v 1.7 2009-02-22 00:52:26 tarragon Exp $
+# $Source: /var/lib/cvs/spopt/lib/Spopt/Note.pm,v $
 
-package Note;
+package Spopt::Note;
 use strict;
 
 our $MIN_SUSTAIN_SEPARATION = 161;

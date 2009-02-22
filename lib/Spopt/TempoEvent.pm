@@ -1,4 +1,7 @@
-package TempoEvent;
+# $Id: TempoEvent.pm,v 1.2 2009-02-22 00:52:26 tarragon Exp $
+# $Source: /var/lib/cvs/spopt/lib/Spopt/TempoEvent.pm,v $
+
+package Spopt::TempoEvent;
 use strict;
 
 sub new    { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
