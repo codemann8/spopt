@@ -1,4 +1,4 @@
-# $Id: Song.pm,v 1.10 2009-02-22 01:00:09 tarragon Exp $
+# $Id: Song.pm,v 1.11 2009-04-22 12:05:20 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/Song.pm,v $
 
 package Spopt::Song;
@@ -115,7 +115,7 @@ sub init_phrase_sp_pwls {
     my $spa  = $self->sparr();
     my $na   = $self->notearr();
     for my $i (0 .. @$spa - 1) {
-	my $pwl = Pwl->new();
+	my $pwl = Spopt::Pwl->new();
 	$self->{_sptick_pwl}[$i] = $pwl;
 	$pwl->add_point(0,0);
 	my $cumsp = 0;
@@ -381,10 +381,10 @@ sub _qb_gen_tempo_timesig_measure_beat_stuff {
     my $rtimesig = $qbf->get_timesig();
 
     ## Set up the conversion from the millisecond domain to the beat domain
-    $self->{_qbstuff}{ms2beat} = Pwl->new();
-    $self->{_qbstuff}{beat2ms} = Pwl->new();
-    $self->{_qbstuff}{ms2tick} = Pwl->new();
-    $self->{_qbstuff}{tick2ms} = Pwl->new();
+    $self->{_qbstuff}{ms2beat} = Spopt::Pwl->new();
+    $self->{_qbstuff}{beat2ms} = Spopt::Pwl->new();
+    $self->{_qbstuff}{ms2tick} = Spopt::Pwl->new();
+    $self->{_qbstuff}{tick2ms} = Spopt::Pwl->new();
     for my $i (0 .. @$rbeat - 1) {
         $self->{_qbstuff}{ms2beat}->add_point( $rbeat->[$i], $i );
         $self->{_qbstuff}{beat2ms}->add_point( $i, $rbeat->[$i] );
@@ -408,7 +408,7 @@ sub _qb_gen_tempo_timesig_measure_beat_stuff {
     }
 
     ## bmt stuff
-    my @pwl = map { Pwl->new() } (0 .. 5);
+    my @pwl = map { Spopt::Pwl->new() } (0 .. 5);
     $self->b2tpwl($pwl[0]);
     $self->b2mpwl($pwl[1]);
     $self->m2tpwl($pwl[2]);
@@ -537,7 +537,7 @@ sub _qb_gen_note_arr {
     my $sustainthresh = $qbf->sustainthresh();
     for (my $i = 0; $i < @$qbfna; $i++) {
 	my ($msstart,$mslen,$notebv) = @{$qbfna->[$i]};
-	my $nn = Note->new();
+	my $nn = Spopt::Note->new();
 	$nn->idx($i);
 	$nn->star(0);
 	$notebv = $notebv & 0b00111111;
