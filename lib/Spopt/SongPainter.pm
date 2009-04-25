@@ -1,4 +1,4 @@
-# $Id: SongPainter.pm,v 1.15 2009-02-22 01:10:41 tarragon Exp $
+# $Id: SongPainter.pm,v 1.16 2009-04-25 23:22:34 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/SongPainter.pm,v $
 
 package Spopt::SongPainter;
@@ -10,7 +10,7 @@ use FindBin;
 use Time::HiRes qw ( gettimeofday tv_interval );
 use POSIX qw( strftime );
 
-our $VERSION = do { my @r=(q$Revision: 1.15 $=~/\d+/g); sprintf '%d.'.'%03d'x$#r,@r };
+our $VERSION = do { my @r=(q$Revision: 1.16 $=~/\d+/g); sprintf '%d.'.'%03d'x$#r,@r };
 
 my $QUANTUM_DEPTH;
 
@@ -21,16 +21,17 @@ my $LEFT_MARGIN_PIXELS = 16;
 my $PIXELS_PER_BEAT = 40;
 my $HEADER_PIXELS = 90;
 my $FOOTER_PIXELS = 40;
+my $FOOTER_MARGIN_PIXELS = 40;
 my $PIXELS_PER_SINGLE_ROW = 114;
 
 my $FOOTER_BLURB_LEFT  = 
     'Generated on: ' . POSIX::strftime('%Y-%m-%d %T', localtime) . ".\n" .
-    "'spopt' written by debr5836 and tma.\n" .
+    "'spopt' written by debr5836 and tma (spopt\@moto-coda.org).\n" .
     "SongPainter.pm v$VERSION.";
 my $FOOTER_BLURB_RIGHT =
     "http://www.slowhero.com/\n"  .
     "http://www.scorehero.com/\n" .
-    'spopt@moto-coda.org';
+    'http://pathhero.codemann8.com/';
 
 my @STAFF_LINES_a = (
     -1,         # special for "purple" notes
@@ -443,7 +444,7 @@ sub _printTitles() {
 sub _printFooter() {
     my $self = shift;
     $self->_set_timer();
-    my $footer_position = $HEADER_PIXELS + $self->{'_numrows'} * $PIXELS_PER_SINGLE_ROW;
+    my $footer_position = $HEADER_PIXELS + $self->{'_numrows'} * $PIXELS_PER_SINGLE_ROW + $FOOTER_MARGIN_PIXELS;
     $self->_drawText(
         '_im_song',
         '#333333',
@@ -707,7 +708,7 @@ sub _initialize_im {
     my $self = shift;
     $self->_set_timer();
     my $x = $PIXEL_WIDTH;
-    my $y = $self->{_numrows} * $PIXELS_PER_SINGLE_ROW + $HEADER_PIXELS + $FOOTER_PIXELS;
+    my $y = $self->{_numrows} * $PIXELS_PER_SINGLE_ROW + $HEADER_PIXELS + $FOOTER_MARGIN_PIXELS + $FOOTER_PIXELS;
     my $im = Image::Magick->new(size=>"${x}x$y");
     $QUANTUM_DEPTH = $im->QuantumDepth();
     $im->Read("xc:white");
@@ -954,8 +955,8 @@ sub _draw_tempo {
     my ($self,$tempo,$x,$y) = @_;
     $self->_set_timer();
 
-    my $font = "$FindBin::Bin/../assets/tindtre/TEMPILTR.TTF";
-    #my $font = "$FindBin::Bin/../assets/tmpindlt/TEMPIL__.TTF";
+    my $font = "$FindBin::Bin/../assets/fonts/tindtre/TEMPILTR.TTF";
+    #my $font = "$FindBin::Bin/../assets/fonts/tmpindlt/TEMPIL__.TTF";
     $self->_drawText(   '_im_song', 'black',$font,10,"%",$x,$y+3);
     $self->_drawText(   '_im_song', 'black','Helvetica',10,"=$tempo",$x+6,$y+3);
     $self->_get_timer(2);
