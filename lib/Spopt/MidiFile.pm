@@ -1,4 +1,4 @@
-# $Id: MidiFile.pm,v 1.2 2009-02-22 00:52:26 tarragon Exp $
+# $Id: MidiFile.pm,v 1.3 2009-04-25 23:20:01 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/MidiFile.pm,v $
 
 package Spopt::MidiFile;
@@ -19,7 +19,7 @@ sub _init {
     $self->{events} = [];
 }
 
-sub read {
+sub readfile {
     my $self = shift;
     my $debug = $self->debug();
     if ($debug >= 1) { print "DEBUG: Enter MidiFile::read()\n"; }
