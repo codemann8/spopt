@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.17 2009-02-22 01:00:09 tarragon Exp $
+# $Id: QbFile.pm,v 1.18 2009-04-25 23:21:38 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package Spopt::QbFile;
@@ -9,12 +9,18 @@ use Carp qw( carp croak );
 
 use String::CRC32;
 use File::Basename;
+use File::stat;
+use File::Type;
+use Encode qw( decode );
 
-## TODO properly document this sucker!
+## TODO properly document this! 
 
 sub new             { my $type = shift; my @args = @_; my $self = {}; bless $self, $type; $self->_init(); return $self;}
 sub _prop           { my $self = shift; if (@_ == 2) { $self->{$_[0]} = $_[1]; } return $self->{$_[0]}; }
 sub file            { my $self = shift; return $self->_prop('file',@_);    }
+sub sectionfile     { my $self = shift; return $self->_prop('sectionfile',@_);    }
+sub sectiontext     { my $self = shift; return $self->_prop('sectiontext',@_);    }
+sub vocalfile       { my $self = shift; return $self->_prop('vocalfile',@_);    }
 sub debug           { my $self = shift; return $self->_prop('debug',@_);    }
 sub sustainthresh   { my $self = shift; return $self->_prop('sustainthresh',@_);    }
 sub verbose         { my $self = shift; return $self->_prop('verbose',@_);    }
@@ -24,6 +30,7 @@ sub get_timesig     { my ($self) = @_;       return $self->{'_timesig'}; }
 sub get_str2crc     { my ($self) = @_;       return $self->{'_str2crc'}; }
 sub get_crc2str     { my ($self) = @_;       return $self->{'_crc2str'}; }
 sub get_markers     { my $self = shift; return $self->{'_markers'}; }
+
 sub get_notearr {
     my ($self,$chart,$diff) = @_;
     if ( defined $diff ) {
@@ -34,6 +41,7 @@ sub get_notearr {
         return $self->{'_notes'}->{$chart};
     }
 }
+
 sub get_sparr {
     my ($self,$chart,$diff) = @_;
     if ( defined $diff ) {
@@ -155,6 +163,9 @@ sub _init {
     my $self = shift;
 
     $self->file('');
+    $self->sectionfile('');
+    $self->sectiontext('');
+    $self->vocalfile('');
     $self->debug(0);
     $self->sustainthresh(0);
 
@@ -168,10 +179,10 @@ sub _init {
     $self->{'_beat'}            = [];
     $self->{'_timesig'}         = [];
     $self->{'_markers'}         = [];
-    foreach my $diff ( qw( easy medium hard expert ) ) {
+    foreach my $diff ( qw( easy medium hard expert expert_plus ) ) {
         $self->{'_notes'}{ $diff }   = [];
         $self->{'_sp'}{ $diff }      = [];
-        foreach my $part ( qw( guitar aux drum guitarcoop rhythm rhythmcoop ) ) {
+        foreach my $part ( qw( guitar aux drum guitarcoop rhythm rhythmcoop vocals ) ) {
             $self->{'_notes'}{ $part }{ $diff }   = [];
             $self->{'_sp'}{ $part }{ $diff }      = [];
         }
@@ -185,7 +196,7 @@ sub _init {
 Reads in the file specified, generates a checksum list, and extracts the sections from the file.
 
 =cut
-sub read {
+sub readfile {
     my $self = shift;
     my $debug = $self->debug();
 
@@ -213,7 +224,9 @@ sub read {
     }
     close SONGFILE;
 
-## TODO check for QB header
+    die "Invalid QB file size in $filename\n" unless $self->checkQBFileSize( $filename, $self->{'_raw'}->[1] );
+    my @magic = @{$self->{'_raw'}}[2..6];
+    die "Invalud QB header in Filename\n" unless $self->checkQBHeader( \@magic );
 
     # scan for file checksum and set pointers
     foreach my $i ( 1 .. ( scalar @{$self->{'_raw'}} ) - 1 ) {
@@ -256,7 +269,12 @@ sub read {
     }
     $temptracks->{'timesig'} = $self->_get_section('timesig');
     $temptracks->{'beats'}   = $self->_get_section('fretbars');
-    $temptracks->{'markers'} = $self->_get_section('markers');
+    if ( $gamever == 4 ) {
+        $temptracks->{'markers'} = $self->_get_section('guitar_markers');
+    }
+    else {
+        $temptracks->{'markers'} = $self->_get_section('markers');
+    }
     
     for my $part ( qw(guitar rhythm guitarcoop rhythmcoop aux drum) ) {
         if ( $part eq 'aux' || $part eq 'drum' && $gamever != 4 ) {
@@ -354,82 +372,231 @@ sub read {
         $self->{'_timesig'}->[$i] = [ $ms, $numerator, $denominator ];
     }
 
-    # process section names, if available
-    ## for section names, we have to read in the master file
-    my $master_file = "";
-    if ($filename =~ /(\S+)\/(\S+)/) {
-        $master_file = "$1/master_section_names.txt";
-    }
-    else {
-        $master_file = "master_section_names.txt";
-    }
-    if ( -f $master_file ) {
-        open MSECTION, "$master_file" or die "Could not find section file for opening";
-        my %db = ();
-        while (<MSECTION>) {
-            next unless /(\S+)\s+(\S+)\s+(\S+)\s+(\S.*\S)/;
-            my ($strcrc,$songcrc,$songbase,$string) = ($1,$2,$3,$4);
-            $db{$songbase}{$strcrc} = $string;
-        }
-        close MSECTION;
-
-        ## Now loop through all of the section names, and if we find one, then we stick it in the hash
-        my $basename = $self->{'_str2crc'}->{'basename'}->{'string'};
-        foreach my $marker ( @{$temptracks->{'markers'}} ) {
-            last unless ref $marker eq 'HASH';
-            my $crc  = $marker->{'marker'};
-            my $time = $marker->{'time'};
-            if ( defined $db{$basename} && defined $db{$basename}{$crc} ) {
-                push @{$self->{'_markers'}}, [ $time, $db{$basename}{$crc} ];
-            }
-        }
-    }
-
-    # release some memory
-    # undef $temptracks;
+    $self->parseMarkerText( $temptracks->{'markers'} );
 
     return $self;
 }
 
-sub _get_section {
+sub checkQBFileSize {
+    my $self = shift;
+    my $filename = shift;
+    my $size = shift;
+    my $debug = $self->debug();
+
+    # check headers - file size
+    my $songStat = stat $filename;
+    if ( $size == $songStat->size ) {
+        $debug && print "DEBUG: File size matches header.\n";
+        return $size;
+    }
+    else {
+        return 0;
+    }
+}
+sub checkQBHeader {
+    my $self = shift;
+    my $headerREF = shift;
+    my $debug = $self->debug();
+
+    # check headers - qb magic
+    if (
+        ( 
+             $headerREF->[0] == 0x1c080204
+          && $headerREF->[1] == 0x1004080c
+          && $headerREF->[2] == 0x0c080204
+          && $headerREF->[3] == 0x1402040c
+          && $headerREF->[4] == 0x10100c00
+        )
+    ||
+        (    $headerREF->[0] == 0x0402081c
+          && $headerREF->[1] == 0x0c080410
+          && $headerREF->[2] == 0x0402080c
+          && $headerREF->[3] == 0x0c040214
+          && $headerREF->[4] == 0x000c1010
+        )
+    ) {
+        $debug && print "DEBUG: Valid QB header found.\n";
+    }
+    else {
+        return 0;
+    }
+    return 1;
+}
+
+# process section names, if available
+sub parseMarkerText {
+    my $self = shift;
+    my $markerRef = shift;
+    my $debug = $self->debug();
+
+    my $sectionTextFile = $self->sectiontext();
+    my $sectionFile = $self->sectionfile();
+
+    if ( $sectionTextFile eq '' ) {
+        # legacy marker code
+        # only deals with base markers, not the extra chart markers from GHWT/GHM
+        if ( $self->file() =~ /(\S+)\/(\S+)/) {
+            $sectionTextFile = "$1/master_section_names.txt";
+        }
+        else {
+            $sectionTextFile = "master_section_names.txt";
+        }
+
+        if ( -f $sectionTextFile ) {
+            open MSECTION, "$sectionTextFile" or die "Could not open section file: $!\n";
+            my %db = ();
+            while (<MSECTION>) {
+                next unless /(\S+)\s+(\S+)\s+(\S+)\s+(\S.*\S)/;
+                my ($strcrc,$songcrc,$songbase,$string) = ($1,$2,$3,$4);
+                $db{$songbase}{$strcrc} = $string;
+            }
+            close MSECTION;
+
+            ## Now loop through all of the section names, and if we find one, then we stick it in the hash
+            my $basename = $self->{'_str2crc'}->{'basename'}->{'string'};
+            for my $marker ( @$markerRef ) {
+                last unless ref $marker eq 'HASH';
+                my $crc  = $marker->{'marker'};
+                my $time = $marker->{'time'};
+                if ( defined $db{$basename} && defined $db{$basename}{$crc} ) {
+                    push @{$self->{'_markers'}}, [ $time, $db{$basename}{$crc} ];
+                }
+            }
+        }
+    }
+    elsif ( -f $sectionTextFile && -f $sectionFile ) {
+        
+        my $buf;
+
+        open FILE, "$sectionFile" or die "Could not open section file: $!\n";
+        seek FILE, 4, 0;
+        read FILE, $buf, 4;
+        die "Invalid QB file length in $sectionFile\n" unless $self->checkQBFileSize( $sectionFile, unpack('N', $buf) );
+        read FILE, $buf, 0x14;
+        my @magic = unpack 'N*', $buf;
+        die "Invalid QB header in $sectionFile\n" unless $self->checkQBHeader( \@magic );
+        
+        my %markerToString;
+        while ( read FILE, $buf, 20 ) {
+            my ( $vartype, $markerCRC, $fileCRC, $stringCRC, $null ) = unpack 'N*', $buf;
+            $markerToString{ $stringCRC } = $markerCRC;
+            $debug && printf "DEBUG: found marker match: 0x%08x = 0x%08x\n", $stringCRC, $markerCRC;
+        }
+        close FILE;
+
+        # new section to read the UTF-16 qs files provided with GHWT/GHM.
+        open FILE, "$sectionTextFile" or die "Could not open section text file: $!\n";
+        read FILE, $buf, 2;
+        my $encoding = '';
+        my $magic = unpack 'n', $buf;
+        if ( $magic == 0xfffe ) {
+            $encoding = 'UTF-16LE';
+        }
+        elsif ( $magic == 0xfeff ) {
+            $encoding = 'UTF16-BE';
+        }
+        else {
+            $encoding = 'ASCII';
+            seek FILE, 0, 0;
+        }
+        my %db;
+        while (<FILE>) {
+            chomp;
+            my $line = decode($encoding, $_);
+            next if $line eq '';
+            $line =~ m/^([0-9a-fA-F]{8}) (.*)$/;
+            my $checksum = hex $1;
+            my $string = $2;
+            $string =~ s/"//g;
+            my $calculated_checksum = $self->qbcrc32($string);
+            seek FILE, 1, 1;
+            $debug && printf "DEBUG: Found marker text: 0x%08x (0x%08x) %s\n", $checksum, $calculated_checksum, $string;
+            $db{ $markerToString{ $checksum } } = $string;
+        }
+        for my $marker ( @$markerRef ) {
+            last unless ref $marker eq 'HASH';
+            my $crc  = $marker->{'marker'};
+            my $time = $marker->{'time'};
+            if ( defined $db{ $crc } ) {
+                push @{$self->{'_markers'}}, [ $time, $db{$crc} ];
+            }
+        }
+    }
+    else {
+        $debug && print "DEBUG: No section text available.\n";
+    }
+}
+
+sub _get_raw_section {
     my $self = shift;
     my $section_string = shift;
-    croak "Section '$section_string' not found!" unless defined $self->{'_str2crc'}->{$section_string};
+    my $debug = $self->debug();
+
+    die "Unknown section string '$section_string'!" unless defined $self->{'_str2crc'}->{$section_string};
+
     my $section_crc = $self->{'_str2crc'}->{$section_string}->{'checksum'};
+
     unless ( defined $self->{'_sections_crc'}->{$section_crc} ) {
         return undef;
     }
 
-    my $debug = $self->debug();
     if ( $debug > 1 ) {
-        printf "DEBUG: _get_section : '%s' (0x%08x)\n", 
+        printf "DEBUG: _get_raw_section : '%s' (0x%08x)\n", 
             $section_string, 
             $section_crc;
     }
 
     my $pos_start = $self->{'_sections'}->[ $self->{'_sections_crc'}->{$section_crc} ];
-    my $pos_end   = $self->{'_sections'}->[ $self->{'_sections_crc'}->{$section_crc} + 1 ] - 1 ;
+    my $pos_end;
+    if ( defined $self->{'_sections'}->[ $self->{'_sections_crc'}->{$section_crc} + 1 ] ) {
+        $pos_end = $self->{'_sections'}->[ $self->{'_sections_crc'}->{$section_crc} + 1 ] -1;
+    }
+    else {
+        $pos_end = scalar @{$self->{'_raw'}};
+    }
     if ( $debug > 1 ) {
-        printf "DEBUG: _get_section : \$pos_start = %u, \$pos_end = %u\n", 
+        printf "DEBUG: _get_raw_section : \$pos_start = %u, \$pos_end = %u\n", 
             $pos_start, 
             $pos_end;
     }
 
-    my @section_data = @{$self->{'_raw'}}[ $pos_start+5..$pos_end ];
+    my @section_data = @{$self->{'_raw'}}[ $pos_start..$pos_end ];
+    return \@section_data, $pos_start * 4;
+}
 
-    my $section_type = $section_data[ 0 ];
+sub _get_section {
+    my $self = shift;
+    my $section_string = shift;
+    my $debug = $self->debug();
+
+    my ( $section_data, $file_position ) = $self->_get_raw_section( $section_string );
+    return undef if !defined $section_data;
+    my $sectionType = shift @$section_data;
+    my $sectionChecksum = shift @$section_data;
+    my $fileChecksum = shift @$section_data;
+    my $sectionStart = shift @$section_data;
+    my $null = shift @$section_data;
+    if ( $debug ) {
+        printf "DEBUG: raw position     = 0x%08x\n", $file_position;
+        printf "DEBUG: section type     = 0x%08x\n", $sectionType;
+        printf "DEBUG: section checksum = 0x%08x\n", $sectionChecksum;
+        printf "DEBUG: file checksum    = 0x%08x\n", $fileChecksum;
+        printf "DEBUG: section start    = 0x%08x\n", $sectionStart;
+        printf "DEBUG: null             = 0x%08x\n", $null;
+    }
+    my $dataType = $section_data->[ 0 ];
     if ( $debug > 1 ) {
-        printf "DEBUG: _get_section : \$section_type = 0x%08x\n", $section_type;
+        printf "DEBUG: _get_section : \$dataType = 0x%08x\n", $dataType;
     }
 
-    if    ( $section_type == 0x00010000 ) {
+    if    ( $dataType == 0x00010000 ) {
         # empty
         $debug && print "DEBUG: Section $section_string is empty\n";
         return [];
     }
-    elsif ( $section_type == 0x00010100 ) {
+    elsif ( $dataType == 0x00010100 ) {
         # array
-        my @parsed = $self->_parse_array( \@section_data, $section_string );
+        my @parsed = $self->_parse_array( $section_data, $section_string );
         $debug 
         && printf "DEBUG: Section %s (0x%08x) is valid (%u element array)\n", 
            $section_string, 
@@ -437,12 +604,12 @@ sub _get_section {
            scalar @parsed;
         return \@parsed;
     }
-    elsif (    $section_type == 0x000c0100
-            || $section_type == 0x00010c00
+    elsif (    $dataType == 0x000c0100
+            || $dataType == 0x00010c00
     ) 
     {
         # array of arrays
-        my @parsed = $self->_parse_arrayOfArrays( \@section_data, $section_string );
+        my @parsed = $self->_parse_arrayOfArrays( $section_data, $section_string );
         $debug
         && printf "DEBUG: Section %s (0x%08x) is valid (%u element array of arrays)\n",
            $section_string,
@@ -450,12 +617,12 @@ sub _get_section {
            scalar @parsed;
         return \@parsed;
     }
-    elsif (    $section_type == 0x000a0100
-            || $section_type == 0x00010a00
+    elsif (    $dataType == 0x000a0100
+            || $dataType == 0x00010a00
     ) 
     {
         # array of hashes
-        my @parsed = $self->_parse_array_hash( \@section_data, $section_string );
+        my @parsed = $self->_parse_array_hash( $section_data, $section_string );
         $debug
         && printf "DEBUG: Section %s (0x%08x) is valid (%u element array of hashes)\n",
            $section_string,
@@ -465,7 +632,7 @@ sub _get_section {
         return \@parsed;
     }
     else {
-        carp sprintf "Unrecognised section: '%s' (0x%08x)", $section_string, $section_type;
+        carp sprintf "Unrecognised section: '%s' (0x%08x)", $section_string, $dataType;
         return [];
     }
     die "Should never get here!\n";
@@ -475,7 +642,7 @@ sub _get_section {
 sub qbcrc32 {
     my $self = shift;
     my $string = shift;
-    warn 'no string provided!\n' unless defined $string;
+    warn "no string provided!\n" unless defined $string;
 
     $string = lc $string;
     $string =~ s#/#\\#g;
@@ -827,7 +994,11 @@ sub _parse_array_hash {
         while ( 1 ) {
             my $var_type = shift @$section_AREF;
 
-            if    ( $var_type == 0x00000300 || $var_type == 0x00810000 ) {
+            if    (
+                $var_type == 0x00000300 ||
+                $var_type == 0x00810000 ||
+                $var_type == 0x00010100
+            ) {
                 # integer
                 $debug > 1 && printf "DEBUG: variable type - integer (0x%08x)\n", $var_type;
                 my $var_name  = shift @$section_AREF;
@@ -844,7 +1015,12 @@ sub _parse_array_hash {
 
                 last unless $pointer;
             }
-            elsif ( $var_type == 0x00003500 || $var_type == 0x009a0000 ) {
+            elsif (
+                $var_type == 0x00003500 || 
+                $var_type == 0x009a0000 || 
+                $var_type == 0x00011a00 || 
+                $var_type == 0x00011c00
+            ) {
                 # string
                 $debug > 1 && printf "DEBUG: variable type - string (0x%08x)\n", $var_type;
                 my $var_name  = shift @$section_AREF;
