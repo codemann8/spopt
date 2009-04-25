@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.14 2009-02-22 01:10:40 tarragon Exp $
+# $Id: generateCharts.pl,v 1.15 2009-04-25 23:25:12 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -9,86 +9,35 @@ use warnings;
 
 use FindBin;
 use lib "$FindBin::Bin/../lib";
+use Spopt;
 
 use Config::General;
 use File::Basename;
 use File::Path qw(mkpath);
-use Image::Magick;
-use Spopt;
+use IO::File;
 
-my $version = do { my @r=(q$Revision: 1.14 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+use Image::Magick;
+
+my $version = do { my @r=(q$Revision: 1.15 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
-my %SONGDB;
-my %RESULTSDB;
 
-my $QBDIR   = "$GHROOT/qb";
-my $MIDIDIR = "$GHROOT/midi";
-my $ASSETS  = "$GHROOT/assets";
+my $GLOBAL_CONFIG_FILE = "$GHROOT/cfg/spoptGlobalSettings.cfg";
+my %GLOBAL_CONFIG = new Config::General( $GLOBAL_CONFIG_FILE )->getall
+    or die "Could not open global config file: $!\n";
 
-my %ALGORITHM =
-(
-    'blank'           => {wp => 1.00, wd => 0.00, sq => 0.00, sp => 0.00 },
+my $GAMEFILEROOT = join '/', $GHROOT,$GLOBAL_CONFIG{'ASSETS'},$GLOBAL_CONFIG{'GAMEFILES'};
 
-    'zero-zero'       => {wp => 1.00, wd => 0.00, sq => 0.00, sp => 0.00 },
-    'twenty-twenty'   => {wp => 1.00, wd => 0.00, sq => 0.20, sp => 0.20 },
-    'forty-forty'     => {wp => 1.00, wd => 0.00, sq => 0.40, sp => 0.40 },
-    'sixty-sixty'     => {wp => 1.00, wd => 0.00, sq => 0.60, sp => 0.60 },
-    'eighty-eighty'   => {wp => 1.00, wd => 0.00, sq => 0.80, sp => 0.80 },
-
-    'twenty-zero'     => {wp => 1.00, wd => 0.00, sq => 0.20, sp => 0.00 },
-    'forty-twenty'    => {wp => 1.00, wd => 0.00, sq => 0.40, sp => 0.20 },
-    'sixty-forty'     => {wp => 1.00, wd => 0.00, sq => 0.60, sp => 0.40 },
-    'eighty-sixty'    => {wp => 1.00, wd => 0.00, sq => 0.80, sp => 0.60 },
-
-    'forty-zero'      => {wp => 1.00, wd => 0.00, sq => 0.40, sp => 0.00 },
-    'sixty-twenty'    => {wp => 1.00, wd => 0.00, sq => 0.60, sp => 0.20 },
-    'eighty-forty'    => {wp => 1.00, wd => 0.00, sq => 0.80, sp => 0.40 },
-
-    'sixty-zero'      => {wp => 1.00, wd => 0.00, sq => 0.60, sp => 0.00 },
-    'eighty-twenty'   => {wp => 1.00, wd => 0.00, sq => 0.80, sp => 0.20 },
-
-    'eighty-zero'     => {wp => 1.00, wd => 0.00, sq => 0.80, sp => 0.00 },
-    'hundred-zero'    => {wp => 1.00, wd => 0.00, sq => 1.00, sp => 0.00 },
-
-    'lazy-whammy'     => {wp => 1.00, wd => 0.50, sq => 0.00, sp => 0.00 },
-    'no-squeeze'      => {wp => 1.00, wd => 0.00, sq => 0.00, sp => 0.00 },
-    'big-squeeze'     => {wp => 1.00, wd => 0.00, sq => 0.60, sp => 0.00 },
-    'bigger-squeeze'  => {wp => 1.00, wd => 0.00, sq => 0.60, sp => 0.60 },
-    'nearly-ideal'    => {wp => 1.00, wd => 0.00, sq => 0.80, sp => 0.80 },
-    'upper-bound'     => {wp => 1.00, wd => 0.00, sq => 1.00, sp => 1.00 },
-);
-
-my %games = 
-(
-    'gh-ps2'        => { 'optimizer' => 'gh',   'whammyrate' => 7.5,  'platform' => 'ps2',  'path' => "$ASSETS/GuitarHero" },
-    'gh2-ps2'       => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'platform' => 'ps2',  'path' => "$ASSETS/GuitarHero2" },
-    'gh2-x360'      => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'platform' => 'x360', 'path' => "$ASSETS/GuitarHero2" },
-    'gh2-x360-dlc'  => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'platform' => 'x360', 'path' => "$ASSETS/GuitarHero2DLC" },
-    'ghrt80s-ps2'   => { 'optimizer' => 'gh2',  'whammyrate' => 7.5,  'platform' => 'ps2',  'path' => "$ASSETS/GuitarHeroEncoreRocksThe80s" },
-    'gh3-ps2'       => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHero3LegendsOfRock" },
-    'gh3-dlc'       => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHero3LegendsOfRockDLC" },
-    'gh3-aerosmith' => { 'optimizer' => 'gh3',  'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHeroAerosmith" },
-    'ghwt'          => { 'optimizer' => 'ghwt', 'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHeroWorldTour" },
-    'ghwt-dlc'      => { 'optimizer' => 'ghwt', 'whammyrate' => 7.75, 'platform' => 'x360', 'path' => "$ASSETS/GuitarHeroWorldTourDLC" },
-);
-
-my @diffs = qw(easy medium hard expert);
-my %charts = (
-    'guitar'     => 'Guitar',
-    'rhythm'     => 'Bass/Rhythm',
-    'guitarcoop' => 'Guitar CO-OP',
-    'rhythmcoop' => 'Bass/Rhythm CO-OP',
-    'drum'       => 'Drums',
-    'aux'        => 'Auxilary',
-);
+my %ALGORITHM = %{ $GLOBAL_CONFIG{'ALGORITHM'} };
+my %GAME = %{ $GLOBAL_CONFIG{'GAME'} };
+my %CHART = %{ $GLOBAL_CONFIG{'CHART'} };
 
 sub usage {
-    my $filename = basename( $0 );
+    my $self = basename( $0 );
     print <<END;
-$filename v$version
+$self v$version by tma 2009
 
-USAGE: $filename <config_file>
+USAGE: $self <config_file>
 END
     exit;
 }
@@ -121,24 +70,58 @@ unless ( -d $OUTPUT_DIR ) {
     exit 1;
 }
 
+my %SONGDB = ();
+my %RESULTSDB = ();
+
+my $songInfo = new Spopt::SongInfo;
+
 ## Loop through all of the songs
-my $sl = new Spopt::SongLib;
-foreach my $game ( keys %games ) {
-    my @songarr = $sl->get_songarr_for_game( $game );
-    foreach my $song ( @songarr ) {
-        for my $chart ( keys %charts ) {
-            foreach my $diff ( reverse @diffs ) {
-                my $tier  = $song->{tier};
-                my $title = $song->{name};
-                my $file  = $song->{file};
+for my $game ( keys %GAME ) {
+    next unless $game =~ /$GAME_REGEX/;
 
-                next unless $game =~ /$GAME_REGEX/;
+    my @songs      = $songInfo->get_songarr_for_game( $game );
+    my @charts     = makeConfigArray( $GAME{ $game }->{'chart'} );
+    my @diffs      = makeConfigArray( $GAME{ $game }->{'diff'} );
+    my @algorithms = makeConfigArray( $GAME{ $game }->{'algorithm'} );
+
+    my $gamePath = join '/', $GAMEFILEROOT, $GAME{ $game }->{'path'}, $GAME{ $game }->{'platform'};
+
+    for my $song ( @songs ) {
+        my $songFilename     = $song->{'file'};
+        next unless $songFilename =~ /$FILE_REGEX/;
+
+        my $songTitle        = $song->{'name'};
+        my $songFullFilename = join '/', $gamePath, $songFilename;
+
+        print "reading $songFullFilename\n";
+        my $songH = readGamefile( $songFullFilename, $game );
+        next unless defined $songH;
+
+        for my $chart ( @charts ) {
+            next unless $chart =~ /$CHART_REGEX/;
+
+            for my $diff ( reverse @diffs ) {
                 next unless $diff =~ /$DIFF_REGEX/;
-                next unless $tier =~ /$TIER_REGEX/;
-                next unless $file =~ /$FILE_REGEX/;
-                next unless $chart =~ /$CHART_REGEX/;
 
-                do_song( $game, $diff, $tier, $title, $file, $chart );
+                # TODO - modify SongPainter to accept pre-generated "blank" chart
+                ## generate blank chart here
+                
+                for my $algorithm ( 'blank', @algorithms ) {
+                    next unless $algorithm =~ /$ALG_REGEX/;
+
+                    process_song(
+                        { 
+                            'game'      => $game,
+                            'filename'  => $songFilename,
+                            'title'     => $songTitle,
+                            'handle'    => $songH,
+                            'chart'     => $chart,
+                            'diff'      => $diff,
+                            'algorithm' => $algorithm,
+                            'draw'      => 1,
+                        }
+                    );
+                }
             }
         }
     }
@@ -148,91 +131,80 @@ exit;
 
 ## SUBROUTINES
 
-sub do_song {
-    my ($game,$diff,$tier,$title,$file,$chart) = @_;
-    my %song = (tier => $tier, name => $title, file => $file, chart => $chart);
-
-    ## This should keep some of the leaks down
-    %SONGDB = ();
-    %RESULTSDB = ();
-
-    readmidi($game,\%song);
-
-    if ( $game =~ m/gh3.*|ghwt/ ) {
-        foreach my $alg (qw(blank lazy-whammy no-squeeze twenty-zero forty-zero sixty-zero eighty-zero hundred-zero)) {
-            if ($ALG_REGEX) { next unless $alg =~ /$ALG_REGEX/; }
-            process_song($game,\%song,$diff,$alg,1);
-        }
-    }
-    else {
-        foreach my $alg (qw(blank lazy-whammy no-squeeze big-squeeze bigger-squeeze nearly-ideal upper-bound)) {
-            if ($ALG_REGEX) { next unless $alg =~ /$ALG_REGEX/; }
-            process_song($game,\%song,$diff,$alg,1);
-        }
-    }
+# converts a single entry in config into an array, if not already one
+sub makeConfigArray {
+    my $item = shift;
+    ref $item eq 'ARRAY' ?
+    return @$item        :
+    return ( $item )     ;
 }
 
-sub readmidi {
-    my ($game,$rsong) = @_;
-    my $basefilename = $rsong->{'file'};
-    my $tier = $rsong->{'tier'};
-    my $title = $rsong->{'name'};
-    print "Reading game:$game midi:$basefilename title:$title...\n";
+sub readGamefile {
+    my $filename = shift;
+    my $game = shift;
+    if ( ! -f $filename || ! -r $filename ) {
+        print "$filename is not readable or does not exist\n";
+        return undef;
+    }
 
-    if ( $games{$game}->{'filetype'} eq 'qb' ) {
-        my $filename = "$QBDIR/$game/$basefilename.qb";
-        if ( -f "$filename.xen" ) {
-            $filename .= '.xen';
-        }
-        elsif ( -f "$filename.ps2" ) {
-            $filename .= '.ps2';
-        }
-        else {
-            print STDERR "ERROR: Couldn't find file '$filename'\n";
-            return 1;
-        }
-        my $mf = new Spopt::QbFile;
-        $mf->file($filename);
+    my $object;
+    if    ( $filename =~ m/\.mid\.qb(\.ps2|\.xen)?$/ ) {
+        $object = new Spopt::QbFile;
+        if ( $GAME{$game}->{'optimizer'} eq 'ghwt' ) {
+            my $sectionfile = $filename;
+            $sectionfile =~ s/mid.qb/mid_text.qb/;
+            my $sectiontext = $filename;
+            $sectiontext =~ s/mid.qb/mid_text.qs/;
+            my $vocalfile = $filename;
+            $vocalfile =~ s/mid.qb/mid.qs/;
 
-	##my $sustthresh = $rsong->{sustthresh};
-        ##if ($sustthresh > 0) { $mf->sustainthresh($sustthresh); }
-        ##$mf->maxtrack(2);
-
-        $mf->read();
-        $SONGDB{$game}{$basefilename} = $mf;
+            $object->sectionfile( $sectionfile );
+            $object->sectiontext( $sectiontext );
+            $object->vocalfile( $vocalfile );
+        }
+    }
+    elsif ( $filename =~ m/\.mid$/ ) {
+        $object = new Spopt::MidiFile;
     }
     else {
-        my $filename = "$MIDIDIR/$game/$basefilename";
-        print STDERR "ERROR: Couldn't find file '$filename'\n" unless -f $filename;
-        my $mf = new Spopt::MidiFile;
-        $mf->file($filename);
-        ##$mf->maxtrack(2);
-        $mf->read();
-        $SONGDB{$game}{$basefilename} = $mf;
+        print "unknown file type.\n";
+        return undef;
     }
+
+    $object->file( $filename );
+    $object->readfile;
+    return $object;
 }
 
 sub process_song {
-    my ($game,$rsong,$diff,$alg,$pic) = @_;
-    my $title = $rsong->{name};
-    my $mfkey = $rsong->{file};
-    my $songkey = $mfkey; $songkey =~ s/.mid$//;
-    my $tier = $rsong->{tier};
-    my $chart = $rsong->{chart};
-    my $sp = $ALGORITHM{$alg}{sp};
-    my $sq = $ALGORITHM{$alg}{sq};
-    my $wp = $ALGORITHM{$alg}{wp};
-    my $wd = $ALGORITHM{$alg}{wd};
+    my $optionsHASH = shift;
+
+    my $game     = $optionsHASH->{'game'};
+    my $filename = $optionsHASH->{'filename'};
+    my $title    = $optionsHASH->{'title'};
+    my $handle   = $optionsHASH->{'handle'};
+    my $chart    = $optionsHASH->{'chart'};
+    my $diff     = $optionsHASH->{'diff'};
+    my $alg      = $optionsHASH->{'algorithm'};
+    my $pic      = $optionsHASH->{'draw'};
+
+    my $songkey = $filename;
+    $songkey =~ s/\.mid(\.qb\.xen|\.qb\.ps2)?$//;
+
+    my $sp = $ALGORITHM{$alg}->{'sp'};
+    my $sq = $ALGORITHM{$alg}->{'sq'};
+    my $wp = $ALGORITHM{$alg}->{'wp'};
+    my $wd = $ALGORITHM{$alg}->{'wd'};
 
     my $diffdir = "$OUTPUT_DIR/$game/$chart/$diff";
     mkpath( $diffdir ) unless -d $diffdir;
 
     my $song = new Spopt::Song;
-    $song->game( $games{$game}->{'optimizer'} );
-    $song->filetype( $games{$game}->{'filetype'} );
+    $song->game( $GAME{$game}->{'optimizer'} );
+    $song->filetype( $GAME{$game}->{'type'} );
     $song->diff($diff);
     $song->chart($chart);
-    $song->midifile($SONGDB{$game}{$mfkey});
+    $song->midifile($handle);
     $song->squeeze_percent($sq);
     $song->sp_squeeze_percent($sp);
     $song->whammy_delay($wd);
@@ -243,7 +215,7 @@ sub process_song {
     $song->init_phrase_sp_pwls();
 
     if ($alg eq "blank") {
-        print "Generating blank chart for $game:$mfkey:$chart:$diff\n";
+        print "Generating blank chart for $game:$filename:$chart:$diff\n";
 
         ## Make the blank notechart
         my $painter = new Spopt::SongPainter;
@@ -253,28 +225,28 @@ sub process_song {
         $painter->filename("$diffdir/$songkey.blank.png");
         $painter->note_order( $NOTE_PRESET, $NOTE_ORDER );
         $painter->title($title);
-        $painter->subtitle("$charts{$chart} $diff");
+        $painter->subtitle( join ' ', $CHART{$chart}->{'name'},$diff );
         $painter->outline_only(0);
         highlight_blank_phrases($song,$painter);
         $painter->paintsong();
 
     }
     else {
-        print "Generating $alg algorithm chart for $game:$mfkey:$chart:$diff\n";
+        print "Generating $alg algorithm chart for $game:$filename:$chart:$diff\n";
 
         my ($dum1,$dum2,$dum3,$perfect) = $song->estimate_scores();
-        $RESULTSDB{$game}{$mfkey}{$diff}{"no-sp"}{best}{score} = $perfect; 
+        $RESULTSDB{$game}{$filename}{$diff}{"no-sp"}{best}{score} = $perfect; 
 
         my $optimizer = new Spopt::Optimizer;
         $optimizer->song($song);
         $optimizer->gen_interesting_events();
         $optimizer->debug(0);
-        $optimizer->game( $games{$game}->{'optimizer'} );
+        $optimizer->game( $GAME{$game}->{'optimizer'} );
         if ( $WHAMMY_RATE ) {
             $optimizer->whammy_per_quarter_bar( $WHAMMY_RATE );
         }
         else {
-            $optimizer->whammy_per_quarter_bar( $games{$game}->{'whammyrate'} );
+            $optimizer->whammy_per_quarter_bar( $GAME{$game}->{'whammyrate'} );
         }
         $optimizer->optimize_me();
 
@@ -296,7 +268,7 @@ sub process_song {
                 $painter->whammy_per_quarter_bar( $WHAMMY_RATE );
             }
             else {
-                $painter->whammy_per_quarter_bar( $games{$game}->{'whammyrate'} );
+                $painter->whammy_per_quarter_bar( $GAME{$game}->{'whammyrate'} );
             }
             $painter->debug(0);
             $painter->song($song);
@@ -306,11 +278,11 @@ sub process_song {
             $painter->paintsol($sol[0]);
 	}
 
-        printf "$game %-25s %-8s %-20s score:%6s path:$pathstr\n", $mfkey, $diff, $alg, $totscore;
+        printf "$game %-25s %-8s %-20s score:%6s path:$pathstr\n", $filename, $diff, $alg, $totscore;
 
-        $RESULTSDB{$game}{$mfkey}{$diff}{$alg}{best}{score}    = $totscore; 
-        $RESULTSDB{$game}{$mfkey}{$diff}{$alg}{best}{txtfile}  = "$songkey.$alg.summary.html";
-        $RESULTSDB{$game}{$mfkey}{$diff}{$alg}{best}{pngfile}  = "$songkey.$alg.best.png";
+        $RESULTSDB{$game}{$filename}{$diff}{$alg}{best}{score}    = $totscore; 
+        $RESULTSDB{$game}{$filename}{$diff}{$alg}{best}{txtfile}  = "$songkey.$alg.summary.html";
+        $RESULTSDB{$game}{$filename}{$diff}{$alg}{best}{pngfile}  = "$songkey.$alg.best.png";
     }
 }
 
