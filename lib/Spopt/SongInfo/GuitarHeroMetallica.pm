@@ -1,4 +1,4 @@
-# $Id: GuitarHeroMetallica.pm,v 1.2 2009-04-28 08:32:09 tarragon Exp $
+# $Id: GuitarHeroMetallica.pm,v 1.3 2009-04-28 08:34:48 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/SongInfo/GuitarHeroMetallica.pm,v $
 
 package Spopt::SongInfo::GuitarHeroMetallica;
@@ -45,7 +45,7 @@ sub _init {
         {
         game   => 'ghm',
         tier   => 4,
-        name   => q{All NightMare Long},
+        name   => q{All Nightmare Long},
         artist => q{Metallica},
         year   => 2008,
         file   => 'allnightmarelong.mid.qb',
