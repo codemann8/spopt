@@ -1,4 +1,4 @@
-# $Id: GuitarHeroMetallica.pm,v 1.1 2009-04-22 12:05:20 tarragon Exp $
+# $Id: GuitarHeroMetallica.pm,v 1.2 2009-04-28 08:32:09 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/SongInfo/GuitarHeroMetallica.pm,v $
 
 package Spopt::SongInfo::GuitarHeroMetallica;
@@ -117,7 +117,7 @@ sub _init {
         {
         game   => 'ghm',
         tier   => 8,
-        name   => q{Cynanide},
+        name   => q{Cyanide},
         artist => q{Metallica},
         year   => 2008,
         file   => 'cyanide.mid.qb',
