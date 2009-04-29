@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.18 2009-04-25 23:21:38 tarragon Exp $
+# $Id: QbFile.pm,v 1.19 2009-04-29 08:56:50 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package Spopt::QbFile;
@@ -518,7 +518,9 @@ sub parseMarkerText {
             my $crc  = $marker->{'marker'};
             my $time = $marker->{'time'};
             if ( defined $db{ $crc } ) {
+                next if $db{$crc} eq '\\L_ENDOFSONG';
                 push @{$self->{'_markers'}}, [ $time, $db{$crc} ];
+                $debug && printf "DEBUG: pushed %u %s (0x%08x) into marker array.\n", $time, $db{$crc}, $crc;
             }
         }
     }
