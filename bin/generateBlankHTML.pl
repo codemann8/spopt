@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateBlankHTML.pl,v 1.3 2009-01-25 12:09:27 tarragon Exp $
+# $Id: generateBlankHTML.pl,v 1.4 2009-05-16 02:37:56 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateBlankHTML.pl,v $
 
 use strict;
@@ -10,11 +10,11 @@ use File::Basename;
 
 use FindBin;
 use lib "$FindBin::Bin/../lib";
-use SongLib;
+use Spopt::SongInfo;
 
 use CGI qw/:standard *table *Tr/;
 
-my $version = do { my @r=(q$Revision: 1.3 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.4 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my %TOPSCORES = ();
 
@@ -28,6 +28,8 @@ my @games =
     { 'name' => 'gh3-dlc',       'title' => 'Guitar Hero III -- DLC'            },
     { 'name' => 'gh3-aerosmith', 'title' => 'Guitar Hero: Aerosmith'            },
     { 'name' => 'ghwt',          'title' => 'Guitar Hero: World Tour'           },
+    { 'name' => 'ghwt-dlc',      'title' => 'Guitar Hero: World Tour -- DLC'    },
+    { 'name' => 'ghm',           'title' => 'Guitar Hero: Metallica'            },
 );
 
 my @diffs = qw(easy medium hard expert);
@@ -66,7 +68,7 @@ my $TIER_REGEX = defined $config{'TIER_REGEX'} ? $config{'TIER_REGEX'} : qw{.*};
 my $OUTPUT_DIR = defined $config{'OUTPUT_DIR'} ? $config{'OUTPUT_DIR'} : qw{.};
 my $CHART_REGEX = defined $config{'CHART_REGEX'} ? $config{'CHART_REGEX'} : 'guitar';
 
-my $SL = new SongLib;
+my $SL = new Spopt::SongInfo;
 
 for my $chart ( keys %charts ) {
     next unless $chart =~ /$CHART_REGEX/;

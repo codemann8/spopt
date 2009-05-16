@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: generateCharts.pl,v 1.15 2009-04-25 23:25:12 tarragon Exp $
+# $Id: generateCharts.pl,v 1.16 2009-05-16 02:37:56 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/generateCharts.pl,v $
 #
 # spopt wrapper script. based on original "doit.pl" written by debr with modifications by tma.
@@ -18,7 +18,7 @@ use IO::File;
 
 use Image::Magick;
 
-my $version = do { my @r=(q$Revision: 1.15 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+my $version = do { my @r=(q$Revision: 1.16 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
 my $GHROOT = "$FindBin::Bin/..";
 
@@ -59,7 +59,7 @@ my $ALG_REGEX   = defined $config{'ALG_REGEX'}   ? $config{'ALG_REGEX'}   : qw{.
 my $OUTPUT_DIR  = defined $config{'OUTPUT_DIR'}  ? $config{'OUTPUT_DIR'}  : qw{.};
 my $WHAMMY_RATE = defined $config{'WHAMMY_RATE'} ? $config{'WHAMMY_RATE'} : 0;
 my $CHART_REGEX = defined $config{'CHART_REGEX'} ? $config{'CHART_REGEX'} : '^guitar$';
-my $NOTE_PRESET = defined $config{'NOTE_PRESET'} ? $config{'NOTE_PRESET'} : 'guitar';
+my $NOTE_PRESET = defined $config{'NOTE_PRESET'} ? $config{'NOTE_PRESET'} : '';
 my $NOTE_ORDER  = defined $config{'NOTE_ORDER'}  ? $config{'NOTE_ORDER'}  : '';
 my $DEBUG       = defined $config{'DEBUG'}       ? $config{'DEBUG'}       : 0;
 my $TIMING      = defined $config{'TIMING'}      ? $config{'TIMING'}      : 0;
@@ -223,7 +223,12 @@ sub process_song {
         $painter->timing( $TIMING );
         $painter->song($song);
         $painter->filename("$diffdir/$songkey.blank.png");
-        $painter->note_order( $NOTE_PRESET, $NOTE_ORDER );
+        if ( $NOTE_PRESET ) {
+            $painter->note_order( $NOTE_PRESET, $NOTE_ORDER );
+        }
+        else {
+            $painter->note_order( $CHART{$chart}->{'note_order'}, '' );
+        }
         $painter->title($title);
         $painter->subtitle( join ' ', $CHART{$chart}->{'name'},$diff );
         $painter->outline_only(0);
@@ -273,7 +278,12 @@ sub process_song {
             $painter->debug(0);
             $painter->song($song);
             $painter->filename("$diffdir/$songkey.$alg.best.png");
-            $painter->note_order( $NOTE_PRESET, $NOTE_ORDER );
+            if ( $NOTE_PRESET ) {
+                $painter->note_order( $NOTE_PRESET, $NOTE_ORDER );
+            }
+            else {
+                $painter->note_order( $CHART{$chart}->{'note_order'}, '' );
+            }
             $painter->title($title);
             $painter->paintsol($sol[0]);
 	}

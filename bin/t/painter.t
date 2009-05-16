@@ -14,7 +14,7 @@ my $qb = new QbFile;
 $qb->file("$FindBin::Bin/../qb/ghwt/byob.mid.qb.xen");
 # $qb->file("$FindBin::Bin/../qb/ghwt/floaton.mid.qb.xen");
 # $qb->file("$FindBin::Bin/../qb/ghwt/trappedunderice.mid.qb.xen");
-$qb->read();
+$qb->readfile();
 
 # guitar aux drum guitarcoop rhythm rhythmcoop
 my $chart = 'drum';

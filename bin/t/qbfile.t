@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: qbfile.t,v 1.4 2008-10-30 05:29:31 tarragon Exp $
+# $Id: qbfile.t,v 1.5 2009-05-16 02:37:56 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/bin/t/qbfile.t,v $
 #
 # basic tests for qbfile library
@@ -162,5 +162,5 @@ is( ref($crc2str), 'HASH', 'generated crc2str hash');
 cmp_deeply( $str2crc, \%strings_to_checksums, 'str2crc hash valid' );
 cmp_deeply( $crc2str, \%checksums_to_strings, 'crc2str hash valid' );
 $qb->file( "$FindBin::Bin/../qb/gh3-aerosmith/alltheyoungdudes.mid.qb.xen" );
-ok( $qb->read(), 'test file reader');
+ok( $qb->readfile(), 'test file reader');
 
