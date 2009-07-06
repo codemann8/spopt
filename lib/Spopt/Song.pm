@@ -1,4 +1,4 @@
-# $Id: Song.pm,v 1.11 2009-04-22 12:05:20 tarragon Exp $
+# $Id: Song.pm,v 1.12 2009-07-06 08:57:55 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/Song.pm,v $
 
 package Spopt::Song;
@@ -540,6 +540,12 @@ sub _qb_gen_note_arr {
 	my $nn = Spopt::Note->new();
 	$nn->idx($i);
 	$nn->star(0);
+
+        if ( $game eq 'ghwt' && $chart eq 'drum' ) {
+            # strip sustain notes on drum charts
+            $mslen = $sustainthresh;
+        }
+
 	$notebv = $notebv & 0b00111111;
 	if ($notebv & 0x1)  { $nn->green(1);}
 	if ($notebv & 0x2)  { $nn->red(1);}
