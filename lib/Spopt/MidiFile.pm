@@ -1,4 +1,4 @@
-# $Id: MidiFile.pm,v 1.3 2009-04-25 23:20:01 tarragon Exp $
+# $Id: MidiFile.pm,v 1.4 2012-05-11 01:32:37 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/MidiFile.pm,v $
 
 package Spopt::MidiFile;
@@ -97,7 +97,7 @@ sub _parse_MTrk {
 	elsif ($rf->[0] >= 0xe0 and $rf->[0] <= 0xef) { $status = "pitchwheel";   $lastmidi = $status; splice @$rf, 0, 1; $numbytes--;}
 	else                                          { $status = $lastmidi; } ## Running status implied
 
-	my $event = MidiEvent->new();
+	my $event = Spopt::MidiEvent->new();
 	$event->track($n);
 	$event->tick($timestamp);
 
