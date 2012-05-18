@@ -1,4 +1,4 @@
-# $Id: QbFile.pm,v 1.19 2009-04-29 08:56:50 tarragon Exp $
+# $Id: QbFile.pm,v 1.20 2012-05-18 06:45:24 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/QbFile.pm,v $
 
 package Spopt::QbFile;
@@ -226,7 +226,7 @@ sub readfile {
 
     die "Invalid QB file size in $filename\n" unless $self->checkQBFileSize( $filename, $self->{'_raw'}->[1] );
     my @magic = @{$self->{'_raw'}}[2..6];
-    die "Invalud QB header in Filename\n" unless $self->checkQBHeader( \@magic );
+    die "Invalid QB header in Filename\n" unless $self->checkQBHeader( \@magic );
 
     # scan for file checksum and set pointers
     foreach my $i ( 1 .. ( scalar @{$self->{'_raw'}} ) - 1 ) {
