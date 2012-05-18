@@ -1,4 +1,4 @@
-# $Id: Song.pm,v 1.12 2009-07-06 08:57:55 tarragon Exp $
+# $Id: Song.pm,v 1.13 2012-05-18 06:44:49 tarragon Exp $
 # $Source: /var/lib/cvs/spopt/lib/Spopt/Song.pm,v $
 
 package Spopt::Song;
@@ -95,10 +95,10 @@ sub check {
     my $notes_ref = $self->notearr;
     printf "Chart has %u notes.\n", scalar @$notes_ref;
 
-    print  "Checking notes...\n";
-    for my $ref ( @$notes_ref ) {
-        
-    }
+    #print  "Checking notes...\n";
+    #for my $ref ( @$notes_ref ) {
+    #    print Dumper $ref;
+    #}
 
     my $starPower_ref = $self->sparr;
     my $tempo_ref = $self->tempoarr;
@@ -320,7 +320,7 @@ sub insert_misses {
 
 sub _gen_measure_beat_structures {
     my $self = shift;
-    my @pwl = map { Pwl->new() } (0 .. 5);
+    my @pwl = map { Spopt::Pwl->new() } (0 .. 5);
     $self->b2tpwl($pwl[0]);
     $self->b2mpwl($pwl[1]);
     $self->m2tpwl($pwl[2]);
@@ -690,7 +690,7 @@ sub _gen_note_arr {
 	my @buttons = keys %{$notes{$time}};
 	@buttons = grep { $notes{$time}{$_} eq "on" } @buttons;
 	next unless @buttons > 0;
-	my $nn = Note->new();
+	my $nn = Spopt::Note->new();
 	$nn->idx($noteidx); $noteidx++;
 
 	if ($sp{$time} eq "on") { $nn->star(1); }
