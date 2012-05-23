@@ -1,0 +1,19 @@
+# don't track various game asset files (proprietry and probably copyright)
+
+# ps2 gh1/gh2 mid (MIDI) files
+*.mid
+
+# gh3+ files. xen is Xbox 360 specific extension.
+*.qb
+*.qs
+*.xen
+*.ps2
+
+# DS guitar hero variants
+*.qgm
+*.qsig
+*.qft
+
+# debr5836 test code that shouldn't be committed
+bin/perlie
+
