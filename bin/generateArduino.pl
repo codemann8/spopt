@@ -284,6 +284,45 @@ while ( 1 ) {
     $DEBUG && printf "%-7s: tick %06d microsecond %010d, %s\n", $event_type, $this_event_tick, $ms, $event_text;
 }
 
+# handle final note off event
+my $this_event_tick = 0;
+my $this_tempo = $loop_tempo;
+my $event_type = '';
+my $event_text = '';
+
+my @sorted_notes = sort { $note_hash{$a} <=> $note_hash{$b} } keys %note_hash; # sort by tick value
+my $noteoff_tick = $note_hash{ $sorted_notes[0] };
+$note_hash{ $sorted_notes[0] } = $NO_EVENT;
+my %actual_notes = ( shift @sorted_notes => 1 );
+for my $other_notes ( @sorted_notes ) {
+    if ( $note_hash{ $other_notes } == $noteoff_tick ) {
+        $actual_notes{ $other_notes } = 1;
+        $note_hash{ $other_notes } = $NO_EVENT;
+    }
+    else {
+        last;
+    }
+}
+
+$this_event_tick = $noteoff_tick;
+
+my $display_note;
+$display_note .= $actual_notes{'g'} ? 'g' : '-';
+$display_note .= $actual_notes{'r'} ? 'r' : '-';
+$display_note .= $actual_notes{'y'} ? 'y' : '-';
+$display_note .= $actual_notes{'b'} ? 'b' : '-';
+$display_note .= $actual_notes{'o'} ? 'o' : '-';
+$display_note .= $actual_notes{'p'} ? ' p' : ' -';
+$display_note .= $actual_notes{'strum'} ? ' strum' : ' -';
+$event_type = 'NOTEOFF';
+$event_text = $display_note;
+
+delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
+noteOffEvent( \%actual_notes );
+
+$DEBUG && printf "%-7s: tick %06d microsecond %010d, %s\n", $event_type, $this_event_tick, $ms, $event_text;
+
+# wait forever
 print "  while ( true ) { delay(1); }\n";
 print "}\n";
 
