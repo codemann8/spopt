@@ -7,7 +7,7 @@
 use strict;
 use warnings;
 
-my $DEBUG = 1;
+my $DEBUG = 0;
 
 use FindBin;
 use lib "$FindBin::Bin/../lib";
@@ -17,6 +17,16 @@ use Config::General;
 use File::Basename;
 
 my $version = do { my @r=(q$Revision: 1.1 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
+
+my %pins = (
+    'green'  => 13,
+    'red'    => 12,
+    'yellow' => 11,
+    'blue'   => 10,
+    'orange' => 9,
+    'strum'  => 8,
+    'purple' => -1,
+);
 
 my $GHROOT = "$FindBin::Bin/..";
 
@@ -78,7 +88,7 @@ my $tempos = $song->tempoarr();
 my $NO_EVENT = 99999999; # tick value higher than any song will ever be to simplify comparisons for non-existent events
 my $MS_PER_MINUTE = 60000000; # microseconds in a minute
 my $tpqn = 480; # ticks per quarter note, constant
-
+my $minimum_delay = 4; # smallest possible delay midi ticks
 my $loop_tempo = int ( $MS_PER_MINUTE / 100 ); # default 100 beats per minute
 my $beats_per_measure = 4; # aka 4/4 time
 
@@ -87,14 +97,23 @@ my $ms = 0;
 
 # note status (== NO_EVENT means note is off)
 my %note_hash = (
-    'g' => $NO_EVENT,
-    'r' => $NO_EVENT,
-    'y' => $NO_EVENT,
-    'b' => $NO_EVENT,
-    'o' => $NO_EVENT,
-    'p' => $NO_EVENT, 
+    'g'     => $NO_EVENT,
+    'r'     => $NO_EVENT,
+    'y'     => $NO_EVENT,
+    'b'     => $NO_EVENT,
+    'o'     => $NO_EVENT,
+    'p'     => $NO_EVENT,
+    'strum' => $NO_EVENT,
 );
 
+print "void setup () {\n";
+for my $pin ( keys %pins ) {
+    next if $pins{ $pin } == -1;
+    print "  pinMode( $pins{$pin}, OUTPUT );\n";
+}
+print "}\n";
+
+print "void loop() {\n";
 while ( 1 ) {
     last unless scalar @$notes;
     my $note = shift @$notes;
@@ -121,40 +140,13 @@ while ( 1 ) {
     my $event_text = '';
 
     if (
-        $sig_tick <= $tempo_tick      && 
-        $sig_tick <= $note_start_tick
-    ) {
-        # handle time signature (actually beats per measure) changes
-        $this_event_tick = $sig_tick;
-
-        unshift (@$notes, $note);
-        unshift (@$tempos, $tempo) unless $tempo_tick == $NO_EVENT;
-
-        $event_type = 'TIMESIG';
-        $event_text = "----- - $timesig->{'bpm'} beats per measure";
-
-        $beats_per_measure = $timesig->{'bpm'};
-    }
-    elsif ( $tempo_tick <= $note_start_tick ) {
-        # handle tempo changes
-        $this_event_tick = $tempo_tick;
-
-        unshift (@$notes, $note);
-        unshift (@$timesigs, $timesig) unless $sig_tick == $NO_EVENT;
-
-        $event_type = 'TEMPO';
-        $event_text = "----- - $tempo->{'tempo'} (~" . 
-            int( $MS_PER_MINUTE / $tempo->{'tempo'} + 0.5 ) . " bpm)";
-
-        $loop_tempo = $tempo->{'tempo'};
-    }
-    elsif (
-        $note_hash{'g'} <= $note_start_tick ||
-        $note_hash{'r'} <= $note_start_tick ||
-        $note_hash{'y'} <= $note_start_tick ||
-        $note_hash{'b'} <= $note_start_tick ||
-        $note_hash{'o'} <= $note_start_tick ||
-        $note_hash{'p'} <= $note_start_tick
+        $note_hash{'g'}     <= $note_start_tick ||
+        $note_hash{'r'}     <= $note_start_tick ||
+        $note_hash{'y'}     <= $note_start_tick ||
+        $note_hash{'b'}     <= $note_start_tick ||
+        $note_hash{'o'}     <= $note_start_tick ||
+        $note_hash{'p'}     <= $note_start_tick ||
+        $note_hash{'strum'} <= $note_start_tick
     ) {
         # handle note off events
         my @sorted_notes = sort { $note_hash{$a} <=> $note_hash{$b} } keys %note_hash; # sort by tick value
@@ -184,19 +176,57 @@ while ( 1 ) {
         $display_note .= $actual_notes{'b'} ? 'b' : '-';
         $display_note .= $actual_notes{'o'} ? 'o' : '-';
         $display_note .= $actual_notes{'p'} ? ' p' : ' -';
+        $display_note .= $actual_notes{'strum'} ? ' strum' : ' -';
         $event_type = 'NOTEOFF';
         $event_text = $display_note;
+
+        delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
+        noteOffEvent( \%actual_notes );
+    }
+    elsif (
+        $sig_tick <= $tempo_tick      && 
+        $sig_tick <= $note_start_tick
+    ) {
+        # handle time signature (actually beats per measure) changes
+        $this_event_tick = $sig_tick;
+
+        unshift (@$notes, $note);
+        unshift (@$tempos, $tempo) unless $tempo_tick == $NO_EVENT;
+
+        $event_type = 'TIMESIG';
+        $event_text = "----- - $timesig->{'bpm'} beats per measure";
+
+        $beats_per_measure = $timesig->{'bpm'};
+
+        delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
+    }
+    elsif ( $tempo_tick <= $note_start_tick ) {
+        # handle tempo changes
+        $this_event_tick = $tempo_tick;
+
+        unshift (@$notes, $note);
+        unshift (@$timesigs, $timesig) unless $sig_tick == $NO_EVENT;
+
+        $event_type = 'TEMPO';
+        $event_text = "----- - $tempo->{'tempo'} (~" . 
+            int( $MS_PER_MINUTE / $tempo->{'tempo'} + 0.5 ) . " bpm)";
+
+        $loop_tempo = $tempo->{'tempo'};
+
+        delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
     }
     else {
         # handle notes
         $this_event_tick = $note_start_tick;
         my $this_end_note_tick = 
             $note_start_tick == $note->{'endTick'}  ?
-            $note_start_tick + 1 :
+            $note_start_tick + $minimum_delay :
             $note->{'endTick'};
 
         unshift (@$tempos, $tempo) unless $tempo_tick == $NO_EVENT;
         unshift (@$timesigs, $timesig) unless $sig_tick == $NO_EVENT;
+
+        my $strum = 1; # TODO add support for HOPO
 
         my $display_note;
         if ( $note->{'green'} ) {
@@ -241,18 +271,21 @@ while ( 1 ) {
         else {
             $display_note .=  ' -';
         }
+        $note_hash{'strum'} = $note_start_tick + $minimum_delay if $strum;
+
         $event_type = 'NOTEON';
         $event_text = $display_note;
+        $event_text .= ' STRUM' if $strum;
+        delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
+        noteOnEvent( $note, $strum );
     }
     $ms += ( $this_event_tick - $last_event ) / $tpqn * $this_tempo;
     $last_event = $this_event_tick;
     $DEBUG && printf "%-7s: tick %06d microsecond %010d, %s\n", $event_type, $this_event_tick, $ms, $event_text;
 }
 
-#use Data::Dumper;
-#print Dumper $timesigs;
-#print Dumper $tempos;
-#print Dumper $notes;
+print "  while ( true ) { delay(1); }\n";
+print "}\n";
 
 exit;
 
@@ -295,3 +328,76 @@ sub readGamefile {
     return $object;
 }
 
+sub delayEvent {
+    my $ms = shift;
+    print "  delay($ms);\n" if $ms;
+}
+
+# noteOn( $note_object, $ms_delay, $strum_flag );
+sub noteOnEvent {
+    my ( $note, $strum ) = @_;
+
+    if ( $strum ) {
+        print "  digitalWrite( $pins{'strum'}, HIGH );\n";
+    }
+
+    # purple notes are a special case - on bass charts this is an open note, on drums it's the kick
+    # a -1 value for the pin on the purple note designates it as an open note, and we skip all other
+    # notes if that's the case (note sure how the games deal with this clash though).
+    if ( $note->{'purple'} ) {
+        if ( $pins{'purple'} == -1 ) {
+            print "  digitalWrite( $pins{'green'}, LOW);\n";
+            print "  digitalWrite( $pins{'red'}, LOW);\n";
+            print "  digitalWrite( $pins{'yellow'}, LOW);\n";
+            print "  digitalWrite( $pins{'blue'}, LOW);\n";
+            print "  digitalWrite( $pins{'orange'}, LOW);\n";
+            return;
+        }
+        print "  digitalWrite( $pins{'purple'}, HIGH );\n";
+    }
+    if ( $note->{'green'} ) {
+        print "  digitalWrite( $pins{'green'}, HIGH );\n";
+    }
+    if ( $note->{'red'} ) {
+        print "  digitalWrite( $pins{'red'}, HIGH );\n";
+    }
+    if ( $note->{'yellow'} ) {
+        print "  digitalWrite( $pins{'yellow'}, HIGH );\n";
+    }
+    if ( $note->{'blue'} ) {
+        print "  digitalWrite( $pins{'blue'}, HIGH );\n";
+    }
+    if ( $note->{'orange'} ) {
+        print "  digitalWrite( $pins{'orange'}, HIGH );\n";
+    }
+}
+
+
+# noteOff( $note_hash, $ms_  delay );
+sub noteOffEvent {
+    my $note = shift;
+
+    if ( $note->{'strum'} ) {
+        print "  digitalWrite( $pins{'strum'}, LOW);\n";
+    }
+
+    if ( $note->{'g'} ) {
+        print "  digitalWrite( $pins{'green'}, LOW);\n";
+    }
+    if ( $note->{'r'} ) {
+        print "  digitalWrite( $pins{'red'}, LOW);\n";
+    }
+    if ( $note->{'y'} ) {
+        print "  digitalWrite( $pins{'yellow'}, LOW);\n";
+    }
+    if ( $note->{'b'} ) {
+        print "  digitalWrite( $pins{'blue'}, LOW);\n";
+    }
+    if ( $note->{'o'} ) {
+        print "  digitalWrite( $pins{'orange'}, LOW);\n";
+    }
+    if ( $note->{'p'} && $pins{'purple'} != -1 ) {
+        print "  digitalWrite( $pins{'purple'}, LOW);\n";
+    }
+
+}
