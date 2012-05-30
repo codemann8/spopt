@@ -54,20 +54,21 @@ $self v$version by tma 2012
 USAGE: $self 
             --debug 
             --test
-            --game <game id>
+            --game <game id> - e.g. gh2-ps2, gh3-x360
             --file <song file>
-            --difficulty <difficulty> defaults to expert
-            --chart <chart> defaults to guitar
-            --port <serial device name> optional
+            --diff <difficulty> - defaults to expert
+            --chart <chart> - defaults to guitar
+            --pre-delay <n> - (optional) millisecond delay to wait from 
+                              pressing "green" to starting playback
+            --serial <serial device> - (optional) playback serial port
 
-If port is not defined, this will output native code for the Arduino to play the song
+If serial is not defined, this will output native code for the Arduino to play the song
 directly.
 
-If port is defined, then a small stub of Arduino code will be shown and the program
+If serial is defined, then a small stub of Arduino code will be shown and the program
 will prepare to control the Arduino via the provided serial port.
 
---test is for running in serial port mode without a serial port attached. Not
-particularly useful without debug on.
+--test is for running in serial mode without actually opening the serial port.
 
 END
     exit;
@@ -77,7 +78,8 @@ my $game;
 my $songFile;
 my $difficulty = 'expert';
 my $chart = 'guitar';
-my $port;
+my $pre_song_delay = 0;
+my $serial_port;
 my $test;
 
 GetOptions(
@@ -85,9 +87,10 @@ GetOptions(
     'test'         => \$test,
     'game=s'       => \$game,
     'file=s'       => \$songFile,
-    'difficulty=s' => \$difficulty,
+    'diff=s' => \$difficulty,
     'chart=s'      => \$chart,
-    'port:s'       => \$port,
+    'serial:s'     => \$serial_port,
+    'pre-delay:i'  => \$pre_song_delay,
 );
 
 &usage unless defined $songFile;
@@ -127,7 +130,6 @@ my $beats_per_measure = 4; # aka 4/4 time
 
 my $last_event = 0;
 my $ms = 0;
-my $delay_add = 0;
 
 # note status (== NO_EVENT means note is off)
 my %note_hash = (
@@ -143,6 +145,12 @@ my %note_hash = (
 my @events_delay;
 my @events_pin_number;
 my @events_pin_state;
+
+# insert initial green button press and pre-delay
+noteOnEvent( 0, { 'green' => 1 }, 0 );
+noteOffEvent( 4, { 'g' => 1 } );
+
+my $delay_add = $pre_song_delay;
 
 print "Processing song file.\n";
 while ( 1 ) {
@@ -308,7 +316,7 @@ my $tt = Template->new
     });
                     
 print "Generating Arduino code:\n\n";
-unless ( $port ) {
+unless ( $serial_port ) {
     # generate native Arduino code
 
     my $vars = {
@@ -332,14 +340,14 @@ else {
     $tt->process('arduino_serial.tt', $vars) or die $tt->error(), "\n";
     print "-------------------8<--------------------\n";
 
-    print "\nPress any key to start playing song via serial port $port\n";
+    print "\nPress any key to start playing song via serial port $serial_port\n";
     ReadMode 'raw';
     ReadKey 0;
     ReadMode 'normal';
 
     my $serial;
     unless ( $test ) {
-        $serial = Device::SerialPort->new($port) or die "Failed to open serial port $port\n";
+        $serial = Device::SerialPort->new($serial_port) or die "Failed to open serial port $serial_port\n";
         $serial->baudrate(9600);
         $serial->databits(8);
         $serial->parity('none');
