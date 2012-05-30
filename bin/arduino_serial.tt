@@ -1,0 +1,20 @@
+#include <DigitalToggle.h>
+
+byte incoming;
+
+void setup () {
+
+[% FOREACH i IN pins -%]
+    [% NEXT IF i.value == -1 -%]
+    pinMode( [% i.value %], OUTPUT ); // [% i.key %]
+
+[% END -%]
+}
+
+void loop () {
+    if ( Serial.available() ) {
+        incoming = Serial.read();
+        digitalToggle( incoming );
+    }
+}
+

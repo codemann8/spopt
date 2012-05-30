@@ -1,0 +1,36 @@
+#include <DigitalToggle.h>
+int count = 0;
+int events = [% number_of_events %];
+
+int delays[] = {
+[% FOREACH i IN events_delay -%]
+    [% i -%]
+    [% UNLESS loop.last %],[% END -%]
+[% END -%]
+};
+byte pins[] = {
+[% FOREACH i IN events_pin -%]
+    [% i -%]
+    [% UNLESS loop.last %],[% END -%]
+[% END -%]
+};
+
+void setup () {
+
+[% FOREACH i IN pins -%]
+    [% NEXT IF i.value == -1 -%]
+    pinMode( [% i.value %], OUTPUT ); // [% i.key %]
+
+[% END -%]
+}
+
+void loop() {
+  for ( count=0; count < events ; count++ ) {
+    if ( delays[count] > 0 ) {
+      delay( delays[count] );
+    };
+    digitalToggle( pins[count] );
+  };
+
+  while ( true ) { delay(1000); }
+}

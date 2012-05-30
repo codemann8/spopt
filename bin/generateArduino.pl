@@ -15,6 +15,12 @@ use Spopt;
 
 use Config::General;
 use File::Basename;
+use POSIX qw(pause);
+use Getopt::Long;
+use Template;
+use Term::ReadKey;
+use Time::HiRes qw(setitimer ITIMER_REAL);
+use Device::SerialPort;
 
 my $version = do { my @r=(q$Revision: 1.1 $=~/\d+/g); sprintf '%d.'.'%d'x$#r,@r };
 
@@ -45,23 +51,50 @@ sub usage {
     print <<END;
 $self v$version by tma 2012
 
-USAGE: $self <game code> <song_file> <difficulty> <chart>
+USAGE: $self 
+            --debug 
+            --test
+            --game <game id>
+            --file <song file>
+            --difficulty <difficulty> defaults to expert
+            --chart <chart> defaults to guitar
+            --port <serial device name> optional
+
+If port is not defined, this will output native code for the Arduino to play the song
+directly.
+
+If port is defined, then a small stub of Arduino code will be shown and the program
+will prepare to control the Arduino via the provided serial port.
+
+--test is for running in serial port mode without a serial port attached. Not
+particularly useful without debug on.
+
 END
     exit;
 }
 
-my $game = shift;
+my $game;
+my $songFile;
+my $difficulty = 'expert';
+my $chart = 'guitar';
+my $port;
+my $test;
 
-my $songFile = shift;
+GetOptions(
+    'debug+'       => \$DEBUG,
+    'test'         => \$test,
+    'game=s'       => \$game,
+    'file=s'       => \$songFile,
+    'difficulty=s' => \$difficulty,
+    'chart=s'      => \$chart,
+    'port:s'       => \$port,
+);
+
 &usage unless defined $songFile;
 unless ( -f $songFile && -r $songFile ) {
     print "Song file does not exist or is not readable.\n";
     exit 1;
 }
-
-my $difficulty = shift;
-
-my $chart = shift;
 
 my $songH = readGamefile( $songFile, $game );
 
@@ -94,6 +127,7 @@ my $beats_per_measure = 4; # aka 4/4 time
 
 my $last_event = 0;
 my $ms = 0;
+my $delay_add = 0;
 
 # note status (== NO_EVENT means note is off)
 my %note_hash = (
@@ -106,33 +140,30 @@ my %note_hash = (
     'strum' => $NO_EVENT,
 );
 
-print "void setup () {\n";
-for my $pin ( keys %pins ) {
-    next if $pins{ $pin } == -1;
-    print "  pinMode( $pins{$pin}, OUTPUT );\n";
-}
-print "}\n";
+my @events_delay;
+my @events_pin_number;
+my @events_pin_state;
 
-print "void loop() {\n";
+print "Processing song file.\n";
 while ( 1 ) {
     last unless scalar @$notes;
     my $note = shift @$notes;
     my $note_start_tick = $note->{'startTick'};
-    $DEBUG > 1 && print "note   : $note_start_tick\n";
+    $DEBUG > 1 && print STDERR "note   : $note_start_tick\n";
 
     my $timesig = shift ( @$timesigs ) if scalar @$timesigs;
     my $sig_tick = $NO_EVENT;
     if ( $timesig ) {
         $sig_tick = $timesig->{'tick'};
     }
-    $DEBUG > 1 && print "timesig: $sig_tick\n" unless $sig_tick == $NO_EVENT;
+    $DEBUG > 1 && print STDERR "timesig: $sig_tick\n" unless $sig_tick == $NO_EVENT;
 
     my $tempo = shift ( @$tempos ) if scalar @$tempos;
     my $tempo_tick = $NO_EVENT;
     if ( $tempo ) {
         $tempo_tick = $tempo->{'tick'};
     }
-    $DEBUG > 1 && print "tempo  : $tempo_tick\n" unless $tempo_tick == $NO_EVENT;
+    $DEBUG > 1 && print STDERR "tempo  : $tempo_tick\n" unless $tempo_tick == $NO_EVENT;
 
     my $this_event_tick = 0;
     my $this_tempo = $loop_tempo;
@@ -148,40 +179,13 @@ while ( 1 ) {
         $note_hash{'p'}     <= $note_start_tick ||
         $note_hash{'strum'} <= $note_start_tick
     ) {
-        # handle note off events
-        my @sorted_notes = sort { $note_hash{$a} <=> $note_hash{$b} } keys %note_hash; # sort by tick value
-        my $noteoff_tick = $note_hash{ $sorted_notes[0] };
-        $note_hash{ $sorted_notes[0] } = $NO_EVENT;
-        my %actual_notes = ( shift @sorted_notes => 1 );
-        for my $other_notes ( @sorted_notes ) {
-            if ( $note_hash{ $other_notes } == $noteoff_tick ) {
-                $actual_notes{ $other_notes } = 1;
-                $note_hash{ $other_notes } = $NO_EVENT;
-            }
-            else {
-                last;
-            }
-        }
-
-        $this_event_tick = $noteoff_tick;
+        # handle note off event
 
         unshift (@$notes, $note);
         unshift (@$timesigs, $timesig) unless $sig_tick == $NO_EVENT;
         unshift (@$tempos, $tempo) unless $tempo_tick == $NO_EVENT;
 
-        my $display_note;
-        $display_note .= $actual_notes{'g'} ? 'g' : '-';
-        $display_note .= $actual_notes{'r'} ? 'r' : '-';
-        $display_note .= $actual_notes{'y'} ? 'y' : '-';
-        $display_note .= $actual_notes{'b'} ? 'b' : '-';
-        $display_note .= $actual_notes{'o'} ? 'o' : '-';
-        $display_note .= $actual_notes{'p'} ? ' p' : ' -';
-        $display_note .= $actual_notes{'strum'} ? ' strum' : ' -';
-        $event_type = 'NOTEOFF';
-        $event_text = $display_note;
-
-        delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
-        noteOffEvent( \%actual_notes );
+        ( $this_event_tick, $event_type, $event_text ) = buildNoteOff( \%note_hash, $this_tempo );
     }
     elsif (
         $sig_tick <= $tempo_tick      && 
@@ -198,7 +202,7 @@ while ( 1 ) {
 
         $beats_per_measure = $timesig->{'bpm'};
 
-        delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
+        $delay_add += sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000;
     }
     elsif ( $tempo_tick <= $note_start_tick ) {
         # handle tempo changes
@@ -213,7 +217,7 @@ while ( 1 ) {
 
         $loop_tempo = $tempo->{'tempo'};
 
-        delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
+        $delay_add += sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000;
     }
     else {
         # handle notes
@@ -276,55 +280,86 @@ while ( 1 ) {
         $event_type = 'NOTEON';
         $event_text = $display_note;
         $event_text .= ' STRUM' if $strum;
-        delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
-        noteOnEvent( $note, $strum );
+
+        my $delay = sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 + $delay_add;
+        $delay_add = 0;
+        noteOnEvent( $delay, $note, $strum );
     }
     $ms += ( $this_event_tick - $last_event ) / $tpqn * $this_tempo;
     $last_event = $this_event_tick;
-    $DEBUG && printf "%-7s: tick %06d microsecond %010d, %s\n", $event_type, $this_event_tick, $ms, $event_text;
+    $DEBUG && printf STDERR "%-7s: tick %06d microsecond %010d, %s\n", $event_type, $this_event_tick, $ms, $event_text;
 }
 
-# handle final note off event
-my $this_event_tick = 0;
-my $this_tempo = $loop_tempo;
-my $event_type = '';
-my $event_text = '';
+# handle final note off events
+for my $final_note_tick ( sort { $note_hash{$a} <=> $note_hash{$b} } keys %note_hash ) { 
+    last if $note_hash{ $final_note_tick } == $NO_EVENT;
 
-my @sorted_notes = sort { $note_hash{$a} <=> $note_hash{$b} } keys %note_hash; # sort by tick value
-my $noteoff_tick = $note_hash{ $sorted_notes[0] };
-$note_hash{ $sorted_notes[0] } = $NO_EVENT;
-my %actual_notes = ( shift @sorted_notes => 1 );
-for my $other_notes ( @sorted_notes ) {
-    if ( $note_hash{ $other_notes } == $noteoff_tick ) {
-        $actual_notes{ $other_notes } = 1;
-        $note_hash{ $other_notes } = $NO_EVENT;
-    }
-    else {
-        last;
-    }
+    my ( $this_event_tick, $event_type, $event_text ) = buildNoteOff( \%note_hash, $loop_tempo );
+    $ms += ( $this_event_tick - $last_event ) / $tpqn * $loop_tempo; # potential bug - tempo changes during held note at end of song
+    $last_event = $this_event_tick;
+    $DEBUG && printf STDERR "%-7s: tick %06d microsecond %010d, %s\n", $event_type, $this_event_tick, $ms, $event_text;
 }
 
-$this_event_tick = $noteoff_tick;
+my $tt = Template->new
+    ({
+        INCLUDE_PATH => '.',
+        PRE_CHOMP    => 1,
+        POST_CHOMP   => 0,
+    });
+                    
+print "Generating Arduino code:\n\n";
+unless ( $port ) {
+    # generate native Arduino code
 
-my $display_note;
-$display_note .= $actual_notes{'g'} ? 'g' : '-';
-$display_note .= $actual_notes{'r'} ? 'r' : '-';
-$display_note .= $actual_notes{'y'} ? 'y' : '-';
-$display_note .= $actual_notes{'b'} ? 'b' : '-';
-$display_note .= $actual_notes{'o'} ? 'o' : '-';
-$display_note .= $actual_notes{'p'} ? ' p' : ' -';
-$display_note .= $actual_notes{'strum'} ? ' strum' : ' -';
-$event_type = 'NOTEOFF';
-$event_text = $display_note;
+    my $vars = {
+        'number_of_events' => scalar @events_delay,
+        'pins'             => \%pins,
+        'events_delay'     => \@events_delay,
+        'events_pin'       => \@events_pin_number,
+    };
 
-delayEvent( sprintf '%.0f', (( $this_event_tick - $last_event ) / $tpqn * $this_tempo) / 1000 );
-noteOffEvent( \%actual_notes );
+    print "-------------------8<--------------------\n";
+    $tt->process('arduino_native.tt', $vars) or die $tt->error(), "\n";
+    print "-------------------8<--------------------\n";
+}
+else {
+    # generate serial driver Arduino code
+    my $vars = {
+        'pins' => \%pins,
+    };
 
-$DEBUG && printf "%-7s: tick %06d microsecond %010d, %s\n", $event_type, $this_event_tick, $ms, $event_text;
+    print "-------------------8<--------------------\n";
+    $tt->process('arduino_serial.tt', $vars) or die $tt->error(), "\n";
+    print "-------------------8<--------------------\n";
 
-# wait forever
-print "  while ( true ) { delay(1); }\n";
-print "}\n";
+    print "\nPress any key to start playing song via serial port $port\n";
+    ReadMode 'raw';
+    ReadKey 0;
+    ReadMode 'normal';
+
+    my $serial;
+    unless ( $test ) {
+        $serial = Device::SerialPort->new($port) or die "Failed to open serial port $port\n";
+        $serial->baudrate(9600);
+        $serial->databits(8);
+        $serial->parity('none');
+        $serial->stopbits(1);
+    }
+
+    $SIG{ALRM} = sub { };
+
+    print "Playing song...\n";
+    for ( my $i = 0 ; $i < scalar @events_delay ; $i++ ) {
+        unless ( $events_delay[$i] == 0 ) {
+            setitimer( ITIMER_REAL, $events_delay[$i] / 1000 );
+            $DEBUG && printf "delay %-2.f milliseconds\n", $events_delay[$i];
+            pause;
+        }
+        $DEBUG && printf "toggle pin %2d\n", $events_pin_number[$i];
+        $serial->write( $events_pin_number[$i] ) unless $test;
+    }
+    print "Done!\n";
+}
 
 exit;
 
@@ -367,76 +402,129 @@ sub readGamefile {
     return $object;
 }
 
-sub delayEvent {
-    my $ms = shift;
-    print "  delay($ms);\n" if $ms;
-}
-
-# noteOn( $note_object, $ms_delay, $strum_flag );
+# noteOn( $delay, $note_object, $strum_flag );
 sub noteOnEvent {
-    my ( $note, $strum ) = @_;
-
-    if ( $strum ) {
-        print "  digitalWrite( $pins{'strum'}, HIGH );\n";
-    }
+    my ( $delay, $note, $strum ) = @_;
 
     # purple notes are a special case - on bass charts this is an open note, on drums it's the kick
     # a -1 value for the pin on the purple note designates it as an open note, and we skip all other
     # notes if that's the case (note sure how the games deal with this clash though).
     if ( $note->{'purple'} ) {
         if ( $pins{'purple'} == -1 ) {
-            print "  digitalWrite( $pins{'green'}, LOW);\n";
-            print "  digitalWrite( $pins{'red'}, LOW);\n";
-            print "  digitalWrite( $pins{'yellow'}, LOW);\n";
-            print "  digitalWrite( $pins{'blue'}, LOW);\n";
-            print "  digitalWrite( $pins{'orange'}, LOW);\n";
+            pushEvent( $delay, $pins{'green'}, 0 );
+            pushEvent( 0, $pins{'red'}, 0 );
+            pushEvent( 0, $pins{'yellow'}, 0 );
+            pushEvent( 0, $pins{'blue'}, 0 );
+            pushEvent( 0, $pins{'orange'}, 0 );
+            if ( $strum ) {
+                pushEvent( 0, $pins{'strum'}, 1 );
+            }
             return;
         }
-        print "  digitalWrite( $pins{'purple'}, HIGH );\n";
+        pushEvent( $delay, $pins{'purple'}, 1 );
+        $delay = 0;
     }
     if ( $note->{'green'} ) {
-        print "  digitalWrite( $pins{'green'}, HIGH );\n";
+        pushEvent( $delay, $pins{'green'}, 1 );
+        $delay = 0;
     }
     if ( $note->{'red'} ) {
-        print "  digitalWrite( $pins{'red'}, HIGH );\n";
+        pushEvent( $delay, $pins{'red'}, 1 );
+        $delay = 0;
     }
     if ( $note->{'yellow'} ) {
-        print "  digitalWrite( $pins{'yellow'}, HIGH );\n";
+        pushEvent( $delay, $pins{'yellow'}, 1 );
+        $delay = 0;
     }
     if ( $note->{'blue'} ) {
-        print "  digitalWrite( $pins{'blue'}, HIGH );\n";
+        pushEvent( $delay, $pins{'blue'}, 1 );
+        $delay = 0;
     }
     if ( $note->{'orange'} ) {
-        print "  digitalWrite( $pins{'orange'}, HIGH );\n";
+        pushEvent( $delay, $pins{'orange'}, 1 );
+        $delay = 0;
+    }
+
+    if ( $strum ) {
+        pushEvent( $delay, $pins{'strum'}, 1 );
+        $delay = 0;
     }
 }
 
+sub pushEvent {
+    my ( $delay, $pin, $state ) = @_;
+    push @events_delay, $delay;
+    push @events_pin_number, $pin;
+    push @events_pin_state, $state;
+}
 
-# noteOff( $note_hash, $ms_  delay );
+# noteOff( $delay, $note_hash );
 sub noteOffEvent {
-    my $note = shift;
-
-    if ( $note->{'strum'} ) {
-        print "  digitalWrite( $pins{'strum'}, LOW);\n";
-    }
+    my ( $delay, $note ) = @_;
 
     if ( $note->{'g'} ) {
-        print "  digitalWrite( $pins{'green'}, LOW);\n";
+        pushEvent( $delay, $pins{'green'}, 0 );
+        $delay = 0;
     }
     if ( $note->{'r'} ) {
-        print "  digitalWrite( $pins{'red'}, LOW);\n";
+        pushEvent( $delay, $pins{'red'}, 0 );
+        $delay = 0;
     }
     if ( $note->{'y'} ) {
-        print "  digitalWrite( $pins{'yellow'}, LOW);\n";
+        pushEvent( $delay, $pins{'yellow'}, 0 );
+        $delay = 0;
     }
     if ( $note->{'b'} ) {
-        print "  digitalWrite( $pins{'blue'}, LOW);\n";
+        pushEvent( $delay, $pins{'blue'}, 0 );
+        $delay = 0;
     }
     if ( $note->{'o'} ) {
-        print "  digitalWrite( $pins{'orange'}, LOW);\n";
+        pushEvent( $delay, $pins{'orange'}, 0 );
+        $delay = 0;
     }
     if ( $note->{'p'} && $pins{'purple'} != -1 ) {
-        print "  digitalWrite( $pins{'purple'}, LOW);\n";
+        pushEvent( $delay, $pins{'purple'}, 0 );
+        $delay = 0;
+    }
+    if ( $note->{'strum'} ) {
+        pushEvent( $delay, $pins{'strum'}, 0 );
+        $delay = 0;
     }
 
+}
+
+sub buildNoteOff {
+    # add note off event to array
+    my ( $note_hash, $this_tempo ) = @_;
+
+    my @sorted_notes = sort { $note_hash->{$a} <=> $note_hash->{$b} } keys %$note_hash; # sort by tick value
+    my $noteoff_tick = $note_hash->{ $sorted_notes[0] };
+    $note_hash->{ $sorted_notes[0] } = $NO_EVENT;
+    my %actual_notes = ( shift @sorted_notes => 1 );
+    for my $other_notes ( @sorted_notes ) {
+        if ( $note_hash->{ $other_notes } == $noteoff_tick ) {
+            $actual_notes{ $other_notes } = 1;
+            $note_hash->{ $other_notes } = $NO_EVENT;
+        }
+        else {
+            last;
+        }
+    }
+
+    my $display_note;
+    $display_note .= $actual_notes{'g'} ? 'g' : '-';
+    $display_note .= $actual_notes{'r'} ? 'r' : '-';
+    $display_note .= $actual_notes{'y'} ? 'y' : '-';
+    $display_note .= $actual_notes{'b'} ? 'b' : '-';
+    $display_note .= $actual_notes{'o'} ? 'o' : '-';
+    $display_note .= $actual_notes{'p'} ? ' p' : ' -';
+    $display_note .= $actual_notes{'strum'} ? ' strum' : ' -';
+    my $event_type = 'NOTEOFF';
+    my $event_text = $display_note;
+
+    my $delay = sprintf '%.0f', (( $noteoff_tick - $last_event ) / $tpqn * $this_tempo) / 1000 + $delay_add;
+    $delay_add = 0;
+    noteOffEvent( $delay, \%actual_notes );
+
+    return $noteoff_tick, $event_type, $event_text;
 }
