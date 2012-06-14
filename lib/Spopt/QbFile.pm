@@ -360,7 +360,9 @@ sub readfile {
     @{$self->{'_beat'}} = @{$temptracks->{'beats'}};
 
     if ($self->sustainthresh() == 0) {
-	my $st = int ( ($self->{'_beat'}[1] - $self->{'_beat'}[0]) / 2 + 0.0001);
+        my $st = int ( ($self->{'_beat'}[1] - $self->{'_beat'}[0]) / 2 + 0.0001);
+        #codemann8 - I think for GH5/BH/WoR uses 4 instead of 2
+        #my $st = int ( ($self->{'_beat'}[1] - $self->{'_beat'}[0]) / 4 + 0.0001);
         $self->sustainthresh($st);
     }
 
@@ -413,6 +415,12 @@ sub checkQBHeader {
           && $headerREF->[2] == 0x0402080c
           && $headerREF->[3] == 0x0c040214
           && $headerREF->[4] == 0x000c1010
+        )
+	|| #GH5/BH/WoR Header
+        (    $headerREF->[0] == 0x1c000000
+          && $headerREF->[1] == 0x00000000
+          && $headerREF->[3] == 0x00000000
+          && $headerREF->[4] == 0x00000000
         )
     ) {
         $debug && print "DEBUG: Valid QB header found.\n";

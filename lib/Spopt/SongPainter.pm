@@ -24,9 +24,20 @@ my $FOOTER_PIXELS = 40;
 my $FOOTER_MARGIN_PIXELS = 40;
 my $PIXELS_PER_SINGLE_ROW = 114;
 
+my $HELV_FONT;
+my $TIMES_FONT;
+if ($^O eq "MSWin32") {
+	$HELV_FONT = 'Arial';
+	$TIMES_FONT = 'Times-New-Roman';
+}
+else {
+	$HELV_FONT = 'Helvetica';
+	$TIMES_FONT = 'Times';
+}
+
 my $FOOTER_BLURB_LEFT  = 
     'Generated on: ' . POSIX::strftime('%Y-%m-%d %T', localtime) . ".\n" .
-    "'spopt' written by debr5836 and tma (spopt\@moto-coda.org).\n" .
+    "'spopt' written by debr5836/tma/codemann8 (spopt\@moto-coda.org).\n" .
     "SongPainter.pm v$VERSION.";
 my $FOOTER_BLURB_RIGHT =
     "http://www.slowhero.com/\n"  .
@@ -388,7 +399,7 @@ sub _paintSectionLabels {
         $self->_drawText(
             '_im_song',
             'Black',
-            'Helvetica',
+            $HELV_FONT,
             10,
             $txt,
             $basex + 20,
@@ -436,8 +447,8 @@ sub _printTitles() {
     $self->_set_timer();
     my $title = $self->title();
     my $subtitle = $self->subtitle();
-    $self->_drawCenteredText('_im_song','black','Times',50,$title,512,40) if $title;
-    $self->_drawCenteredText('_im_song','black','Times',30,$subtitle,512,80) if $subtitle;
+    $self->_drawCenteredText('_im_song','black',$TIMES_FONT,50,$title,512,40) if $title;
+    $self->_drawCenteredText('_im_song','black',$TIMES_FONT,30,$subtitle,512,80) if $subtitle;
     $self->_get_timer();
 }
 
@@ -448,7 +459,7 @@ sub _printFooter() {
     $self->_drawText(
         '_im_song',
         '#333333',
-        'Helvetica',
+        $HELV_FONT,
         12,
         $FOOTER_BLURB_LEFT,
         $LEFT_MARGIN_PIXELS + 10,
@@ -457,7 +468,7 @@ sub _printFooter() {
     $self->_drawText(
         '_im_song',
         '#333333',
-        'Helvetica',
+        $HELV_FONT,
         12,
         $FOOTER_BLURB_RIGHT,
         $PIXEL_WIDTH - $LEFT_MARGIN_PIXELS - 200,
@@ -945,8 +956,8 @@ sub _drawTimeSignature {
         my $staff3 = $basey + $STAFF_LINES_a[3];
         my $staff5 = $basey + $STAFF_LINES_a[5];
 	my $bpm = $song->bpm($i);
-        $self->_drawText("_im_song","gray80","Times",32,"$bpm",$basex+3,$staff3);
-        $self->_drawText("_im_song","gray80","Times",32,"4"   ,$basex+3,$staff5);
+        $self->_drawText("_im_song","gray80",$TIMES_FONT,32,"$bpm",$basex+3,$staff3);
+        $self->_drawText("_im_song","gray80",$TIMES_FONT,32,"4"   ,$basex+3,$staff5);
     }
     $self->_get_timer(2);
 }
@@ -957,8 +968,13 @@ sub _draw_tempo {
 
     my $font = "$FindBin::Bin/../assets/fonts/tindtre/TEMPILTR.TTF";
     #my $font = "$FindBin::Bin/../assets/fonts/tmpindlt/TEMPIL__.TTF";
-    $self->_drawText(   '_im_song', 'black',$font,10,"%",$x,$y+3);
-    $self->_drawText(   '_im_song', 'black','Helvetica',10,"=$tempo",$x+6,$y+3);
+	if ($^O eq "MSWin32") {
+		$self->_drawText(   '_im_song', 'black',$HELV_FONT,10,"t",$x,$y+3);
+	}
+	else {
+		$self->_drawText(   '_im_song', 'black',$font,10,"%",$x,$y+3);
+	}
+    $self->_drawText(   '_im_song', 'black',$HELV_FONT,10,"=$tempo",$x+6,$y+3);
     $self->_get_timer(2);
 }
 
@@ -1026,10 +1042,10 @@ sub _paintMeasureScores {
     my $multscoretxt = sprintf "\%d", $self->{_multmeasscore}[$i];
     my $sptxt    = sprintf "%.2fSP", $self->{_spmeas}[$i];
 
-    $self->_drawRightText("_im_song", "grey60",   "Helvetica",10,$basescoretxt,$right-3,$basey+$STAFF_LINES_a[5]+10);
-    $self->_drawRightText("_im_song", "DarkGreen","Helvetica",10,$multscoretxt,$right-3,$basey+$STAFF_LINES_a[5]+20);
+    $self->_drawRightText("_im_song", "grey60",   $HELV_FONT,10,$basescoretxt,$right-3,$basey+$STAFF_LINES_a[5]+10);
+    $self->_drawRightText("_im_song", "DarkGreen",$HELV_FONT,10,$multscoretxt,$right-3,$basey+$STAFF_LINES_a[5]+20);
     if ($self->{_spmeas}[$i] > 0) {
-        $self->_drawRightText("_im_song", "SteelBlue3","Helvetica",10,$sptxt,$right-3,$basey+$STAFF_LINES_a[5]+30);
+        $self->_drawRightText("_im_song", "SteelBlue3",$HELV_FONT,10,$sptxt,$right-3,$basey+$STAFF_LINES_a[5]+30);
     }
     $self->_get_timer(2);
 }
@@ -1077,7 +1093,7 @@ sub _drawMeasureGrid {
     $self->_drawLine("_im_song", "black",   1, $right, $bot, $right, $top);
 
     ## Do the measure number
-    $self->_drawText("_im_song", "DarkRed","Helvetica",10,"$i",$left,$staff1-5);
+    $self->_drawText("_im_song", "DarkRed",$HELV_FONT,10,"$i",$left,$staff1-5);
     #my ($self,$color,$family,$size,$text,$x,$y) = @_;
     $self->_get_timer(2);
 }
